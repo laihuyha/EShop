@@ -11,6 +11,7 @@ using System.Text.Unicode;
 
 namespace EShop
 {
+    //ádasd
     public class Startup
     {
         //asdasda
