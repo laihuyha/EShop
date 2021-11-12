@@ -1,0 +1,36 @@
+﻿@model EShop.Models.Role
+@{
+    ViewData["Title"] = "Details";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="card">
+    <div class="card-header">
+      <h3 class="card-title">Thông tin quyền</h3>
+    <!-- /.card-header -->
+    <div class="card-body table-responsive p-0" style="height: 300px;">
+      <table class="table table-head-fixed text-nowrap">
+        <tbody>
+          <tr>
+            <td>ID</td>
+            <td><span class="tag tag-success">@Model.RoleId</span></td>
+          </tr>
+          <tr>
+            <td>Tên Quyền</td>
+            <td><span class="tag tag-success">@Model.RoleName</span></td>
+          </tr>
+          <tr>
+            <td>Mô Tả</td>
+            <td><span class="tag tag-success">@Model.Descriptions</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <!-- /.card-body -->
+  </div>
+  <!-- /.card -->
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.RoleId">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>
