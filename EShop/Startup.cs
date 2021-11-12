@@ -13,6 +13,7 @@ namespace EShop
 {
     public class Startup
     {
+        //asdasda
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
