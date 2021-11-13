@@ -74,10 +74,10 @@
                 <input asp-for="Homeflag" class="form-control" />
                 <span asp-validation-for="Homeflag" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="IsActived" class="control-label"></label>
-                <input asp-for="IsActived" class="form-control" />
-                <span asp-validation-for="IsActived" class="text-danger"></span>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="IsActived" /> @Html.DisplayNameFor(model => model.IsActived)
+                </label>
             </div>
             <div class="form-group">
                 <label asp-for="Tag" class="control-label"></label>
@@ -110,3 +110,6 @@
     <a asp-action="Index">Back to List</a>
 </div>
 
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

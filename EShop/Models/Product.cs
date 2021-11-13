@@ -23,7 +23,7 @@ namespace EShop.Models
         public string Video { get; set; }
         public DateTime? DateCreated { get; set; }
         public DateTime? DateModified { get; set; }
-        public bool? IsBestsellers { get; set; }
+        public bool IsBestsellers { get; set; }
         public bool? Homeflag { get; set; }
         public bool IsActived { get; set; }
         public string Tag { get; set; }

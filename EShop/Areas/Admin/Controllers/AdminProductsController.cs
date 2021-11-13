@@ -1,10 +1,12 @@
-﻿using EShop.Models;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using EShop.Models;
 using PagedList.Core;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace EShop.Areas.Admin.Controllers
 {
@@ -24,10 +26,7 @@ namespace EShop.Areas.Admin.Controllers
             //Khai báo để phân trang
             var pageNo = page == null || page <= 0 ? 1 : page.Value;
             var pageSize = 5; /*Utilities.PAGE_SIZE;*/
-            var lstProduct = _context.Products
-                .AsNoTracking()
-                .Include(x => x.Cate)
-                .OrderByDescending(x => x.ProductId);
+            var lstProduct = _context.Products.AsNoTracking().Include(x => x.Cate).OrderByDescending(x => x.ProductId);
             PagedList<Product> models = new PagedList<Product>(lstProduct, pageNo, pageSize);
 
             ViewBag.CurrentPage = pageNo;
