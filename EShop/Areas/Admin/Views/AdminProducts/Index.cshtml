@@ -98,22 +98,23 @@
                                             <i class="fab fa-hotjar"></i>
                                         </td>
                                     }
-                                <td>
-                                    <a asp-controller="AdminProducts" asp-action="Details" asp-route-id="@item.ProductId" class="btn btn-icon btn-hover btn-sm btn-rounded">
-                                        <i class="anticon anticon-eye"></i>
-                                    </a>
-                                    <a asp-controller="AdminProducts" asp-action="Edit" asp-route-id="@item.ProductId" class="btn btn-icon btn-hover btn-sm btn-rounded">
-                                        <i class="anticon anticon-edit"></i>
-                                    </a>
-                                    <a asp-controller="AdminProducts" asp-action="Delete" asp-route-id="@item.ProductId" class="btn btn-icon btn-hover btn-sm btn-rounded">
-                                        <i class="anticon anticon-delete"></i>
-                                    </a>
-                                </td>
+                                    <td>
+                                        <a asp-controller="AdminProducts" asp-action="Details" asp-route-id="@item.ProductId" class="btn btn-icon btn-hover btn-sm btn-rounded">
+                                            <i class="anticon anticon-eye"></i>
+                                        </a>
+                                        <a asp-controller="AdminProducts" asp-action="Edit" asp-route-id="@item.ProductId" class="btn btn-icon btn-hover btn-sm btn-rounded">
+                                            <i class="anticon anticon-edit"></i>
+                                        </a>
+                                        <a asp-controller="AdminProducts" asp-action="Delete" asp-route-id="@item.ProductId" class="btn btn-icon btn-hover btn-sm btn-rounded">
+                                            <i class="anticon anticon-delete"></i>
+                                        </a>
+                                    </td>
                                 </tr>
                             }
                         }
                     </tbody>
                 </table>
+                <pager class="paper-container" list="@Model" asp-area="Admin" asp-controller="AdminProducts" asp-action="Index"></pager>
             </div>
         </div>
     </div>
