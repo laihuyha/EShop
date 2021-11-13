@@ -5,7 +5,7 @@
     Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
 }
 
-<div class="card" style="border-radius: 1rem;">
+<div class="card" style="border-radius: 1rem;margin-top:10%">
     <div class="card-body">
         <div class="row m-b-30" style="margin-bottom:15px;">
             <div class="col-lg-8">
@@ -68,10 +68,6 @@
                                         <span class="badge badge-lg badge-secondary">Disable</span>
                                     }
                                 <td class="align-middle text-center">
-                                    <a asp-area="Admin" asp-controller="AdminAccounts" asp-action="Create"
-                                       class="btn btn-outline-success btn-block btn-xs">
-                                        <i class="fas fa-user-plus" style="margin-right:10px;"></i>Thêm
-                                    </a>
                                     <a asp-area="Admin" asp-controller="AdminAccounts" asp-action="Details"
                                        asp-route-id="@item.UserId" class="btn btn-outline-info btn-block btn-xs">
                                         <i class="fas fa-info-circle" style="margin-right:10px;"></i>Xem
