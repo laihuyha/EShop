@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using PagedList.Core;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -19,13 +20,44 @@ namespace EShop.Areas.Admin.Controllers
         }
 
         // GET: Admin/AdminCustomers
-        public IActionResult Index(int? page)
+        public IActionResult Index(string sortOrder,string currentFilter, string searchStr,int? page)
         {
+            //Sort
+            ViewData["NameSortParm"] = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
+            ViewData["DateSortParm"] = sortOrder == "Date" ? "date_desc" : "Date";
+            ViewData["CurrentSort"] = sortOrder;
+            var _customer = from m in _context.Customers.Include(m=>m.Location) select m;
+            switch (sortOrder)
+            {
+                case "name_desc":
+                    _customer = _customer.OrderByDescending(x => x.FullName);
+                    break;
+                case "Date":
+                    _customer = _customer.OrderBy(x => x.BirthDay);
+                    break;
+                case "date_desc":
+                    _customer = _customer.OrderByDescending(x => x.BirthDay);
+                    break;
+                default:
+                    _customer = _customer.OrderBy(s => s.FullName);
+                    break;
+            }
+
+            //Search
+            ViewData["CurrentFilter"] = searchStr;
+            if (!String.IsNullOrEmpty(searchStr))
+            {
+                _customer = _customer.Where(s => s.FullName.Contains(searchStr) || s.CustommerId.ToString().Contains(searchStr) || s.Mail.Contains(searchStr) || s.Phone.Contains(searchStr));
+            }
+
             //Khai báo để phân trang
             var pageNo = page == null || page <= 0 ? 1 : page.Value;
             var pageSize = 5; /*Utilities.PAGE_SIZE;*/
-            var lstCustomer = _context.Customers.AsNoTracking().Include(x => x.Location).OrderByDescending(x => x.CustommerId);
-            PagedList<Customer> models = new PagedList<Customer>(lstCustomer, pageNo, pageSize);
+            var lstCustomer = _context.Customers
+                .AsNoTracking()
+                .Include(x => x.Location)
+                .OrderBy(x => x.CustommerId);
+            PagedList<Customer> models = new PagedList<Customer>(_customer, pageNo, pageSize);
 
             ViewBag.CurrentPage = pageNo;
             return View(models);
