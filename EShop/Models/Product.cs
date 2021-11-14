@@ -27,7 +27,7 @@ namespace EShop.Models
         [Display(Name ="Giá")]
         [Required(ErrorMessage ="Không để trống giá")] 
         [Range(1000,100000000)]
-        public long? Price { get; set; }
+        public int? Price { get; set; }
         [Display(Name ="Chiết khấu")]
         public int? Discount { get; set; }
         public string ThumbImg { get; set; }
