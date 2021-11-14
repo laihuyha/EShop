@@ -26,7 +26,7 @@ namespace EShop.Models
         public int ParentId { get; set; }
         public int? Levels { get; set; }
         public int? Ordering { get; set; }
-        public bool? IsPublished { get; set; }
+        public bool IsPublished { get; set; }
         public string ThumbImg { get; set; }
         public string Title { get; set; }
         public string Alias { get; set; }

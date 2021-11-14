@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using EShop.Models;
+using PagedList.Core;
 
 namespace EShop.Areas.Admin.Controllers
 {
@@ -20,9 +21,57 @@ namespace EShop.Areas.Admin.Controllers
         }
 
         // GET: Admin/AdminCategories
-        public async Task<IActionResult> Index()
+        public IActionResult Index(string sortOrder, string currentFilter, string searchStr, int? page)
         {
-            return View(await _context.Categories.ToListAsync());
+            var _category = from m in _context.Categories select m;
+            //Sort
+            ViewData["IdSortParm"] = String.IsNullOrEmpty(sortOrder) ? "id_desc" : "";
+            ViewData["NameSortParm"] = sortOrder == "Name" ? "name_desc" : "Name";
+            ViewData["StatusSortParm"] = sortOrder == "Publish" ? "Disable" : "Publish";
+            ViewData["TitleSortParm"] = sortOrder == "Title" ? "title_desc" : "Title";
+            ViewData["CurrentSort"] = sortOrder;
+            switch (sortOrder)
+            {
+                case "id_desc":
+                    _category = _category.OrderByDescending(p => p.CateId);
+                    break;
+                case "Name":
+                    _category = _category.OrderBy(p => p.CategoryName);
+                    break;
+                case "name_desc":
+                    _category = _category.OrderByDescending(p => p.CategoryName);
+                    break;
+                case "title_desc":
+                    _category = _category.OrderByDescending(p => p.Title);
+                    break;
+                case "Title":
+                    _category = _category.OrderBy(p => p.Title);
+                    break;
+                case "Publish":
+                    _category = _category.OrderBy(p => p.IsPublished);
+                    break;
+                case "Disable":
+                    _category = _category.OrderByDescending(p => p.IsPublished);
+                    break;
+                default:
+                    _category = _category.OrderBy(p => p.CateId);
+                    break;
+            }
+
+            //Search
+            ViewData["CurrentFilter"] = searchStr;
+            if (!String.IsNullOrEmpty(searchStr))
+            {
+                _category = _category.Where(p => p.CateId.ToString().Contains(searchStr) || p.CategoryName.ToString().Contains(searchStr) || p.Title.Contains(searchStr) || p.Descriptions.Contains(searchStr));
+            }
+
+            //Paginate
+            var pageNo = page == null || page <= 0 ? 1 : page.Value;
+            var pageSize = 5;
+            PagedList<Category> models = new PagedList<Category>(_category, pageNo, pageSize);
+            ViewBag.CurrentPage = pageNo;
+
+            return View(models);
         }
 
         // GET: Admin/AdminCategories/Details/5
