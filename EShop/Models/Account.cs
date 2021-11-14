@@ -19,6 +19,7 @@ namespace EShop.Models
         public string Password { get; set; }
         [DataType(DataType.EmailAddress, ErrorMessage = "Sai định dạng Email")]
         public string Email { get; set; }
+        [Required(ErrorMessage = "Họ và tên không được để trống!")]
         [Display(Name = "Họ và Tên")]
         public string FullName { get; set; }
         [Display(Name = "SĐT")]

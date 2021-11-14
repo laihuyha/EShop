@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 #nullable disable
 
@@ -11,9 +13,15 @@ namespace EShop.Models
         {
             Products = new HashSet<Product>();
         }
-
+        [Key]
+        [Column(Order = 1)]
         public int CateId { get; set; }
+        [Required(ErrorMessage = "Không được để trống tên loại sản phẩm!")]
+        [StringLength(100, ErrorMessage = "Tên loại sản phẩm không được quá 100 ký tự")]
+        [Display(Name = "Tên loại sản phẩm")]
         public string CategoryName { get; set; }
+        [StringLength(1000, ErrorMessage = "Tên loại sản phẩm không được quá 1000 ký tự")]
+        [Display(Name = "Mô tả sản phẩm")]
         public string Descriptions { get; set; }
         public int ParentId { get; set; }
         public int? Levels { get; set; }
