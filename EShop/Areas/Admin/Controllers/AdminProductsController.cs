@@ -21,17 +21,54 @@ namespace EShop.Areas.Admin.Controllers
         }
 
         // GET: Admin/AdminProducts
-        public IActionResult Index(int? page)
+        public IActionResult Index(string sortOrder, string currentFilter, string searchStr, int? page)
         {
-            //Khai báo để phân trang
-            var pageNo = page == null || page <= 0 ? 1 : page.Value;
-            var pageSize = 5; /*Utilities.PAGE_SIZE;*/
-            var lstProduct = _context.Products.AsNoTracking().Include(x => x.Cate).OrderByDescending(x => x.ProductId);
-            PagedList<Product> models = new PagedList<Product>(lstProduct, pageNo, pageSize);
+            //Sort
+            ViewData["IdSortParm"] = String.IsNullOrEmpty(sortOrder) ? "id_desc" : "";
+            ViewData["DateSortParm"] = sortOrder == "Date" ? "date_desc" : "Date";
+            ViewData["UnitSortParm"] = sortOrder == "Unit" ? "unit_desc" : "Unit";
+            ViewData["CurrentSort"] = sortOrder;
+            
+            var _product = from p in _context.Products.Include(p => p.Cate) select p;
+            switch (sortOrder)
+            {
+                case "id_desc":
+                    _product = _product.OrderByDescending(p => p.ProductId);
+                    break;
+                case "Date":
+                    _product = _product.OrderBy(p => p.DateCreated);
+                    break;
+                case "date_desc":
+                    _product = _product.OrderByDescending(p => p.DateCreated);
+                    break;
+                case "unit_desc":
+                    _product = _product.OrderByDescending(p => p.UnitInStock);
+                     break;
+                case "Unit":
+                    _product = _product.OrderBy(p => p.UnitInStock);
+                    break;
+                default:
+                    _product = _product.OrderBy(p => p.ProductId);
+                    break;
+            }
+
+            //Search
+            ViewData["CurrentFilter"] = searchStr;
+            if (!String.IsNullOrEmpty(searchStr))
+            {
+                _product = _product.Where(p => p.ProductName.Contains(searchStr) || p.ProductId.ToString().Contains(searchStr));
+            }
+
+            var pageNo = page == null || page <= 0 ? 1 : page.Value ;
+            var pageSize = 5; 
+           
+            PagedList<Product> models = new PagedList<Product>(_product, pageNo, pageSize);
 
             ViewBag.CurrentPage = pageNo;
             return View(models);
         }
+
+       
 
         // GET: Admin/AdminProducts/Details/5
         public async Task<IActionResult> Details(int? id)
@@ -163,5 +200,7 @@ namespace EShop.Areas.Admin.Controllers
         {
             return _context.Products.Any(e => e.ProductId == id);
         }
+
+
     }
 }

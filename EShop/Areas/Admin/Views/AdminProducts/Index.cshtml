@@ -32,8 +32,16 @@
                                 <option selected>Status</option>
                             </select>
                         </div>
+                        <form asp-controller="AdminProducts" asp-action="Index">
+                            <p>
+                                <input type="search" name="searchStr" value="@ViewData["CurrentFilter"]" required />
+                                <button type="submit"><i class="fa fa-search"></i></button>
+                            </p>
+                        </form>
                     </div>
+
                 </div>
+
                 <div class="col-lg-4 text-right">
                     <a asp-controller="AdminProducts" asp-action="Create" class="btn btn-primary">
                         <i class="anticon anticon-plus-circle m-r-5"></i>
@@ -45,11 +53,21 @@
                 <table class="table table-hover e-commerce-table">
                     <thead>
                         <tr>
-                            <th>ID</th>
-                            <th class="text-center align-items-center">Tên sản phẩm</th>
+                            <th>
+                                <a asp-action="Index" asp-route-sortOrder="@ViewData["IdSortParm"]">
+                                    ID
+                                </a>
+                            </th>
+                            <th class="text-center align-items-center">
+                                Tên sản phẩm
+                            </th>
                             <th class="text-center align-items-center">Danh mục</th>
                             <th>Giá</th>
-                            <th class="text-center align-items-center">Tồn kho</th>
+                            <th class="text-center align-items-center">
+                                <a asp-action="Index" asp-route-sortOrder="@ViewData["UnitSortParm"]">
+                                    Tồn kho
+                                </a>
+                            </th>
                             <th>Trạng thái</th>
                             <th class="text-center align-items-center">Is BestSeller?</th>
                             <th></th>
@@ -119,3 +137,72 @@
         </div>
     </div>
 </div>
+<style>
+    form {
+        /*position: relative;*/
+        margin-top: 20px;
+        margin-bottom: 0px;
+        margin-left: 120px;
+        transform: translate(-50%,-50%);
+        transition: all 1s;
+        width: 50px;
+        height: 50px;
+        background: white;
+        box-sizing: border-box;
+        border-radius: 25px;
+        border: 4px solid black;
+        padding: 5px;
+    }
+
+        form input {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 42.5px;
+            line-height: 30px;
+            outline: 0;
+            border: 0;
+            display: none;
+            font-size: 1em;
+            border-radius: 20px;
+            padding: 0 20px;
+            background: #CBF6D2;
+        }
+
+    .fa {
+        box-sizing: border-box;
+        padding: 10px;
+        width: 42.5px;
+        height: 42.5px;
+        position: absolute;
+        top: 0;
+        right: 0;
+        border-radius: 50%;
+        color: #07051a;
+        text-align: center;
+        font-size: 1.2em;
+        transition: all 1s;
+    }
+
+    form:hover,
+    form:valid {
+        width: 200px;
+        cursor: pointer;
+    }
+
+        form:hover input,
+        form:valid input {
+            display: block;
+        }
+
+        form:hover .fa,
+        form:valid .fa {
+            background: #07051a;
+            color: white;
+        }
+
+    button {
+        border: none;
+    }
+</style>
