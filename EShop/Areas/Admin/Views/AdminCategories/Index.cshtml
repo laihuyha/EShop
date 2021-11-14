@@ -46,14 +46,16 @@
                                     ID
                                 </a>
                             </th>
-                            <th asp-action="Index" asp-route-sortOrder="@ViewData["NameSortParm"]">
-                                Tên danh mục
+                            <th>
+                                <a asp-action="Index" asp-route-sortOrder="@ViewData["NameSortParm"]">
+                                    Tên danh mục
+                                </a>
                             </th>
                             <th class="text-center align-items-center">Mô tả</th>
                             <th>
-                                <a asp-action="Index" asp-route-sortOrder="@ViewData["StatusSortParm"]">
-                                    Trạng thái
-                                </a>
+
+                                Trạng thái
+
                             </th>
                             <th class="text-center align-items-center">
                                 <a asp-action="Index" asp-route-sortOrder="@ViewData["TitleSortParm"]">
@@ -98,15 +100,15 @@
                                             </div>
                                         </td>
                                     }
-                                    <td>@item.Title</td>
+                                    <td class="text-center align-items-center">@item.Title</td>
                                     <td>
-                                        <a asp-controller="AdminProducts" asp-action="Details" asp-route-id="@item.CateId" class="btn btn-icon btn-hover btn-sm btn-rounded">
+                                        <a asp-controller="AdminCategories" asp-action="Details" asp-route-id="@item.CateId" class="btn btn-icon btn-hover btn-sm btn-rounded">
                                             <i class="anticon anticon-eye"></i>
                                         </a>
-                                        <a asp-controller="AdminProducts" asp-action="Edit" asp-route-id="@item.CateId" class="btn btn-icon btn-hover btn-sm btn-rounded">
+                                        <a asp-controller="AdminCategories" asp-action="Edit" asp-route-id="@item.CateId" class="btn btn-icon btn-hover btn-sm btn-rounded">
                                             <i class="anticon anticon-edit"></i>
                                         </a>
-                                        <a asp-controller="AdminProducts" asp-action="Delete" asp-route-id="@item.CateId" class="btn btn-icon btn-hover btn-sm btn-rounded">
+                                        <a asp-controller="AdminCategories" asp-action="Delete" asp-route-id="@item.CateId" class="btn btn-icon btn-hover btn-sm btn-rounded">
                                             <i class="anticon anticon-delete"></i>
                                         </a>
                                     </td>

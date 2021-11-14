@@ -27,7 +27,6 @@ namespace EShop.Areas.Admin.Controllers
             //Sort
             ViewData["IdSortParm"] = String.IsNullOrEmpty(sortOrder) ? "id_desc" : "";
             ViewData["NameSortParm"] = sortOrder == "Name" ? "name_desc" : "Name";
-            ViewData["StatusSortParm"] = sortOrder == "Publish" ? "Disable" : "Publish";
             ViewData["TitleSortParm"] = sortOrder == "Title" ? "title_desc" : "Title";
             ViewData["CurrentSort"] = sortOrder;
             switch (sortOrder)
@@ -47,10 +46,10 @@ namespace EShop.Areas.Admin.Controllers
                 case "Title":
                     _category = _category.OrderBy(p => p.Title);
                     break;
-                case "Publish":
+                case "Disable":
                     _category = _category.OrderBy(p => p.IsPublished);
                     break;
-                case "Disable":
+                case "Publish":
                     _category = _category.OrderByDescending(p => p.IsPublished);
                     break;
                 default:
@@ -62,15 +61,14 @@ namespace EShop.Areas.Admin.Controllers
             ViewData["CurrentFilter"] = searchStr;
             if (!String.IsNullOrEmpty(searchStr))
             {
-                _category = _category.Where(p => p.CateId.ToString().Contains(searchStr) || p.CategoryName.ToString().Contains(searchStr) || p.Title.Contains(searchStr) || p.Descriptions.Contains(searchStr));
+                _category = _category.Where(p => p.CateId.ToString().Contains(searchStr) || p.CategoryName.Contains(searchStr) || p.Descriptions.Contains(searchStr)|| p.Title.Contains(searchStr));
             }
 
             //Paginate
             var pageNo = page == null || page <= 0 ? 1 : page.Value;
             var pageSize = 5;
-            PagedList<Category> models = new PagedList<Category>(_category, pageNo, pageSize);
             ViewBag.CurrentPage = pageNo;
-
+            PagedList<Category> models = new PagedList<Category>(_category, pageNo, pageSize);
             return View(models);
         }
 
