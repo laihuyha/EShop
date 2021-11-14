@@ -23,13 +23,21 @@ namespace EShop.Areas.Admin.Controllers
         // GET: Admin/AdminProducts
         public IActionResult Index(string sortOrder, string currentFilter, string searchStr, int? page)
         {
+            ViewData["CateId"] = new SelectList(_context.Categories, "CateId", "CategoryName");
+
+            //Custom dữ liệu trước khi đổ vào ViewData
+            List<SelectListItem> _Status = new List<SelectListItem>();
+            _Status.Add(new SelectListItem() { Text = "Active", Value = "1" });
+            _Status.Add(new SelectListItem() { Text = "Disable", Value = "0" });
+            ViewData["Status"] = _Status;
+
+            var _product = from p in _context.Products.Include(p => p.Cate) select p;
+
             //Sort
             ViewData["IdSortParm"] = String.IsNullOrEmpty(sortOrder) ? "id_desc" : "";
             ViewData["DateSortParm"] = sortOrder == "Date" ? "date_desc" : "Date";
             ViewData["UnitSortParm"] = sortOrder == "Unit" ? "unit_desc" : "Unit";
             ViewData["CurrentSort"] = sortOrder;
-            
-            var _product = from p in _context.Products.Include(p => p.Cate) select p;
             switch (sortOrder)
             {
                 case "id_desc":
@@ -43,7 +51,7 @@ namespace EShop.Areas.Admin.Controllers
                     break;
                 case "unit_desc":
                     _product = _product.OrderByDescending(p => p.UnitInStock);
-                     break;
+                    break;
                 case "Unit":
                     _product = _product.OrderBy(p => p.UnitInStock);
                     break;
@@ -58,14 +66,31 @@ namespace EShop.Areas.Admin.Controllers
             {
                 _product = _product.Where(p => p.ProductName.Contains(searchStr) || p.ProductId.ToString().Contains(searchStr));
             }
-
+            
+            //Paginate
             var pageNo = page == null || page <= 0 ? 1 : page.Value ;
             var pageSize = 5; 
-           
             PagedList<Product> models = new PagedList<Product>(_product, pageNo, pageSize);
-
             ViewBag.CurrentPage = pageNo;
+
             return View(models);
+        }
+
+        public IActionResult Filter(int? page, int CateID = 0, int Active = 0)
+        {
+            var pageNo = page == null || page <= 0 ? 1 : page.Value;
+
+            var url = $"/Admin/AdminProducts?CateID={CateID}&IsActived={Active}";
+            if(CateID == 0 & Active == 0)
+            {
+                url = $"/Admin/AdminProducts";
+            }
+            else
+            {
+                if (Active == 0) url = $"/Admin/AdminProducts?CateID={CateID}";
+                if (CateID == 0) url = $"/Admin/AdminProducts?IsActived={Active}";
+            }
+            return Json(new { status = "Success", redirectUrl = url });
         }
 
        
