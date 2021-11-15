@@ -6,14 +6,13 @@
 }
 
 <div class="main-content">
-    <form asp-action="Edit">
+    <form asp-controller="AdminProducts" asp-action="Edit" method="post" enctype="multipart/form-data">
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-        <input type="hidden" asp-for="ProductId" />
         <div class="page-header no-gutters has-tab">
             <div class="d-md-flex m-b-15 align-items-center justify-content-between">
                 <div class="media align-items-center m-b-15">
                     <div class="avatar avatar-image rounded" style="height: 70px; width: 70px">
-                        <img src="~/_AdminAssets/images/others/thumb-16.jpg" alt="">
+                        <img src="~/images/products/@Model.ThumbImg" alt="@Model.Title">
                     </div>
                     <div class="m-l-15">
                         <h4 class="m-b-0">@Model.ProductName</h4>
@@ -25,9 +24,6 @@
                         <i class="anticon anticon-save"></i>
                         <span>Lưu</span>
                     </button>
-                    <div style="margin-top: 15px;">
-                        <button class="btn btn-dark" asp-action="Index">Back to List</button>
-                    </div>
                 </div>
             </div>
             <ul class="nav nav-tabs">
@@ -35,7 +31,7 @@
                     <a class="nav-link active" data-toggle="tab" href="#product-edit-basic">Thông tin cơ bản</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" data-toggle="tab" href="#product-edit-option">Option Info</a>
+                    <a class="nav-link" data-toggle="tab" href="#product-edit-option">Thông tin tùy chọn</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" data-toggle="tab" href="#product-edit-description">Mô tả</a>
@@ -47,55 +43,104 @@
                 <div class="card">
                     <div class="card-body">
                         <div class="form-group">
-                            <label class="font-weight-semibold" for="productName">Tên sản phẩm</label>
-                            <input asp-for="ProductName" class="form-control" placeholder="Tên của sản phấm" />
+                            <label asp-for="ProductName" class="control-label">Tên sản phẩm</label>
+                            <input asp-for="ProductName" class="form-control" />
                             <span asp-validation-for="ProductName" class="text-danger"></span>
                         </div>
-                        <div class="form-group">
-                            <label class="font-weight-semibold" for="productPrice">Giá</label>
-                            <input asp-for="Price" class="form-control" placeholder="giá sản phẩm" />
-                            <span asp-validation-for="Price" class="text-danger"></span>
+                        <div class="row">
+                            <div class="form-group col-md-6">
+                                <label asp-for="Price" class="control-label">Giá bán</label>
+                                <input asp-for="Price" class="form-control" />
+                                <span asp-validation-for="Price" class="text-danger"></span>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label asp-for="Discount" class="control-label"></label>
+                                <input asp-for="Discount" class="form-control" />
+                                <span asp-validation-for="Discount" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-md-6">
+                                <label asp-for="CateId" class="control-label">Danh mục</label>
+                                <select asp-for="CateId" class="form-control" asp-items="ViewBag.CateId"></select>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label asp-for="UnitInStock" class="control-label">Tồn kho</label>
+                                <input asp-for="UnitInStock" class="form-control" />
+                                <span asp-validation-for="UnitInStock" class="text-danger"></span>
+                            </div>
                         </div>
                         <div class="form-group">
-                            <label class="font-weight-semibold" for="productCategory">Danh mục</label>
-                            <select asp-for="CateId" class="form-control" asp-items="ViewBag.CateId"></select>
-                            <span asp-validation-for="CateId" class="text-danger"></span>
+                            <label asp-for="Title" class="control-label"></label>
+                            <input asp-for="Title" class="form-control" />
+                            <span asp-validation-for="Title" class="text-danger"></span>
                         </div>
                         <div class="form-group">
-                            <label class="font-weight-semibold" for="productBrand">Tổn kho</label>
-                            <input asp-for="UnitInStock" class="form-control" placeholder="số lượng tồn" />
-                            <span asp-validation-for="UnitInStock" class="text-danger"></span>
-                        </div>
-                        <div class="form-group">
-                            <label class="font-weight-semibold" for="productStatus">Tag</label>
-                            <input asp-for="Tag" class="form-control" />
-                            <span asp-validation-for="Tag" class="text-danger"></span>
+                            <label asp-for="ThumbImg" class="font-weight-semibold">Upload Ảnh</label>
+                            <input type="file" name="fThumbImg" asp-for="ThumbImg" class="form-control-file" />
+                            <span asp-validation-for="ThumbImg" class="text-danger"></span>
                         </div>
                     </div>
                 </div>
             </div>
-            @*  *@a
             <div class="tab-pane fade" id="product-edit-option">
                 <div class="card">
                     <div class="card-body">
-                        <div class="form-group form-check">
-                            <label class="form-check-label">
-                                <input class="form-check-input" asp-for="IsActived" />Is Actived?
-                            </label>
-                        </div>
-                        <div class="form-group form-check">
-                            <label class="form-check-label">
-                                <input class="form-check-input" asp-for="IsBestsellers" />Is Bestseller?
-                            </label>
-                        </div>
                         <div class="form-group">
-                            <label class="font-weight-semibold" for="productFit">Fit</label>
+                            <label asp-for="Tag" class="control-label"></label>
+                            <input asp-for="Tag" class="form-control" />
+                            <span asp-validation-for="Tag" class="text-danger"></span>
                         </div>
-                        <div class="form-group">
-                            <label class="font-weight-semibold" for="productMaterial">Material</label>
+                        <div class="form-group d-flex align-items-center">
+                            @if (Model.IsActived)
+                            {
+                                <div class="switch m-r-10">
+                                    <input type="checkbox" asp-for="IsActived" checked="" />
+                                    <label for="IsActived"></label>
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="switch m-r-10">
+                                    <input type="checkbox" asp-for="IsActived" />
+                                    <label for="IsActived"></label>
+                                </div>
+                            }
+                            <label>Actived</label>
                         </div>
-                        <div class="form-group">
-                            <label class="font-weight-semibold" for="productShip">Ship From</label>
+                        <div class="form-group d-flex align-items-center">
+                            @if (Model.Homeflag)
+                            {
+                                <div class="switch m-r-10">
+                                    <input type="checkbox" asp-for="Homeflag" checked="" />
+                                    <label for="Homeflag"></label>
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="switch m-r-10">
+                                    <input type="checkbox" asp-for="Homeflag" />
+                                    <label for="Homeflag"></label>
+                                </div>
+                            }
+                            <label>Homeflag</label>
+                        </div>
+                        <div class="form-group d-flex align-items-center">
+                            @if (Model.IsBestsellers)
+                            {
+                                <div class="switch m-r-10">
+                                    <input type="checkbox" asp-for="IsBestsellers" checked="" />
+                                    <label for="IsBestsellers"></label>
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="switch m-r-10">
+                                    <input type="checkbox" asp-for="IsBestsellers" />
+                                    <label for="IsBestsellers"></label>
+                                </div>
+                            }
+                            <label>Bestsellers</label>
                         </div>
                     </div>
                 </div>
@@ -104,9 +149,7 @@
                 <div class="card">
                     <div class="card-body">
                         <div id="productDescription">
-                            <p>
-                                @Model.Descriptions
-                            </p>
+                            <p>Special cloth alert. The key to more success is to have a lot of pillows. Surround yourself with angels, positive energy, beautiful people, beautiful souls, clean heart, angel. They will try to close the door on you, just open it. A major key, never panic. Don’t panic, when it gets crazy and rough, don’t panic, stay calm. They key is to have every key, the key to open every door.The other day the grass was brown, now it’s green because I ain’t give up. Never surrender. Lion! I’m up to something. Always remember in the jungle there’s a lot of they in there, after you overcome they, you will make it to paradise.</p>
                         </div>
                     </div>
                 </div>
@@ -114,6 +157,7 @@
         </div>
     </form>
 </div>
+
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }
