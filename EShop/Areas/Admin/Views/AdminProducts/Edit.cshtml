@@ -25,6 +25,9 @@
                         <i class="anticon anticon-save"></i>
                         <span>Lưu</span>
                     </button>
+                    <div style="margin-top: 15px;">
+                        <button class="btn btn-dark" asp-action="Index">Back to List</button>
+                    </div>
                 </div>
             </div>
             <ul class="nav nav-tabs">
@@ -86,26 +89,12 @@
                         </div>
                         <div class="form-group">
                             <label class="font-weight-semibold" for="productFit">Fit</label>
-                            <select class="custom-select" id="productFit">
-                                <option value="skinny" selected>Skinny</option>
-                                <option value="slim">Slim</option>
-                                <option value="regular">Regular</option>
-                            </select>
                         </div>
                         <div class="form-group">
                             <label class="font-weight-semibold" for="productMaterial">Material</label>
-                            <select class="select2" id="productMaterial" multiple="multiple">
-                                <option value="polyester" selected>Polyester</option>
-                            </select>
                         </div>
                         <div class="form-group">
                             <label class="font-weight-semibold" for="productShip">Ship From</label>
-                            <select class="custom-select" id="productShip">
-                                <option value="columbia" selected>Columbia</option>
-                                <option value="brazil">Brazil</option>
-                                <option value="chile">Chile</option>
-                                <option value="argentina">Argentina</option>
-                            </select>
                         </div>
                     </div>
                 </div>
@@ -115,14 +104,7 @@
                     <div class="card-body">
                         <div id="productDescription">
                             <p>
-                                Special cloth alert. The key to more success is to have a lot of pillows. Surround
-                                yourself with angels, positive energy, beautiful people, beautiful souls, clean heart,
-                                angel. They will try to close the door on you, just open it. A major key, never panic.
-                                Don’t panic, when it gets crazy and rough, don’t panic, stay calm. They key is to have
-                                every key, the key to open every door.The other day the grass was brown, now it’s green
-                                because I ain’t give up. Never surrender. Lion! I’m up to something. Always remember in
-                                the jungle there’s a lot of they in there, after you overcome they, you will make it to
-                                paradise.
+                                @Model.Descriptions
                             </p>
                         </div>
                     </div>
@@ -131,11 +113,6 @@
         </div>
     </form>
 </div>
-
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
-
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }

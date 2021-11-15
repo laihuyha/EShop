@@ -7,6 +7,9 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using EShop.Models;
 using PagedList.Core;
+using EShop.Helpper;
+using System.Globalization;
+using System.IO;
 
 namespace EShop.Areas.Admin.Controllers
 {
@@ -101,10 +104,21 @@ namespace EShop.Areas.Admin.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ProductId,ProductName,ShortDesc,Descriptions,CateId,Price,Discount,ThumbImg,Video,DateCreated,DateModified,IsBestsellers,Homeflag,IsActived,Tag,Title,Alias,UnitInStock")] Product product)
+        public async Task<IActionResult> Create([Bind("ProductId,ProductName,ShortDesc,Descriptions,CateId,Price,Discount,ThumbImg,Video,DateCreated,DateModified,IsBestsellers,Homeflag,IsActived,Tag,Title,Alias,UnitInStock")] Product product, Microsoft.AspNetCore.Http.IFormFile fThumbImg)
         {
             if (ModelState.IsValid)
             {
+                product.ProductName = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(product.ProductName);
+                if(fThumbImg != null)
+                {
+                    string extennsion = Path.GetExtension(fThumbImg.FileName);
+                    string image = Utilities.ToUrlFriendly(product.ProductName) + extennsion;
+                    product.ThumbImg = await Utilities.UploadFile(fThumbImg, @"products", image.ToLower());
+                }
+                if (string.IsNullOrEmpty(product.ThumbImg)) product.ThumbImg = "thumb-6.jpg";
+                product.Alias = Utilities.ToUrlFriendly(product.ProductName);
+                product.DateCreated = DateTime.Now;
+                product.DateModified = DateTime.Now;
                 _context.Add(product);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -135,7 +149,7 @@ namespace EShop.Areas.Admin.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ProductId,ProductName,ShortDesc,Descriptions,CateId,Price,Discount,ThumbImg,Video,DateCreated,DateModified,IsBestsellers,Homeflag,IsActived,Tag,Title,Alias,UnitInStock")] Product product)
+        public async Task<IActionResult> Edit(int id, [Bind("ProductId,ProductName,ShortDesc,Descriptions,CateId,Price,Discount,ThumbImg,Video,DateCreated,DateModified,IsBestsellers,Homeflag,IsActived,Tag,Title,Alias,UnitInStock")] Product product, Microsoft.AspNetCore.Http.IFormFile fThumbImg)
         {
             if (id != product.ProductId)
             {
@@ -146,6 +160,16 @@ namespace EShop.Areas.Admin.Controllers
             {
                 try
                 {
+                    product.ProductName = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(product.ProductName);
+                    if (fThumbImg != null)
+                    {
+                        string extennsion = Path.GetExtension(fThumbImg.FileName);
+                        string image = Utilities.ToUrlFriendly(product.ProductName) + extennsion;
+                        product.ThumbImg = await Utilities.UploadFile(fThumbImg, @"products", image.ToLower());
+                    }
+                    if (string.IsNullOrEmpty(product.ThumbImg)) product.ThumbImg = "thumb-6.jpg";
+                    product.Alias = Utilities.ToUrlFriendly(product.ProductName);
+                    product.DateModified = DateTime.Now;
                     _context.Update(product);
                     await _context.SaveChangesAsync();
                 }
