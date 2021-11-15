@@ -14,6 +14,7 @@ namespace EShop.Models
         }
         //khi nào Db đầy đủ thì cast ra
         public int CustommerId { get; set; }
+        public string Username { get; set; }
         //[Required(ErrorMessage = "Mật khẩu không được để trống!")]
         //[DataType(DataType.Password)]
         //[StringLength(100, ErrorMessage = "Mật khẩu không vượt quá 100 kí tự")]
