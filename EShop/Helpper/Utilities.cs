@@ -64,7 +64,8 @@ namespace EShop.Helpper
                 }
                 else
                 {
-                    string fullPath = path + "//" + newname;
+                    string fullPath = path + "\\" + newname;
+                    //DeleteImage(sDirectory, newname);
                     using (var stream = new FileStream(fullPath, FileMode.Create))
                     {
                         await file.CopyToAsync(stream);
@@ -75,6 +76,16 @@ namespace EShop.Helpper
             catch
             {
                 return null;
+            }
+        }
+
+        public static void DeleteImage(string sDirectory, string imageName = null)
+        {
+            string path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", sDirectory);
+            string fullPath = path + "\\" + imageName;
+            if (System.IO.File.Exists(fullPath))
+            {
+                System.IO.File.Delete(fullPath);
             }
         }
     }
