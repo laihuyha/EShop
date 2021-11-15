@@ -5,12 +5,12 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using System.Globalization;
 
 namespace EShop.Helpper
 {
     public static class Utilities
     {
-
         public static string ToVnd(this double donGia)
         {
             return donGia.ToString("#,##0") + " đ";
