@@ -4,138 +4,141 @@
     ViewData["Title"] = "Edit";
     Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
 }
-
-<div class="main-content">
-    <form asp-action="Edit">
-        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-        <input type="hidden" asp-for="ProductId" />
-        <div class="page-header no-gutters has-tab">
-            <div class="d-md-flex m-b-15 align-items-center justify-content-between">
-                <div class="media align-items-center m-b-15">
-                    <div class="avatar avatar-image rounded" style="height: 70px; width: 70px">
-                        <img src="~/_AdminAssets/images/others/thumb-16.jpg" alt="">
+<div style="margin-top:10%">
+    <h1>Edit</h1>
+    <h4>Product</h4>
+    <hr />
+    <div class="main-content">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="ProductId" />
+            <div class="page-header no-gutters has-tab">
+                <div class="d-md-flex m-b-15 align-items-center justify-content-between">
+                    <div class="media align-items-center m-b-15">
+                        <div class="avatar avatar-image rounded" style="height: 70px; width: 70px">
+                            <img src="~/_AdminAssets/images/others/thumb-16.jpg" alt="">
+                        </div>
+                        <div class="m-l-15">
+                            <h4 class="m-b-0">@Model.ProductName</h4>
+                            <p class="text-muted m-b-0">ID: #@Model.ProductId</p>
+                        </div>
                     </div>
-                    <div class="m-l-15">
-                        <h4 class="m-b-0">@Model.ProductName</h4>
-                        <p class="text-muted m-b-0">ID: #@Model.ProductId</p>
+                    <div class="m-b-15">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="anticon anticon-save"></i>
+                            <span>Lưu</span>
+                        </button>
                     </div>
                 </div>
-                <div class="m-b-15">
-                    <button type="submit" class="btn btn-primary">
-                        <i class="anticon anticon-save"></i>
-                        <span>Lưu</span>
-                    </button>
+                <ul class="nav nav-tabs">
+                    <li class="nav-item">
+                        <a class="nav-link active" data-toggle="tab" href="#product-edit-basic">Thông tin cơ bản</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-toggle="tab" href="#product-edit-option">Option Info</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-toggle="tab" href="#product-edit-description">Mô tả</a>
+                    </li>
+                </ul>
+            </div>
+            <div class="tab-content m-t-15">
+                <div class="tab-pane fade show active" id="product-edit-basic">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="form-group">
+                                <label class="font-weight-semibold" for="productName">Tên sản phẩm</label>
+                                <input asp-for="ProductName" class="form-control" placeholder="Tên của sản phấm" />
+                                <span asp-validation-for="ProductName" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label class="font-weight-semibold" for="productPrice">Giá</label>
+                                <input asp-for="Price" class="form-control" placeholder="giá sản phẩm" />
+                                <span asp-validation-for="Price" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label class="font-weight-semibold" for="productCategory">Danh mục</label>
+                                <select asp-for="CateId" class="form-control" asp-items="ViewBag.CateId"></select>
+                                <span asp-validation-for="CateId" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label class="font-weight-semibold" for="productBrand">Tồn kho</label>
+                                <input asp-for="UnitInStock" class="form-control" placeholder="số lượng tồn" />
+                                <span asp-validation-for="UnitInStock" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label class="font-weight-semibold" for="productStatus">Tag</label>
+                                <input asp-for="Tag" class="form-control" />
+                                <span asp-validation-for="Tag" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="product-edit-option">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="form-group form-check">
+                                <label class="form-check-label">
+                                    <input class="form-check-input" asp-for="IsActived" />Is Actived?
+                                </label>
+                            </div>
+                            <div class="form-group form-check">
+                                <label class="form-check-label">
+                                    <input class="form-check-input" asp-for="IsBestsellers" />Is Bestseller?
+                                </label>
+                            </div>
+                            <div class="form-group">
+                                <label class="font-weight-semibold" for="productFit">Fit</label>
+                                <select class="custom-select" id="productFit">
+                                    <option value="skinny" selected>Skinny</option>
+                                    <option value="slim">Slim</option>
+                                    <option value="regular">Regular</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="font-weight-semibold" for="productMaterial">Material</label>
+                                <select class="select2" id="productMaterial" multiple="multiple">
+                                    <option value="polyester" selected>Polyester</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="font-weight-semibold" for="productShip">Ship From</label>
+                                <select class="custom-select" id="productShip">
+                                    <option value="columbia" selected>Columbia</option>
+                                    <option value="brazil">Brazil</option>
+                                    <option value="chile">Chile</option>
+                                    <option value="argentina">Argentina</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="product-edit-description">
+                    <div class="card">
+                        <div class="card-body">
+                            <div id="productDescription">
+                                <p>
+                                    Special cloth alert. The key to more success is to have a lot of pillows. Surround
+                                    yourself with angels, positive energy, beautiful people, beautiful souls, clean heart,
+                                    angel. They will try to close the door on you, just open it. A major key, never panic.
+                                    Don’t panic, when it gets crazy and rough, don’t panic, stay calm. They key is to have
+                                    every key, the key to open every door.The other day the grass was brown, now it’s green
+                                    because I ain’t give up. Never surrender. Lion! I’m up to something. Always remember in
+                                    the jungle there’s a lot of they in there, after you overcome they, you will make it to
+                                    paradise.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <ul class="nav nav-tabs">
-                <li class="nav-item">
-                    <a class="nav-link active" data-toggle="tab" href="#product-edit-basic">Thông tin cơ bản</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" data-toggle="tab" href="#product-edit-option">Option Info</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" data-toggle="tab" href="#product-edit-description">Mô tả</a>
-                </li>
-            </ul>
-        </div>
-        <div class="tab-content m-t-15">
-            <div class="tab-pane fade show active" id="product-edit-basic">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="form-group">
-                            <label class="font-weight-semibold" for="productName">Tên sản phẩm</label>
-                            <input asp-for="ProductName" class="form-control" placeholder="Tên của sản phấm" />
-                            <span asp-validation-for="ProductName" class="text-danger"></span>
-                        </div>
-                        <div class="form-group">
-                            <label class="font-weight-semibold" for="productPrice">Giá</label>
-                            <input asp-for="Price" class="form-control" placeholder="giá sản phẩm" />
-                            <span asp-validation-for="Price" class="text-danger"></span>
-                        </div>
-                        <div class="form-group">
-                            <label class="font-weight-semibold" for="productCategory">Danh mục</label>
-                            <select asp-for="CateId" class="form-control" asp-items="ViewBag.CateId"></select>
-                            <span asp-validation-for="CateId" class="text-danger"></span>
-                        </div>
-                        <div class="form-group">
-                            <label class="font-weight-semibold" for="productBrand">Tổn kho</label>
-                            <input asp-for="UnitInStock" class="form-control" placeholder="số lượng tồn" />
-                            <span asp-validation-for="UnitInStock" class="text-danger"></span>
-                        </div>
-                        <div class="form-group">
-                            <label class="font-weight-semibold" for="productStatus">Tag</label>
-                            <input asp-for="Tag" class="form-control" />
-                            <span asp-validation-for="Tag" class="text-danger"></span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="tab-pane fade" id="product-edit-option">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="form-group form-check">
-                            <label class="form-check-label">
-                                <input class="form-check-input" asp-for="IsActived" />Is Actived?
-                            </label>
-                        </div>
-                        <div class="form-group form-check">
-                            <label class="form-check-label">
-                                <input class="form-check-input" asp-for="IsBestsellers" />Is Bestseller?
-                            </label>
-                        </div>
-                        <div class="form-group">
-                            <label class="font-weight-semibold" for="productFit">Fit</label>
-                            <select class="custom-select" id="productFit">
-                                <option value="skinny" selected>Skinny</option>
-                                <option value="slim">Slim</option>
-                                <option value="regular">Regular</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label class="font-weight-semibold" for="productMaterial">Material</label>
-                            <select class="select2" id="productMaterial" multiple="multiple">
-                                <option value="polyester" selected>Polyester</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label class="font-weight-semibold" for="productShip">Ship From</label>
-                            <select class="custom-select" id="productShip">
-                                <option value="columbia" selected>Columbia</option>
-                                <option value="brazil">Brazil</option>
-                                <option value="chile">Chile</option>
-                                <option value="argentina">Argentina</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="tab-pane fade" id="product-edit-description">
-                <div class="card">
-                    <div class="card-body">
-                        <div id="productDescription">
-                            <p>
-                                Special cloth alert. The key to more success is to have a lot of pillows. Surround
-                                yourself with angels, positive energy, beautiful people, beautiful souls, clean heart,
-                                angel. They will try to close the door on you, just open it. A major key, never panic.
-                                Don’t panic, when it gets crazy and rough, don’t panic, stay calm. They key is to have
-                                every key, the key to open every door.The other day the grass was brown, now it’s green
-                                because I ain’t give up. Never surrender. Lion! I’m up to something. Always remember in
-                                the jungle there’s a lot of they in there, after you overcome they, you will make it to
-                                paradise.
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </form>
+        </form>
+    </div>
 </div>
+    <div>
+        <a asp-action="Index">Back to List</a>
+    </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
-
-@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-}
+    @section Scripts {
+        @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    }
