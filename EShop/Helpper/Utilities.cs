@@ -13,7 +13,7 @@ namespace EShop.Helpper
     {
         public static string ToVnd(this double donGia)
         {
-            return donGia.ToString("#,##0") + " đ";
+            return donGia.ToString("#,##0") + " VNĐ";
         }
 
         public static string ToUrlFriendly(this string url)
