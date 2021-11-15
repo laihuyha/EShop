@@ -219,6 +219,14 @@ namespace EShop.Areas.Admin.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var product = await _context.Products.FindAsync(id);
+            string imageName = product.ProductName.ToLower() + ".png";
+            //string fullPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot\\images\\products\\" + imageName);
+            //if (System.IO.File.Exists(fullPath))
+            //{
+            //    System.IO.File.Delete(fullPath);
+            //}
+            //Utilities.DeleteImage(@"products",imageName);
+            Utilities.DeleteImage(@"products", imageName);
             _context.Products.Remove(product);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));

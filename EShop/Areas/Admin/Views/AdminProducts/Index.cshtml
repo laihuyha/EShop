@@ -117,6 +117,9 @@
                                         <a asp-controller="AdminProducts" asp-action="Edit" asp-route-id="@item.ProductId" class="btn btn-icon btn-hover btn-sm btn-rounded">
                                             <i class="anticon anticon-edit"></i>
                                         </a>
+                                        @*<button type="button" class="btn btn-icon btn-hover btn-sm btn-rounded" data-toggle="modal" data-target="#exampleModalCenter">
+                                            <i class="anticon anticon-delete"></i>
+                                        </button>*@
                                         <a asp-controller="AdminProducts" asp-action="Delete" asp-route-id="@item.ProductId" class="btn btn-icon btn-hover btn-sm btn-rounded">
                                             <i class="anticon anticon-delete"></i>
                                         </a>
@@ -131,6 +134,28 @@
         </div>
     </div>
 </div>
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModalCenter">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalCenterTitle">Modal title</h5>
+                <button type="button" class="close" data-dismiss="modal">
+                    <i class="anticon anticon-close"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                Bạn có chắc muốn xóa nó chứ?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-danger">Xóa</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <style>
     form {
         position: relative;
