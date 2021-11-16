@@ -10,6 +10,7 @@ using PagedList.Core;
 using System.Globalization;
 using System.IO;
 using EShop.Helpper;
+using AspNetCoreHero.ToastNotification.Abstractions;
 
 namespace EShop.Areas.Admin.Controllers
 {
@@ -17,9 +18,12 @@ namespace EShop.Areas.Admin.Controllers
     public class AdminCategoriesController : Controller
     {
         private readonly EcommerceVer2Context _context;
+        public static string image;
+        public INotyfService _notyfService { get; }
 
-        public AdminCategoriesController(EcommerceVer2Context context)
+        public AdminCategoriesController(EcommerceVer2Context context, INotyfService notyfService)
         {
+            _notyfService = notyfService;
             _context = context;
         }
 
@@ -112,12 +116,13 @@ namespace EShop.Areas.Admin.Controllers
                 if (fThumbImg != null)
                 {
                     string extennsion = Path.GetExtension(fThumbImg.FileName);
-                    string image = Utilities.ToUrlFriendly(category.CategoryName) + extennsion;
+                    image = Utilities.ToUrlFriendly(category.CategoryName) + extennsion;
                     category.ThumbImg = await Utilities.UploadFile(fThumbImg, @"categories", image.ToLower());
                 }
                 if (string.IsNullOrEmpty(category.ThumbImg)) category.ThumbImg = "thumb-6.jpg";
                 category.Alias = Utilities.ToUrlFriendly(category.CategoryName);
                 _context.Add(category);
+                _notyfService.Success("Thêm thành công!");
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
@@ -159,18 +164,20 @@ namespace EShop.Areas.Admin.Controllers
                     if (fThumbImg != null)
                     {
                         string extennsion = Path.GetExtension(fThumbImg.FileName);
-                        string image = Utilities.ToUrlFriendly(category.CategoryName) + extennsion;
+                        image = Utilities.ToUrlFriendly(category.CategoryName) + extennsion;
                         category.ThumbImg = await Utilities.UploadFile(fThumbImg, @"categories", image.ToLower());
                     }
                     if (string.IsNullOrEmpty(category.ThumbImg)) category.ThumbImg = "thumb-6.jpg";
                     category.Alias = Utilities.ToUrlFriendly(category.CategoryName);
                     _context.Update(category);
+                    _notyfService.Success("Sửa thành công!");
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
                     if (!CategoryExists(category.CateId))
                     {
+                        _notyfService.Error("Lỗi!!!!!!!!!!!!!");
                         return NotFound();
                     }
                     else
@@ -207,7 +214,10 @@ namespace EShop.Areas.Admin.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var category = await _context.Categories.FindAsync(id);
+            string imageName = image.ToLower() +
             _context.Categories.Remove(category);
+            Utilities.DeleteImage(@"User", imageName);
+            _notyfService.Success("Xóa thành công!");
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }

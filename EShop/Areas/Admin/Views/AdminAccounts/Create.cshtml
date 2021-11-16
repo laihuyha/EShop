@@ -4,8 +4,8 @@
     ViewData["Title"] = "Create";
     Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
 }
-<div style="align-items: center; margin-top: 5%;">
-    <div class="col-lg-12 bg-white">
+<div style="align-items: center; margin-top: 7%; margin-left: 10%;">
+    <div class="col-lg-10" style="background: #AFE3EE; border-radius:50px;">
         <div class="container h-100">
             <div class="row no-gutters h-100 align-items-center">
                 <div class="col-md-8 col-lg-7 col-xl-6 mx-auto">
@@ -52,17 +52,16 @@
                             <label asp-for="RoleId" class="control-label"></label>
                             <select asp-for="RoleId" class="form-control" asp-items="ViewBag.RoleId"></select>
                         </div>
-                        <div class="form-group form-check">
-                            <label class="form-check-label">
-                                <input class="form-check-input" asp-for="IsActived" /> @Html.DisplayNameFor(model => model.IsActived)
-                            </label>
-                        </div>
-                        <div class="form-group">
-                            <label asp-for="CartId" class="control-label"></label>
-                            <select asp-for="CartId" class="form-control" asp-items="ViewBag.CartId"></select>
+                        <div class="row" style="margin-left: 3px; margin-bottom:10px;">
+                            <div class="switch m-r-10">
+                                <input type="checkbox" asp-for="IsActived" checked="" />
+                                <label for="IsActived"></label>
+                            </div>
+                            <label>Actived</label>
                         </div>
                         <div class="form-group">
                             <input type="submit" value="Create" class="btn btn-primary" />
+                            <a asp-action="Index" class="btn btn-dark" style="margin-left:10px;">Back to list</a>
                         </div>
                     </form>
                 </div>

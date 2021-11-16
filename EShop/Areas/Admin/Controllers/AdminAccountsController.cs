@@ -1,4 +1,5 @@
-﻿using EShop.Models;
+﻿using AspNetCoreHero.ToastNotification.Abstractions;
+using EShop.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -12,10 +13,12 @@ namespace EShop.Areas.Admin.Controllers
     public class AdminAccountsController : Controller
     {
         private readonly EcommerceVer2Context _context;
+        public INotyfService _notyfService { get; }
 
-        public AdminAccountsController(EcommerceVer2Context context)
+        public AdminAccountsController(EcommerceVer2Context context, INotyfService notyfService)
         {
             _context = context;
+            _notyfService = notyfService;
         }
 
         // GET: Admin/AdminAccounts
@@ -72,6 +75,7 @@ namespace EShop.Areas.Admin.Controllers
             if (ModelState.IsValid)
             {
                 _context.Add(account);
+                _notyfService.Success("Thêm thành công!");
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
@@ -115,12 +119,14 @@ namespace EShop.Areas.Admin.Controllers
                 try
                 {
                     _context.Update(account);
+                    _notyfService.Success("Sửa thành công!");
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
                     if (!AccountExists(account.UserId))
                     {
+                        _notyfService.Error("Lỗiiiiiiiii!!!!!");
                         return NotFound();
                     }
                     else
@@ -162,6 +168,7 @@ namespace EShop.Areas.Admin.Controllers
         {
             var account = await _context.Accounts.FindAsync(id);
             _context.Accounts.Remove(account);
+            _notyfService.Success("Xóa thành công!");
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }

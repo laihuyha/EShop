@@ -10,6 +10,7 @@ using PagedList.Core;
 using EShop.Helpper;
 using System.IO;
 using System.Globalization;
+using AspNetCoreHero.ToastNotification.Abstractions;
 
 namespace EShop.Areas.Admin.Controllers
 {
@@ -17,9 +18,11 @@ namespace EShop.Areas.Admin.Controllers
     public class AdminCustomersController : Controller
     {
         private readonly EcommerceVer2Context _context;
-
-        public AdminCustomersController(EcommerceVer2Context context)
+        public static string image;
+        public INotyfService _notyfService { get; }
+        public AdminCustomersController(EcommerceVer2Context context, INotyfService notyfService)
         {
+            _notyfService = notyfService;
             _context = context;
         }
 
@@ -103,13 +106,14 @@ namespace EShop.Areas.Admin.Controllers
                 if (fAvatar != null)
                 {
                     string extennsion = Path.GetExtension(fAvatar.FileName);
-                    string image = Utilities.ToUrlFriendly(customer.FullName) + extennsion;
+                    image = Utilities.ToUrlFriendly(customer.FullName) + extennsion;
                     customer.Avatar = await Utilities.UploadFile(fAvatar, @"User", image.ToLower());
                 }
                 if (string.IsNullOrEmpty(customer.Avatar)) customer.Avatar = "avatar.png";
                 customer.CreateDate = DateTime.Now;
                 customer.LastLogin = DateTime.Now;
                 _context.Add(customer);
+                _notyfService.Success("Thêm thành công!");
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
@@ -154,11 +158,12 @@ namespace EShop.Areas.Admin.Controllers
                     if (fAvatar != null)
                     {
                         string extennsion = Path.GetExtension(fAvatar.FileName);
-                        string image = Utilities.ToUrlFriendly(customer.FullName) + extennsion;
+                        image = Utilities.ToUrlFriendly(customer.FullName) + extennsion;
                         customer.Avatar = await Utilities.UploadFile(fAvatar, @"User", image.ToLower());
                     }
                     if (string.IsNullOrEmpty(customer.Avatar)) customer.Avatar = "avatar.png";
                     customer.LastLogin = DateTime.Now;
+                    _notyfService.Success("Sửa thành công!");
                     _context.Update(customer);
                     await _context.SaveChangesAsync();
                 }
@@ -166,6 +171,7 @@ namespace EShop.Areas.Admin.Controllers
                 {
                     if (!CustomerExists(customer.CustommerId))
                     {
+                        _notyfService.Error("Lỗi!!!!!!!!!!!!");
                         return NotFound();
                     }
                     else
@@ -204,9 +210,10 @@ namespace EShop.Areas.Admin.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var customer = await _context.Customers.FindAsync(id);
-            string imageName = customer.FullName.ToLower() + ".png";
+            string imageName = image.ToLower();
             Utilities.DeleteImage(@"User", imageName);
             _context.Customers.Remove(customer);
+            _notyfService.Success("Xóa thành công!");
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
