@@ -7,6 +7,9 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using EShop.Models;
 using PagedList.Core;
+using System.Globalization;
+using System.IO;
+using EShop.Helpper;
 
 namespace EShop.Areas.Admin.Controllers
 {
@@ -61,7 +64,7 @@ namespace EShop.Areas.Admin.Controllers
             ViewData["CurrentFilter"] = searchStr;
             if (!String.IsNullOrEmpty(searchStr))
             {
-                _category = _category.Where(p => p.CateId.ToString().Contains(searchStr) || p.CategoryName.Contains(searchStr) || p.Descriptions.Contains(searchStr)|| p.Title.Contains(searchStr));
+                _category = _category.Where(p => p.CateId.ToString().Contains(searchStr) || p.CategoryName.Contains(searchStr) || p.Descriptions.Contains(searchStr) || p.Title.Contains(searchStr));
             }
 
             //Paginate
@@ -101,10 +104,19 @@ namespace EShop.Areas.Admin.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("CateId,CategoryName,Descriptions,ParentId,Levels,Ordering,IsPublished,ThumbImg,Title,Alias,Cover")] Category category)
+        public async Task<IActionResult> Create([Bind("CateId,CategoryName,Descriptions,ParentId,Levels,Ordering,IsPublished,ThumbImg,Title,Alias,Cover")] Category category, Microsoft.AspNetCore.Http.IFormFile fThumbImg)
         {
             if (ModelState.IsValid)
             {
+                category.CategoryName = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(category.CategoryName);
+                if (fThumbImg != null)
+                {
+                    string extennsion = Path.GetExtension(fThumbImg.FileName);
+                    string image = Utilities.ToUrlFriendly(category.CategoryName) + extennsion;
+                    category.ThumbImg = await Utilities.UploadFile(fThumbImg, @"categories", image.ToLower());
+                }
+                if (string.IsNullOrEmpty(category.ThumbImg)) category.ThumbImg = "thumb-6.jpg";
+                category.Alias = Utilities.ToUrlFriendly(category.CategoryName);
                 _context.Add(category);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -133,17 +145,25 @@ namespace EShop.Areas.Admin.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("CateId,CategoryName,Descriptions,ParentId,Levels,Ordering,IsPublished,ThumbImg,Title,Alias,Cover")] Category category)
+        public async Task<IActionResult> Edit(int id, [Bind("CateId,CategoryName,Descriptions,ParentId,Levels,Ordering,IsPublished,ThumbImg,Title,Alias,Cover")] Category category, Microsoft.AspNetCore.Http.IFormFile fThumbImg)
         {
             if (id != category.CateId)
             {
                 return NotFound();
             }
-
             if (ModelState.IsValid)
             {
                 try
                 {
+                    category.CategoryName = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(category.CategoryName);
+                    if (fThumbImg != null)
+                    {
+                        string extennsion = Path.GetExtension(fThumbImg.FileName);
+                        string image = Utilities.ToUrlFriendly(category.CategoryName) + extennsion;
+                        category.ThumbImg = await Utilities.UploadFile(fThumbImg, @"categories", image.ToLower());
+                    }
+                    if (string.IsNullOrEmpty(category.ThumbImg)) category.ThumbImg = "thumb-6.jpg";
+                    category.Alias = Utilities.ToUrlFriendly(category.CategoryName);
                     _context.Update(category);
                     await _context.SaveChangesAsync();
                 }

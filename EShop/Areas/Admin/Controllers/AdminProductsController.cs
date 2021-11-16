@@ -1,15 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using EShop.Helpper;
+using EShop.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using EShop.Models;
 using PagedList.Core;
-using EShop.Helpper;
+using System;
 using System.Globalization;
 using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace EShop.Areas.Admin.Controllers
 {
@@ -109,7 +108,7 @@ namespace EShop.Areas.Admin.Controllers
             if (ModelState.IsValid)
             {
                 product.ProductName = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(product.ProductName);
-                if(fThumbImg != null)
+                if (fThumbImg != null)
                 {
                     string extennsion = Path.GetExtension(fThumbImg.FileName);
                     string image = Utilities.ToUrlFriendly(product.ProductName) + extennsion;
