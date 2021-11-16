@@ -1,14 +1,15 @@
-﻿using EShop.Helpper;
-using EShop.Models;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using EShop.Models;
 using PagedList.Core;
-using System;
-using System.Globalization;
+using EShop.Helpper;
 using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
+using System.Globalization;
 
 namespace EShop.Areas.Admin.Controllers
 {
@@ -23,13 +24,13 @@ namespace EShop.Areas.Admin.Controllers
         }
 
         // GET: Admin/AdminCustomers
-        public IActionResult Index(string sortOrder,string currentFilter, string searchStr,int? page)
+        public IActionResult Index(string sortOrder, string currentFilter, string searchStr, int? page)
         {
             //Sort
             ViewData["NameSortParm"] = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
             ViewData["DateSortParm"] = sortOrder == "Date" ? "date_desc" : "Date";
             ViewData["CurrentSort"] = sortOrder;
-            var _customer = from m in _context.Customers.Include(m=>m.Location) select m;
+            var _customer = from m in _context.Customers.Include(m => m.Cart) select m;
             switch (sortOrder)
             {
                 case "name_desc":
@@ -50,21 +51,18 @@ namespace EShop.Areas.Admin.Controllers
             ViewData["CurrentFilter"] = searchStr;
             if (!String.IsNullOrEmpty(searchStr))
             {
-                _customer = _customer.Where(s => s.FullName.Contains(searchStr) || s.CustommerId.ToString().Contains(searchStr) || s.Mail.Contains(searchStr) || s.Phone.Contains(searchStr));
+                _customer = _customer.Where(s => s.FullName.Contains(searchStr) || s.CustommerId.ToString().Contains(searchStr) || s.Mail.Contains(searchStr) || s.Phone.Contains(searchStr) || s.Province.Contains(searchStr)|| s.Ward.Contains(searchStr) || s.District.Contains(searchStr));
             }
 
             //Khai báo để phân trang
             var pageNo = page == null || page <= 0 ? 1 : page.Value;
             var pageSize = 5; /*Utilities.PAGE_SIZE;*/
-            var lstCustomer = _context.Customers
-                .AsNoTracking()
-                .Include(x => x.Location)
-                .OrderBy(x => x.CustommerId);
             PagedList<Customer> models = new PagedList<Customer>(_customer, pageNo, pageSize);
 
             ViewBag.CurrentPage = pageNo;
             return View(models);
         }
+
 
         // GET: Admin/AdminCustomers/Details/5
         public async Task<IActionResult> Details(int? id)
@@ -75,7 +73,7 @@ namespace EShop.Areas.Admin.Controllers
             }
 
             var customer = await _context.Customers
-                .Include(c => c.Location)
+                .Include(c => c.Cart)
                 .FirstOrDefaultAsync(m => m.CustommerId == id);
             if (customer == null)
             {
@@ -88,7 +86,7 @@ namespace EShop.Areas.Admin.Controllers
         // GET: Admin/AdminCustomers/Create
         public IActionResult Create()
         {
-            ViewData["LocationId"] = new SelectList(_context.Locations, "LocationId", "Name");
+            ViewData["CartId"] = new SelectList(_context.Carts, "CartId", "CartId");
             return View();
         }
 
@@ -97,7 +95,7 @@ namespace EShop.Areas.Admin.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("CustommerId,Password,FullName,BirthDay,Avatar,Address,Mail,Phone,LocationId,District,Ward,CreateDate,LastLogin,IsActived")] Customer customer, Microsoft.AspNetCore.Http.IFormFile fAvatar)
+        public async Task<IActionResult> Create([Bind("CustommerId,Username,Password,FullName,BirthDay,Avatar,Address,Mail,Phone,Province,District,Ward,CreateDate,LastLogin,IsActived,CartId")] Customer customer, Microsoft.AspNetCore.Http.IFormFile fAvatar)
         {
             if (ModelState.IsValid)
             {
@@ -115,7 +113,7 @@ namespace EShop.Areas.Admin.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["LocationId"] = new SelectList(_context.Locations, "LocationId", "Name", customer.LocationId);
+            ViewData["CartId"] = new SelectList(_context.Carts, "CartId", "CartId", customer.CartId);
             return View(customer);
         }
 
@@ -132,7 +130,7 @@ namespace EShop.Areas.Admin.Controllers
             {
                 return NotFound();
             }
-            ViewData["LocationId"] = new SelectList(_context.Locations, "LocationId", "Name", customer.LocationId);
+            ViewData["CartId"] = new SelectList(_context.Carts, "CartId", "CartId", customer.CartId);
             return View(customer);
         }
 
@@ -141,7 +139,7 @@ namespace EShop.Areas.Admin.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("CustommerId,Password,FullName,BirthDay,Avatar,Address,Mail,Phone,LocationId,District,Ward,CreateDate,LastLogin,IsActived")] Customer customer, Microsoft.AspNetCore.Http.IFormFile fAvatar)
+        public async Task<IActionResult> Edit(int id, [Bind("CustommerId,Username,Password,FullName,BirthDay,Avatar,Address,Mail,Phone,Province,District,Ward,CreateDate,LastLogin,IsActived,CartId")] Customer customer, Microsoft.AspNetCore.Http.IFormFile fAvatar)
         {
             if (id != customer.CustommerId)
             {
@@ -177,7 +175,7 @@ namespace EShop.Areas.Admin.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["LocationId"] = new SelectList(_context.Locations, "LocationId", "Name", customer.LocationId);
+            ViewData["CartId"] = new SelectList(_context.Carts, "CartId", "CartId", customer.CartId);
             return View(customer);
         }
 
@@ -190,7 +188,7 @@ namespace EShop.Areas.Admin.Controllers
             }
 
             var customer = await _context.Customers
-                .Include(c => c.Location)
+                .Include(c => c.Cart)
                 .FirstOrDefaultAsync(m => m.CustommerId == id);
             if (customer == null)
             {
@@ -206,6 +204,8 @@ namespace EShop.Areas.Admin.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var customer = await _context.Customers.FindAsync(id);
+            string imageName = customer.FullName.ToLower() + ".png";
+            Utilities.DeleteImage(@"User", imageName);
             _context.Customers.Remove(customer);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));

@@ -11,6 +11,7 @@ namespace EShop.Models
         public Cart()
         {
             Accounts = new HashSet<Account>();
+            Customers = new HashSet<Customer>();
         }
 
         public int CartId { get; set; }
@@ -25,5 +26,6 @@ namespace EShop.Models
         public DateTime? DateCreated { get; set; }
 
         public virtual ICollection<Account> Accounts { get; set; }
+        public virtual ICollection<Customer> Customers { get; set; }
     }
 }

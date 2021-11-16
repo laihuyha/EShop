@@ -53,18 +53,33 @@
                     <span asp-validation-for="Phone" class="text-danger"></span>
                 </div>
                 <div class="form-group">
-                    <label asp-for="LocationId" class="control-label">Thành phố</label>
-                    <select asp-for="LocationId" class="form-control" asp-items="ViewBag.LocationId"></select>
+                    <label asp-for="Province" class="control-label">Thành phố</label>
+                    <div class="col-md-10">
+                        <select class="form-control" id="Province" name="Province" onchange="changeFunction();">
+                            <option value="" selected></option>
+                        </select>
+                        <input class="billing_address_1" name="Province" type="hidden" value="">
+                        <span asp-validation-for="Province" class="text-danger"></span>
+                    </div>
                 </div>
                 <div class="form-group">
                     <label asp-for="District" class="control-label"></label>
-                    <input asp-for="District" class="form-control" />
-                    <span asp-validation-for="District" class="text-danger"></span>
+                    <div class="col-md-10">
+                        <select class="form-control" id="District" name="District" onchange="districtChangeFunction();">
+                            <option value="" selected>Quận Huyện</option>
+                        </select>
+                        <input class="billing_address_2" name="District" type="hidden" value="">
+                        <span asp-validation-for="District" class="text-danger"></span>
+                    </div>
                 </div>
                 <div class="form-group">
                     <label asp-for="Ward" class="control-label"></label>
-                    <input asp-for="Ward" class="form-control" />
-                    <span asp-validation-for="Ward" class="text-danger"></span>
+                    <div class="col-md-10">
+                        <select class="form-control" id="Ward" name="Ward" aria-placeholder="Quận Huyện">
+                            <option value="" selected>Phường xã</option>
+                        </select>
+                        <span asp-validation-for="Ward" class="text-danger"></span>
+                    </div>
                 </div>
                 <div class="form-group d-flex align-items-center">
                     <div class="switch m-r-10">
@@ -81,3 +96,78 @@
         </div>
     </div>
 </div>
+
+@section scripts
+{
+    <script>
+        $(document).ready(function () {
+            var province = document.getElementById("Province");
+            window.onload = function () {
+                $.ajax({
+                    url: "https://dev-online-gateway.ghn.vn/shiip/public-api/master-data/province",
+                    headers: {
+                        "token": "ec9c3a6c-46a9-11ec-ac64-422c37c6de1b",
+                    },
+                    type: "GET",
+                    dataType: 'json',
+                    success: function (response) {
+                        console.log('success: ' + response.code);
+                        var str = "<option selected>Tỉnh thành</option> ";
+                        for (var i = 0; i < response.data.length; i++) {
+                            console.log(response.data[i].ProvinceName);
+                            str = str + "<option class='provinceId' data-province='" + response.data[i].ProvinceID + "'>" + response.data[i].ProvinceName + "</option>";
+                        }
+                        province.innerHTML = str;
+                    }
+                });
+            };
+        })
+        function changeFunction() {
+            var selectBox = document.getElementById("Province");
+            var selectedValue = selectBox.options[selectBox.selectedIndex].getAttribute('data-province');
+            var district = document.getElementById("District");
+            $.ajax({
+                url: "https://dev-online-gateway.ghn.vn/shiip/public-api/master-data/district",
+                headers: {
+                    'token': 'ec9c3a6c-46a9-11ec-ac64-422c37c6de1b',
+                    'Content-type': 'application/json'
+                },
+                method: 'GET',
+                dataType: 'json',
+                success: function (response) {
+                    var str = "<option selected>Quận Huyện</option>";
+                    for (var i = 0; i < response.data.length; i++) {
+                        if (response.data[i].ProvinceID == selectedValue) {
+                            str = str + "<option class='districtId' data-district='" + response.data[i].DistrictID + "'>" + response.data[i].DistrictName + "</option>";
+                        }
+                    }
+                    district.innerHTML = str;
+                }
+            });
+        };
+        function districtChangeFunction() {
+            var selectBox = document.getElementById("District");
+            var selectedValue = selectBox.options[selectBox.selectedIndex].getAttribute('data-district');
+            var guild = document.getElementById("Ward");
+            $.ajax({
+                url: "https://dev-online-gateway.ghn.vn/shiip/public-api/master-data/ward?district_id=" + selectedValue,
+                headers: {
+                    'token': 'ec9c3a6c-46a9-11ec-ac64-422c37c6de1b',
+                    'Content-type': 'application/json'
+                },
+                method: 'GET',
+                dataType: 'json',
+                success: function (response) {
+                    var str = "<option selected>Phường xã</option>";
+                    console.log(response.data.length);
+                    for (var i = 0; i < response.data.length; i++) {
+                        console.log(response.data[i].WardName);
+                        str = str + "<option class='guildId' data-guild='" + response.data[i].WardCode + "'>" + response.data[i].WardName + "</option>";
+                    }
+                    console.log(str);
+                    guild.innerHTML = str;
+                }
+            });
+        }
+    </script>
+}
