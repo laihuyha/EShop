@@ -1,9 +1,12 @@
-﻿using EShop.Models;
+﻿using EShop.Helpper;
+using EShop.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using PagedList.Core;
 using System;
+using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -85,7 +88,7 @@ namespace EShop.Areas.Admin.Controllers
         // GET: Admin/AdminCustomers/Create
         public IActionResult Create()
         {
-            ViewData["LocationId"] = new SelectList(_context.Locations, "LocationId", "LocationId");
+            ViewData["LocationId"] = new SelectList(_context.Locations, "LocationId", "Name");
             return View();
         }
 
@@ -94,15 +97,25 @@ namespace EShop.Areas.Admin.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("CustommerId,Password,FullName,BirthDay,Avatar,Address,Mail,Phone,LocationId,District,Ward,CreateDate,LastLogin,IsActived")] Customer customer)
+        public async Task<IActionResult> Create([Bind("CustommerId,Password,FullName,BirthDay,Avatar,Address,Mail,Phone,LocationId,District,Ward,CreateDate,LastLogin,IsActived")] Customer customer, Microsoft.AspNetCore.Http.IFormFile fAvatar)
         {
             if (ModelState.IsValid)
             {
+                customer.FullName = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(customer.FullName);
+                if (fAvatar != null)
+                {
+                    string extennsion = Path.GetExtension(fAvatar.FileName);
+                    string image = Utilities.ToUrlFriendly(customer.FullName) + extennsion;
+                    customer.Avatar = await Utilities.UploadFile(fAvatar, @"User", image.ToLower());
+                }
+                if (string.IsNullOrEmpty(customer.Avatar)) customer.Avatar = "avatar.png";
+                customer.CreateDate = DateTime.Now;
+                customer.LastLogin = DateTime.Now;
                 _context.Add(customer);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["LocationId"] = new SelectList(_context.Locations, "LocationId", "LocationId", customer.LocationId);
+            ViewData["LocationId"] = new SelectList(_context.Locations, "LocationId", "Name", customer.LocationId);
             return View(customer);
         }
 
@@ -119,7 +132,7 @@ namespace EShop.Areas.Admin.Controllers
             {
                 return NotFound();
             }
-            ViewData["LocationId"] = new SelectList(_context.Locations, "LocationId", "LocationId", customer.LocationId);
+            ViewData["LocationId"] = new SelectList(_context.Locations, "LocationId", "Name", customer.LocationId);
             return View(customer);
         }
 
@@ -128,7 +141,7 @@ namespace EShop.Areas.Admin.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("CustommerId,Password,FullName,BirthDay,Avatar,Address,Mail,Phone,LocationId,District,Ward,CreateDate,LastLogin,IsActived")] Customer customer)
+        public async Task<IActionResult> Edit(int id, [Bind("CustommerId,Password,FullName,BirthDay,Avatar,Address,Mail,Phone,LocationId,District,Ward,CreateDate,LastLogin,IsActived")] Customer customer, Microsoft.AspNetCore.Http.IFormFile fAvatar)
         {
             if (id != customer.CustommerId)
             {
@@ -139,6 +152,15 @@ namespace EShop.Areas.Admin.Controllers
             {
                 try
                 {
+                    customer.FullName = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(customer.FullName);
+                    if (fAvatar != null)
+                    {
+                        string extennsion = Path.GetExtension(fAvatar.FileName);
+                        string image = Utilities.ToUrlFriendly(customer.FullName) + extennsion;
+                        customer.Avatar = await Utilities.UploadFile(fAvatar, @"User", image.ToLower());
+                    }
+                    if (string.IsNullOrEmpty(customer.Avatar)) customer.Avatar = "avatar.png";
+                    customer.LastLogin = DateTime.Now;
                     _context.Update(customer);
                     await _context.SaveChangesAsync();
                 }
@@ -155,7 +177,7 @@ namespace EShop.Areas.Admin.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["LocationId"] = new SelectList(_context.Locations, "LocationId", "LocationId", customer.LocationId);
+            ViewData["LocationId"] = new SelectList(_context.Locations, "LocationId", "Name", customer.LocationId);
             return View(customer);
         }
 

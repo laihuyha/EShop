@@ -118,6 +118,10 @@ namespace EShop.Areas.Admin.Controllers
                 product.Alias = Utilities.ToUrlFriendly(product.ProductName);
                 product.DateCreated = DateTime.Now;
                 product.DateModified = DateTime.Now;
+                if (product.Discount == null)
+                {
+                    product.Discount = 0;
+                }
                 _context.Add(product);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
