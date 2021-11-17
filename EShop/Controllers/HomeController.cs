@@ -35,7 +35,7 @@ namespace EShop.Controllers
         [Route("LatopShop.html", Name = "Laptop Store")]
         public IActionResult Laptops(int? page)
         {
-            var lstLatop = from m in _context.Products.Include(n => n.CateId == 1 && n.IsActived) select m;
+            var lstLatop = from m in _context.Products.Include(n=>n.Cate).Where(n => n.CateId == 1 && n.IsActived == true) select m;
             var pageNo = page == null || page <= 0 ? 1 : page.Value;
             var pageSize = 5;
             PagedList<Product> models = new PagedList<Product>(lstLatop, pageNo, pageSize);
