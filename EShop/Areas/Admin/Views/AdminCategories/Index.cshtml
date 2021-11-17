@@ -81,7 +81,7 @@
                                             <h6 class="m-b-0 m-l-10">@item.CategoryName</h6>
                                         </div>
                                     </td>
-                                    <td class="text-center align-items-center">@item.Descriptions</td>
+                                    <td class="text-center align-items-center">@Html.Raw(item.Descriptions)</td>
                                     @if (item.IsPublished)
                                     {
                                         <td>
