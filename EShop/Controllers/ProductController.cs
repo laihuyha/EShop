@@ -15,7 +15,6 @@ namespace EShop.Controllers
             _context = context;
         }
 
-        [Route("shop.html",Name = "Store")]
         public IActionResult Index(int? page)
         {
             try
@@ -34,6 +33,7 @@ namespace EShop.Controllers
                 throw;
             }
         }
+
         [Route("/{Alias}-{CateId}.html", Name = "ToListProduct")]
         public IActionResult List(int CateId, int page = 1)
         {

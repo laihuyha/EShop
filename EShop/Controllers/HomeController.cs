@@ -23,6 +23,7 @@ namespace EShop.Controllers
             return View();
         }
 
+        [Route("shop.html", Name = "Store")]
         public IActionResult Store()
         {
             return View();

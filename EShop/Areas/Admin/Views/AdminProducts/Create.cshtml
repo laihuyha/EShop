@@ -7,7 +7,7 @@
 
 
 <div class="main-content">
-    <form asp-controller="AdminProducts" asp-action="Create" method="post" enctype="multipart/form-data" >
+    <form asp-controller="AdminProducts" asp-action="Create" method="post" enctype="multipart/form-data">
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
         <div class="page-header no-gutters has-tab">
             <div class="d-md-flex m-b-15 align-items-center justify-content-between">
@@ -122,13 +122,10 @@
                 </div>
             </div>
             <div class="tab-pane fade" id="product-edit-description">
-                <div class="card">
+                <div class="card" style="background: #F0BF87">
                     <div class="card-body">
-                        <div class="form-group">
-                            <label asp-for="Descriptions" class="control-label"></label>
-                            <input asp-for="Descriptions" class="form-control" />
-                            <span asp-validation-for="Descriptions" class="text-danger"></span>
-                        </div>
+                        <label asp-for="Descriptions" class="control-label" style="font-weight :800"></label>
+                        <textarea asp-for="Descriptions" class="summernnote"></textarea>
                     </div>
                 </div>
             </div>
@@ -137,6 +134,21 @@
 </div>
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script src="~/_AdminAssets/js/pages/e-commerce-product-edit.js"></script>
+    <script src="~/_AdminAssets/vendors/select2/select2.min.js"></script>
+    <script src="~/_AdminAssets/summernote/summernote-bs4.js"></script>
+    <script>
+        jQuery(document).ready(function () {
+            $('.summernnote').summernote({
+                fontNames: ['Comic Sans MS'],
+                styleTags: ['p', 'h1', 'h2', 'h3', 'h4', 'h5'],
+                height: 350,
+                minHeight: null,
+                maxHeight: null,
+                focus: true
+            });
+        });
+    </script>
     <script>
         var loadFile = function (event) {
             var image = document.getElementById("output");
@@ -144,4 +156,9 @@
         };
     </script>
 }
+@section Styles {
+    <link href="~/_AdminAssets/summernote/summernote-bs4.css" rel="stylesheet" />
+    <link href="~/_AdminAssets/summernote/summernote.css" rel="stylesheet" />
+}
+
 
