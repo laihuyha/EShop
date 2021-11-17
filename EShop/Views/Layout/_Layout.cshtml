@@ -38,10 +38,10 @@
 </head>
 <body>
     <!-- HEADER -->
-    @await Html.PartialAsync("PartialView/_HeaderPartialView.cshtml")
+    @await Html.PartialAsync("PartialView/_HeaderPartialView.cshtml") <!--Headerpartial-->
     <!-- /HEADER -->
     <!-- NAVIGATION -->
-    @await Html.PartialAsync("PartialView/_NavigationPartialView.cshtml")
+    @await Html.PartialAsync("PartialView/_NavigationPartialView.cshtml") <!--Menupartial-->
     <!-- /NAVIGATION -->
     <!-- SECTION -->
     <div class="section">
@@ -94,7 +94,7 @@
         <!-- /container -->
     </div>
     <!-- /SECTION -->
-    @RenderBody()
+    @RenderBody() <!--2 Partial chứa 2 kiểu sản phẩm-->
     <!-- NEWSLETTER -->
     <div id="newsletter" class="section">
         <!-- container -->

@@ -34,28 +34,6 @@ namespace EShop.Controllers
             }
         }
 
-        [Route("/{Alias}-{CateId}.html", Name = "ToListProduct")]
-        public IActionResult List(int CateId, int page = 1)
-        {
-            try
-            {
-                var _lstproduct = _context.Products
-                    .AsNoTracking().Where(x => x.CateId == CateId)
-                    .OrderByDescending(x => x.ProductId);
-                //Paginate
-                var pageSize = 10;
-                var cate = _context.Categories.Find(CateId);
-                PagedList<Product> models = new PagedList<Product>(_lstproduct, page, pageSize);
-                ViewBag.CurrentPage = page;
-                ViewBag.CurrentCategory = cate;
-                return View();
-            }
-            catch (System.Exception)
-            {
-                return RedirectToAction("Index","Home");
-                throw;
-            }
-        }
         [Route("/{Alias}-{id}.html", Name ="ProductDetails")]
         public IActionResult ProductDetails(int id)
         {
