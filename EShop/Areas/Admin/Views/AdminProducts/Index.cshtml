@@ -50,6 +50,7 @@
                                 Tên sản phẩm
                             </th>
                             <th class="text-center align-items-center">Danh mục</th>
+                            <th class="text-center align-items-center">Thương hiệu</th>
                             <th>Giá</th>
                             <th class="text-center align-items-center">
                                 <a asp-action="Index" asp-route-sortOrder="@ViewData["UnitSortParm"]">
@@ -78,6 +79,7 @@
                                         </div>
                                     </td>
                                     <td class="text-center align-items-center">@item.Cate.CategoryName</td>
+                                    <td class="text-center align-items-center">@item.Brand.BrandName</td>
                                     <td>@item.Price.Value.ToString("#,##0") VNĐ</td>
                                     <td class="text-center align-items-center">@item.UnitInStock</td>
                                     @if (item.IsActived)
@@ -118,8 +120,8 @@
                                             <i class="anticon anticon-edit"></i>
                                         </a>
                                         @*<button type="button" class="btn btn-icon btn-hover btn-sm btn-rounded" data-toggle="modal" data-target="#exampleModalCenter">
-                                            <i class="anticon anticon-delete"></i>
-                                        </button>*@
+                                                <i class="anticon anticon-delete"></i>
+                                            </button>*@
                                         <a asp-controller="AdminProducts" asp-action="Delete" asp-route-id="@item.ProductId" class="btn btn-icon btn-hover btn-sm btn-rounded">
                                             <i class="anticon anticon-delete"></i>
                                         </a>

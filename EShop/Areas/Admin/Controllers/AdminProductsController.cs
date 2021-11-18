@@ -1,15 +1,16 @@
-﻿using AspNetCoreHero.ToastNotification.Abstractions;
-using EShop.Helpper;
-using EShop.Models;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using EShop.Models;
 using PagedList.Core;
-using System;
 using System.Globalization;
 using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
+using EShop.Helpper;
+using AspNetCoreHero.ToastNotification.Abstractions;
 
 namespace EShop.Areas.Admin.Controllers
 {
@@ -17,8 +18,8 @@ namespace EShop.Areas.Admin.Controllers
     public class AdminProductsController : Controller
     {
         private readonly EcommerceVer2Context _context;
-        public INotyfService _notyfService { get; }
         public static string image;
+        public INotyfService _notyfService { get; }
 
         public AdminProductsController(EcommerceVer2Context context, INotyfService notyfService)
         {
@@ -27,12 +28,11 @@ namespace EShop.Areas.Admin.Controllers
         }
 
         // GET: Admin/AdminProducts
-        public IActionResult Index(string sortOrder, string currentFilter, string searchStr, int? page)
+        public async Task<IActionResult> Index(string sortOrder, string currentFilter, string searchStr, int? page)
         {
             ViewData["CateId"] = new SelectList(_context.Categories, "CateId", "CategoryName");
-
-            var _product = from p in _context.Products.Include(p => p.Cate) select p;
-
+            ViewData["BrandId"] = new SelectList(_context.Brands, "BrandId", "BrandName");
+            var _product = from m in _context.Products.Include(p => p.Brand).Include(p => p.Cate) select m;
             //Sort
             ViewData["IdSortParm"] = String.IsNullOrEmpty(sortOrder) ? "id_desc" : "";
             ViewData["DateSortParm"] = sortOrder == "Date" ? "date_desc" : "Date";
@@ -59,14 +59,12 @@ namespace EShop.Areas.Admin.Controllers
                     _product = _product.OrderBy(p => p.ProductId);
                     break;
             }
-
             //Search
             ViewData["CurrentFilter"] = searchStr;
             if (!String.IsNullOrEmpty(searchStr))
             {
                 _product = _product.Where(p => p.ProductName.Contains(searchStr) || p.ProductId.ToString().Contains(searchStr));
             }
-
             //Paginate
             var pageNo = page == null || page <= 0 ? 1 : page.Value;
             var pageSize = 5;
@@ -85,6 +83,7 @@ namespace EShop.Areas.Admin.Controllers
             }
 
             var product = await _context.Products
+                .Include(p => p.Brand)
                 .Include(p => p.Cate)
                 .FirstOrDefaultAsync(m => m.ProductId == id);
             if (product == null)
@@ -98,6 +97,7 @@ namespace EShop.Areas.Admin.Controllers
         // GET: Admin/AdminProducts/Create
         public IActionResult Create()
         {
+            ViewData["BrandId"] = new SelectList(_context.Brands, "BrandId", "BrandName");
             ViewData["CateId"] = new SelectList(_context.Categories, "CateId", "CategoryName");
             return View();
         }
@@ -107,7 +107,7 @@ namespace EShop.Areas.Admin.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ProductId,ProductName,ShortDesc,Descriptions,CateId,Price,Discount,ThumbImg,Video,DateCreated,DateModified,IsBestsellers,Homeflag,IsActived,Tag,Title,Alias,UnitInStock")] Product product, Microsoft.AspNetCore.Http.IFormFile fThumbImg)
+        public async Task<IActionResult> Create([Bind("ProductId,ProductName,ShortDesc,Descriptions,CateId,Price,Discount,ThumbImg,Video,DateCreated,DateModified,IsBestsellers,Homeflag,IsActived,Tag,Title,Alias,UnitInStock,BrandId")] Product product, Microsoft.AspNetCore.Http.IFormFile fThumbImg)
         {
             if (ModelState.IsValid)
             {
@@ -131,6 +131,7 @@ namespace EShop.Areas.Admin.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["BrandId"] = new SelectList(_context.Brands, "BrandId", "BrandName", product.BrandId);
             ViewData["CateId"] = new SelectList(_context.Categories, "CateId", "CategoryName", product.CateId);
             return View(product);
         }
@@ -148,6 +149,7 @@ namespace EShop.Areas.Admin.Controllers
             {
                 return NotFound();
             }
+            ViewData["BrandId"] = new SelectList(_context.Brands, "BrandId", "BrandName", product.BrandId);
             ViewData["CateId"] = new SelectList(_context.Categories, "CateId", "CategoryName", product.CateId);
             return View(product);
         }
@@ -157,7 +159,7 @@ namespace EShop.Areas.Admin.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ProductId,ProductName,ShortDesc,Descriptions,CateId,Price,Discount,ThumbImg,Video,DateCreated,DateModified,IsBestsellers,Homeflag,IsActived,Tag,Title,Alias,UnitInStock")] Product product, Microsoft.AspNetCore.Http.IFormFile fThumbImg)
+        public async Task<IActionResult> Edit(int id, [Bind("ProductId,ProductName,ShortDesc,Descriptions,CateId,Price,Discount,ThumbImg,Video,DateCreated,DateModified,IsBestsellers,Homeflag,IsActived,Tag,Title,Alias,UnitInStock,BrandId")] Product product)
         {
             if (id != product.ProductId)
             {
@@ -168,25 +170,13 @@ namespace EShop.Areas.Admin.Controllers
             {
                 try
                 {
-                    product.ProductName = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(product.ProductName);
-                    if (fThumbImg != null)
-                    {
-                        string extennsion = Path.GetExtension(fThumbImg.FileName);
-                        image = Utilities.ToUrlFriendly(product.ProductName) + extennsion;
-                        product.ThumbImg = await Utilities.UploadFile(fThumbImg, @"products", image.ToLower());
-                    }
-                    if (string.IsNullOrEmpty(product.ThumbImg)) product.ThumbImg = "thumb-6.jpg";
-                    product.Alias = Utilities.ToUrlFriendly(product.ProductName);
-                    product.DateModified = DateTime.Now;
                     _context.Update(product);
-                    _notyfService.Success("Sửa thành công!");
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
                     if (!ProductExists(product.ProductId))
                     {
-                        _notyfService.Error("Lỗi!!!!!!!!!!!!!!!");
                         return NotFound();
                     }
                     else
@@ -196,6 +186,7 @@ namespace EShop.Areas.Admin.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["BrandId"] = new SelectList(_context.Brands, "BrandId", "BrandName", product.BrandId);
             ViewData["CateId"] = new SelectList(_context.Categories, "CateId", "CategoryName", product.CateId);
             return View(product);
         }
@@ -209,6 +200,7 @@ namespace EShop.Areas.Admin.Controllers
             }
 
             var product = await _context.Products
+                .Include(p => p.Brand)
                 .Include(p => p.Cate)
                 .FirstOrDefaultAsync(m => m.ProductId == id);
             if (product == null)
@@ -225,16 +217,7 @@ namespace EShop.Areas.Admin.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var product = await _context.Products.FindAsync(id);
-            string imageName = image.ToLower();
-            //string fullPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot\\images\\products\\" + imageName);
-            //if (System.IO.File.Exists(fullPath))
-            //{
-            //    System.IO.File.Delete(fullPath);
-            //}
-            //Utilities.DeleteImage(@"products",imageName);
-            Utilities.DeleteImage(@"products", imageName);
             _context.Products.Remove(product);
-            _notyfService.Success("Xóa thành công!");
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
@@ -243,7 +226,5 @@ namespace EShop.Areas.Admin.Controllers
         {
             return _context.Products.Any(e => e.ProductId == id);
         }
-
-
     }
 }
