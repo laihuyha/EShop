@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using EShop.Models;
 using AspNetCoreHero.ToastNotification.Abstractions;
+using PagedList.Core;
 
 namespace EShop.Areas.Admin.Controllers
 {
@@ -23,9 +24,41 @@ namespace EShop.Areas.Admin.Controllers
         }
 
         // GET: Admin/AdminBrands
-        public async Task<IActionResult> Index()
+        public IActionResult Index(string sortOrder, string currentFilter, string searchStr, int? page)
         {
-            return View(await _context.Brands.ToListAsync());
+            var _brand = from m in _context.Brands select m;
+            //Sort
+            ViewData["IdSortParm"] = String.IsNullOrEmpty(sortOrder) ? "id_desc" : "";
+            ViewData["NameSortParm"] = sortOrder == "Name" ? "name_desc" : "Name";
+            switch (sortOrder)
+            {
+                case "id_desc":
+                    _brand = _brand.OrderByDescending(p => p.BrandId);
+                    break;
+                case "Name":
+                    _brand = _brand.OrderBy(p => p.BrandName);
+                    break;
+                case "name_desc":
+                    _brand = _brand.OrderByDescending(p => p.BrandName);
+                    break;
+                default:
+                    _brand = _brand.OrderBy(p => p.BrandId);
+                    break;
+            }
+
+            //Search
+            ViewData["CurrentFilter"] = searchStr;
+            if (!String.IsNullOrEmpty(searchStr))
+            {
+                _brand = _brand.Where(p => p.BrandId.ToString().Contains(searchStr) || p.BrandName.Contains(searchStr));
+            }
+
+            //Paginate
+            var pageNo = page == null || page <= 0 ? 1 : page.Value;
+            var pageSize = 5;
+            ViewBag.CurrentPage = pageNo;
+            PagedList<Brand> models = new PagedList<Brand>(_brand, pageNo, pageSize);
+            return View(models);
         }
 
         // GET: Admin/AdminBrands/Details/5
