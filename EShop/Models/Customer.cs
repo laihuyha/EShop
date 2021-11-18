@@ -34,9 +34,6 @@ namespace EShop.Models
         public DateTime? CreateDate { get; set; }
         public DateTime? LastLogin { get; set; }
         public bool IsActived { get; set; }
-        public int? CartId { get; set; }
-
-        public virtual Cart Cart { get; set; }
         public virtual ICollection<Order> Orders { get; set; }
     }
 }

@@ -20,6 +20,7 @@ namespace EShop.Models
         public virtual DbSet<Account> Accounts { get; set; }
         public virtual DbSet<Attribute> Attributes { get; set; }
         public virtual DbSet<AttributePrice> AttributePrices { get; set; }
+        public virtual DbSet<Brand> Brands { get; set; }
         public virtual DbSet<Cart> Carts { get; set; }
         public virtual DbSet<Category> Categories { get; set; }
         public virtual DbSet<Customer> Customers { get; set; }
@@ -34,7 +35,7 @@ namespace EShop.Models
         {
             if (!optionsBuilder.IsConfigured)
             {
-//#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
                 optionsBuilder.UseSqlServer("Server=.\\SQLExpress;Database=EcommerceVer2;Trusted_Connection=True;");
             }
         }
@@ -49,13 +50,9 @@ namespace EShop.Models
 
                 entity.ToTable("Account");
 
-                entity.HasIndex(e => e.CartId, "IX_Account_CartID");
-
                 entity.HasIndex(e => e.RoleId, "IX_Account_RoleId");
 
                 entity.Property(e => e.UserId).HasColumnName("UserID");
-
-                entity.Property(e => e.CartId).HasColumnName("CartID");
 
                 entity.Property(e => e.CreateDate).HasColumnType("datetime");
 
@@ -79,11 +76,6 @@ namespace EShop.Models
                 entity.Property(e => e.Username)
                     .IsRequired()
                     .HasMaxLength(50);
-
-                entity.HasOne(d => d.Cart)
-                    .WithMany(p => p.Accounts)
-                    .HasForeignKey(d => d.CartId)
-                    .HasConstraintName("FK_Account_Cart1");
 
                 entity.HasOne(d => d.Role)
                     .WithMany(p => p.Accounts)
@@ -121,6 +113,15 @@ namespace EShop.Models
                     .WithMany(p => p.AttributePrices)
                     .HasForeignKey(d => d.ProductId)
                     .HasConstraintName("FK_AttributePrices_Product");
+            });
+
+            modelBuilder.Entity<Brand>(entity =>
+            {
+                entity.ToTable("Brand");
+
+                entity.Property(e => e.BrandId).HasColumnName("BrandID");
+
+                entity.Property(e => e.BrandName).HasMaxLength(100);
             });
 
             modelBuilder.Entity<Cart>(entity =>
@@ -175,8 +176,6 @@ namespace EShop.Models
 
                 entity.Property(e => e.BirthDay).HasColumnType("datetime");
 
-                entity.Property(e => e.CartId).HasColumnName("CartID");
-
                 entity.Property(e => e.CreateDate).HasColumnType("datetime");
 
                 entity.Property(e => e.LastLogin).HasColumnType("datetime");
@@ -184,11 +183,6 @@ namespace EShop.Models
                 entity.Property(e => e.Phone)
                     .HasMaxLength(13)
                     .IsUnicode(false);
-
-                entity.HasOne(d => d.Cart)
-                    .WithMany(p => p.Customers)
-                    .HasForeignKey(d => d.CartId)
-                    .HasConstraintName("FK_Customers_Cart");
             });
 
             modelBuilder.Entity<Order>(entity =>
@@ -230,6 +224,8 @@ namespace EShop.Models
             {
                 entity.HasIndex(e => e.OrderId, "IX_OrderDetails_OrderID");
 
+                entity.HasIndex(e => e.ProductId, "IX_OrderDetails_ProductID");
+
                 entity.Property(e => e.OrderDetailId).HasColumnName("OrderDetailID");
 
                 entity.Property(e => e.OrderId).HasColumnName("OrderID");
@@ -257,6 +253,8 @@ namespace EShop.Models
 
                 entity.Property(e => e.ProductId).HasColumnName("ProductID");
 
+                entity.Property(e => e.BrandId).HasColumnName("BrandID");
+
                 entity.Property(e => e.CateId).HasColumnName("CateID");
 
                 entity.Property(e => e.DateCreated).HasColumnType("datetime");
@@ -274,6 +272,11 @@ namespace EShop.Models
                     .HasMaxLength(255);
 
                 entity.Property(e => e.ShortDesc).HasMaxLength(255);
+
+                entity.HasOne(d => d.Brand)
+                    .WithMany(p => p.Products)
+                    .HasForeignKey(d => d.BrandId)
+                    .HasConstraintName("FK_Product_Brand");
 
                 entity.HasOne(d => d.Cate)
                     .WithMany(p => p.Products)
