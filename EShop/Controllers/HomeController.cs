@@ -37,21 +37,33 @@ namespace EShop.Controllers
         {
             var lstLatop = from m in _context.Products.Include(n=>n.Cate).Where(n => n.CateId == 1 && n.IsActived == true) select m;
             var pageNo = page == null || page <= 0 ? 1 : page.Value;
-            var pageSize = 5;
+            var pageSize = 9;
             PagedList<Product> models = new PagedList<Product>(lstLatop, pageNo, pageSize);
             ViewBag.CurrentPage = pageNo;
 
             return View(models);
         }
         [Route("Dien-thoai.html", Name = "Smart Phone Store")]
-        public IActionResult SmartPhone()
+        public IActionResult SmartPhone(int? page)
         {
-            return View();
+            var lstLatop = from m in _context.Products.Include(n => n.Cate).Where(n => n.CateId == 3 && n.IsActived == true) select m;
+            var pageNo = page == null || page <= 0 ? 1 : page.Value;
+            var pageSize = 9;
+            PagedList<Product> models = new PagedList<Product>(lstLatop, pageNo, pageSize);
+            ViewBag.CurrentPage = pageNo;
+
+            return View(models);
         }
         [Route("Phu-kien.html", Name = "Accessories Store")]
-        public IActionResult Accessories()
+        public IActionResult Accessories(int? page)
         {
-            return View();
+            var lstLatop = from m in _context.Products.Include(n => n.Cate).Where(n => n.CateId == 7 && n.IsActived == true) select m;
+            var pageNo = page == null || page <= 0 ? 1 : page.Value;
+            var pageSize = 9;
+            PagedList<Product> models = new PagedList<Product>(lstLatop, pageNo, pageSize);
+            ViewBag.CurrentPage = pageNo;
+
+            return View(models);
         }
         [Route("Thuong-hieu.html", Name = "Brand Store")]
         public IActionResult Brand()
@@ -59,9 +71,15 @@ namespace EShop.Controllers
             return View();
         }
         [Route("Ha-gia.html", Name = "Sales Store")]
-        public IActionResult Sales()
+        public IActionResult Sales(int? page)
         {
-            return View();
+            var lstLatop = from m in _context.Products.Include(n => n.Cate).Where(n => n.Discount > 0 && n.IsActived == true) select m;
+            var pageNo = page == null || page <= 0 ? 1 : page.Value;
+            var pageSize = 9;
+            PagedList<Product> models = new PagedList<Product>(lstLatop, pageNo, pageSize);
+            ViewBag.CurrentPage = pageNo;
+
+            return View(models);
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
