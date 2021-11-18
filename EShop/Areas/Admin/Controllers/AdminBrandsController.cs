@@ -7,6 +7,10 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using EShop.Models;
 using AspNetCoreHero.ToastNotification.Abstractions;
+using System.Globalization;
+using System.IO;
+using EShop.Helpper;
+using PagedList.Core;
 
 namespace EShop.Areas.Admin.Controllers
 {
@@ -14,8 +18,8 @@ namespace EShop.Areas.Admin.Controllers
     public class AdminBrandsController : Controller
     {
         private readonly EcommerceVer2Context _context;
+        public static string image;
         public INotyfService _notyfService { get; }
-
         public AdminBrandsController(EcommerceVer2Context context, INotyfService notyfService)
         {
             _notyfService = notyfService;
@@ -23,9 +27,41 @@ namespace EShop.Areas.Admin.Controllers
         }
 
         // GET: Admin/AdminBrands
-        public async Task<IActionResult> Index()
+        public IActionResult Index(string sortOrder, string currentFilter, string searchStr, int? page)
         {
-            return View(await _context.Brands.ToListAsync());
+            var _brand = from m in _context.Brands select m;
+            //Sort
+            ViewData["IdSortParm"] = String.IsNullOrEmpty(sortOrder) ? "id_desc" : "";
+            ViewData["NameSortParm"] = sortOrder == "Name" ? "name_desc" : "Name";
+            switch (sortOrder)
+            {
+                case "id_desc":
+                    _brand = _brand.OrderByDescending(p => p.BrandId);
+                    break;
+                case "Name":
+                    _brand = _brand.OrderBy(p => p.BrandName);
+                    break;
+                case "name_desc":
+                    _brand = _brand.OrderByDescending(p => p.BrandName);
+                    break;
+                default:
+                    _brand = _brand.OrderBy(p => p.BrandId);
+                    break;
+            }
+
+            //Search
+            ViewData["CurrentFilter"] = searchStr;
+            if (!String.IsNullOrEmpty(searchStr))
+            {
+                _brand = _brand.Where(p => p.BrandId.ToString().Contains(searchStr) || p.BrandName.Contains(searchStr));
+            }
+
+            //Paginate
+            var pageNo = page == null || page <= 0 ? 1 : page.Value;
+            var pageSize = 5;
+            ViewBag.CurrentPage = pageNo;
+            PagedList<Brand> models = new PagedList<Brand>(_brand, pageNo, pageSize);
+            return View(models);
         }
 
         // GET: Admin/AdminBrands/Details/5
@@ -57,19 +93,30 @@ namespace EShop.Areas.Admin.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("BrandId,BrandName,Logo")] Brand brand)
+        public async Task<IActionResult> Create([Bind("BrandId,BrandName,Logo")] Brand brand , Microsoft.AspNetCore.Http.IFormFile fLogo)
         {
             if (ModelState.IsValid)
             {
-                var _brand = from m in _context.Brands select m;
+                                var _brand = from m in _context.Brands select m;
                 if(_brand.Any(a=>a.BrandName == brand.BrandName))
                 {
                     _notyfService.Error("Nhãn hàng này đã có trong Cơ sở dữ liệu!");
                     return RedirectToAction(nameof(Create));
                 }
+                else{
+                                  brand.BrandName = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(brand.BrandName);
+                if (fLogo != null)
+                {
+                    string extennsion = Path.GetExtension(fLogo.FileName);
+                    image = Utilities.ToUrlFriendly(brand.BrandName) + extennsion;
+                    brand.Logo = await Utilities.UploadFile(fLogo, @"categories", image.ToLower());
+                }
+                if (string.IsNullOrEmpty(brand.Logo)) brand.Logo = "thumb-6.jpg";
+                _notyfService.Success("Thêm thành công!");
                 _context.Add(brand);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
+                }
             }
             return View(brand);
         }
@@ -95,7 +142,7 @@ namespace EShop.Areas.Admin.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("BrandId,BrandName,Logo")] Brand brand)
+        public async Task<IActionResult> Edit(int id, [Bind("BrandId,BrandName,Logo")] Brand brand, Microsoft.AspNetCore.Http.IFormFile fLogo)
         {
             if (id != brand.BrandId)
             {
@@ -106,19 +153,31 @@ namespace EShop.Areas.Admin.Controllers
             {
                 try
                 {
-                    var _brand = from m in _context.Brands select m;
+                                        var _brand = from m in _context.Brands select m;
                     if (_brand.Any(a => a.BrandName == brand.BrandName && a.Logo == brand.Logo))
                     {
                         _notyfService.Error("Nhãn hàng này đã có trong Cơ sở dữ liệu!");
                         return RedirectToAction(nameof(Create));
                     }
+                    else {
+                                            brand.BrandName = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(brand.BrandName);
+                    if (fLogo != null)
+                    {
+                        string extennsion = Path.GetExtension(fLogo.FileName);
+                        image = Utilities.ToUrlFriendly(brand.BrandName) + extennsion;
+                        brand.Logo = await Utilities.UploadFile(fLogo, @"categories", image.ToLower());
+                    }
+                    if (string.IsNullOrEmpty(brand.Logo)) brand.Logo = "thumb-6.jpg";
+                    _notyfService.Success("Sửa thành công!");
                     _context.Update(brand);
                     await _context.SaveChangesAsync();
+                    }
                 }
                 catch (DbUpdateConcurrencyException)
                 {
                     if (!BrandExists(brand.BrandId))
                     {
+                        _notyfService.Error("Lỗi!!!!!!!!!!!!!");
                         return NotFound();
                     }
                     else
