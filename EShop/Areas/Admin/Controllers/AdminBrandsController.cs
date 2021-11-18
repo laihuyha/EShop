@@ -93,29 +93,30 @@ namespace EShop.Areas.Admin.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("BrandId,BrandName,Logo")] Brand brand , Microsoft.AspNetCore.Http.IFormFile fLogo)
+        public async Task<IActionResult> Create([Bind("BrandId,BrandName,Logo")] Brand brand, Microsoft.AspNetCore.Http.IFormFile fLogo)
         {
             if (ModelState.IsValid)
             {
-                                var _brand = from m in _context.Brands select m;
-                if(_brand.Any(a=>a.BrandName == brand.BrandName))
+                var _brand = from m in _context.Brands select m;
+                if (_brand.Any(a => a.BrandName == brand.BrandName))
                 {
                     _notyfService.Error("Nhãn hàng này đã có trong Cơ sở dữ liệu!");
                     return RedirectToAction(nameof(Create));
                 }
-                else{
-                                  brand.BrandName = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(brand.BrandName);
-                if (fLogo != null)
+                else
                 {
-                    string extennsion = Path.GetExtension(fLogo.FileName);
-                    image = Utilities.ToUrlFriendly(brand.BrandName) + extennsion;
-                    brand.Logo = await Utilities.UploadFile(fLogo, @"categories", image.ToLower());
-                }
-                if (string.IsNullOrEmpty(brand.Logo)) brand.Logo = "thumb-6.jpg";
-                _notyfService.Success("Thêm thành công!");
-                _context.Add(brand);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                    brand.BrandName = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(brand.BrandName);
+                    if (fLogo != null)
+                    {
+                        string extennsion = Path.GetExtension(fLogo.FileName);
+                        image = Utilities.ToUrlFriendly(brand.BrandName) + extennsion;
+                        brand.Logo = await Utilities.UploadFile(fLogo, @"brands", image.ToLower());
+                    }
+                    if (string.IsNullOrEmpty(brand.Logo)) brand.Logo = "thumb-6.jpg";
+                    _notyfService.Success("Thêm thành công!");
+                    _context.Add(brand);
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
                 }
             }
             return View(brand);
@@ -153,24 +154,25 @@ namespace EShop.Areas.Admin.Controllers
             {
                 try
                 {
-                                        var _brand = from m in _context.Brands select m;
+                    var _brand = from m in _context.Brands select m;
                     if (_brand.Any(a => a.BrandName == brand.BrandName && a.Logo == brand.Logo))
                     {
                         _notyfService.Error("Nhãn hàng này đã có trong Cơ sở dữ liệu!");
-                        return RedirectToAction(nameof(Create));
+                        return RedirectToAction(nameof(Edit));
                     }
-                    else {
-                                            brand.BrandName = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(brand.BrandName);
-                    if (fLogo != null)
+                    else
                     {
-                        string extennsion = Path.GetExtension(fLogo.FileName);
-                        image = Utilities.ToUrlFriendly(brand.BrandName) + extennsion;
-                        brand.Logo = await Utilities.UploadFile(fLogo, @"categories", image.ToLower());
-                    }
-                    if (string.IsNullOrEmpty(brand.Logo)) brand.Logo = "thumb-6.jpg";
-                    _notyfService.Success("Sửa thành công!");
-                    _context.Update(brand);
-                    await _context.SaveChangesAsync();
+                        brand.BrandName = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(brand.BrandName);
+                        if (fLogo != null)
+                        {
+                            string extennsion = Path.GetExtension(fLogo.FileName);
+                            image = Utilities.ToUrlFriendly(brand.BrandName) + extennsion;
+                            brand.Logo = await Utilities.UploadFile(fLogo, @"brands", image.ToLower());
+                        }
+                        if (string.IsNullOrEmpty(brand.Logo)) brand.Logo = "thumb-6.jpg";
+                        _notyfService.Success("Sửa thành công!");
+                        _context.Update(brand);
+                        await _context.SaveChangesAsync();
                     }
                 }
                 catch (DbUpdateConcurrencyException)
