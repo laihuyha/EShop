@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using EShop.Models;
+using AspNetCoreHero.ToastNotification.Abstractions;
 
 namespace EShop.Areas.Admin.Controllers
 {
@@ -13,9 +14,11 @@ namespace EShop.Areas.Admin.Controllers
     public class AdminBrandsController : Controller
     {
         private readonly EcommerceVer2Context _context;
+        public INotyfService _notyfService { get; }
 
-        public AdminBrandsController(EcommerceVer2Context context)
+        public AdminBrandsController(EcommerceVer2Context context, INotyfService notyfService)
         {
+            _notyfService = notyfService;
             _context = context;
         }
 
@@ -58,6 +61,12 @@ namespace EShop.Areas.Admin.Controllers
         {
             if (ModelState.IsValid)
             {
+                var _brand = from m in _context.Brands select m;
+                if(_brand.Any(a=>a.BrandName == brand.BrandName))
+                {
+                    _notyfService.Error("Nhãn hàng này đã có trong Cơ sở dữ liệu!");
+                    return RedirectToAction(nameof(Create));
+                }
                 _context.Add(brand);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -97,6 +106,12 @@ namespace EShop.Areas.Admin.Controllers
             {
                 try
                 {
+                    var _brand = from m in _context.Brands select m;
+                    if (_brand.Any(a => a.BrandName == brand.BrandName && a.Logo == brand.Logo))
+                    {
+                        _notyfService.Error("Nhãn hàng này đã có trong Cơ sở dữ liệu!");
+                        return RedirectToAction(nameof(Create));
+                    }
                     _context.Update(brand);
                     await _context.SaveChangesAsync();
                 }

@@ -60,7 +60,7 @@ namespace EShop.Areas.Admin.Controllers
         public IActionResult Create()
         {
             ViewData["CartId"] = new SelectList(_context.Carts, "CartId", "CartId");
-            ViewData["RoleId"] = new SelectList(_context.Roles, "RoleId", "RoleId");
+            ViewData["RoleId"] = new SelectList(_context.Roles, "RoleId", "Descriptions");
             return View();
         }
 
@@ -73,12 +73,18 @@ namespace EShop.Areas.Admin.Controllers
         {
             if (ModelState.IsValid)
             {
+                var _account = from m in _context.Accounts.Include(a => a.Role) select m;
+                if(_account.Any(a=>a.Username == account.Username))
+                {
+                    _notyfService.Error("Tên tài khoản đã được sử dụng");
+                    return RedirectToAction(nameof(Create));
+                }
                 _context.Add(account);
                 _notyfService.Success("Thêm thành công!");
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["RoleId"] = new SelectList(_context.Roles, "RoleId", "RoleId", account.RoleId);
+            ViewData["RoleId"] = new SelectList(_context.Roles, "RoleId", "Descriptions", account.RoleId);
             return View(account);
         }
 
@@ -95,7 +101,7 @@ namespace EShop.Areas.Admin.Controllers
             {
                 return NotFound();
             }
-            ViewData["RoleId"] = new SelectList(_context.Roles, "RoleId", "RoleId", account.RoleId);
+            ViewData["RoleId"] = new SelectList(_context.Roles, "RoleId", "Descriptions", account.RoleId);
             return View(account);
         }
 
@@ -115,15 +121,24 @@ namespace EShop.Areas.Admin.Controllers
             {
                 try
                 {
-                    _context.Update(account);
-                    _notyfService.Success("Sửa thành công!");
-                    await _context.SaveChangesAsync();
+                    var _account = from m in _context.Accounts.Include(a => a.Role) select m;
+                    if(_account.Any(a=>a.Username == account.Username && a.Email == account.Email))
+                    {
+                        _notyfService.Error("Update Lỗi!");
+                        return RedirectToAction(nameof(Edit));
+
+                    }
+                    else
+                    {
+                        _context.Update(account);
+                        _notyfService.Success("Sửa thành công!");
+                        await _context.SaveChangesAsync();
+                    }
                 }
                 catch (DbUpdateConcurrencyException)
                 {
                     if (!AccountExists(account.UserId))
                     {
-                        _notyfService.Error("Lỗiiiiiiiii!!!!!");
                         return NotFound();
                     }
                     else
@@ -133,7 +148,7 @@ namespace EShop.Areas.Admin.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["RoleId"] = new SelectList(_context.Roles, "RoleId", "RoleId", account.RoleId);
+            ViewData["RoleId"] = new SelectList(_context.Roles, "RoleId", "Descriptions", account.RoleId);
             return View(account);
         }
 
