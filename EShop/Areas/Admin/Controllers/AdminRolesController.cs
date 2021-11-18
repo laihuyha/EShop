@@ -58,10 +58,19 @@ namespace EShop.Areas.Admin.Controllers
         {
             if (ModelState.IsValid)
             {
-                _context.Add(role);
-                await _context.SaveChangesAsync();
-                _notyfService.Success("Tạo mới thành công");
-                return RedirectToAction(nameof(Index));
+                var _Roles = from m in _context.Roles select m;
+                if(_Roles.Any(a=>a.RoleName == role.RoleName))
+                {
+                    _notyfService.Error("Trùng tên quyền");
+                    return RedirectToAction(nameof(Create));
+                }
+                else
+                {
+                    _context.Add(role);
+                    await _context.SaveChangesAsync();
+                    _notyfService.Success("Tạo mới thành công");
+                    return RedirectToAction(nameof(Index));
+                }
             }
             return View(role);
         }
@@ -98,15 +107,23 @@ namespace EShop.Areas.Admin.Controllers
             {
                 try
                 {
-                    _context.Update(role);
-                    await _context.SaveChangesAsync();
-                    _notyfService.Success("Cập nhật thành công!");
+                    var _Roles = from m in _context.Roles select m;
+                    if (_Roles.Any(a => a.RoleName == role.RoleName))
+                    {
+                        _notyfService.Error("Trùng tên quyền");
+                        return RedirectToAction(nameof(Create));
+                    }
+                    else
+                    {
+                        _context.Update(role);
+                        await _context.SaveChangesAsync();
+                        _notyfService.Success("Cập nhật thành công!");
+                    }
                 }
                 catch (DbUpdateConcurrencyException)
                 {
                     if (!RoleExists(role.RoleId))
                     {
-                        _notyfService.Error("Cập nhật không thành công!");
                         return NotFound();
                     }
                     else

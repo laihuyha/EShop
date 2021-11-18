@@ -9,13 +9,24 @@
                     <span class="title">Dashboard</span>
                 </a>
             </li>
-            <li class="nav-item">
-                <a class="dropdown-toggle" asp-area="Admin" asp-controller="AdminProducts" asp-action="Index">
+            <li class="nav-item dropdown">
+                <a class="dropdown-toggle" href="javascript:void(0);">
                     <span class="icon-holder">
-                        <i class="anticon anticon-appstore"></i>
+                        <i class="anticon anticon-table"></i>
                     </span>
-                    <span class="title">Quản lý sản phẩm</span>
+                    <span class="title">Quản lý mặt hàng</span>
+                    <span class="arrow">
+                        <i class="arrow-icon"></i>
+                    </span>
                 </a>
+                <ul class="dropdown-menu">
+                    <li>
+                        <a asp-area="Admin" asp-controller="AdminProducts" asp-action="Index">Quản lý sản phẩm</a>
+                    </li>
+                    <li>
+                        <a asp-area="Admin" asp-controller="AdminBrands" asp-action="Index">Quản lý Brand</a>
+                    </li>
+                </ul>
             </li>
             <li class="nav-item">
                 <a class="dropdown-toggle" asp-area="Admin" asp-controller="AdminCustomers" asp-action="Index">
@@ -89,9 +100,6 @@
                     </li>
                     <li>
                         <a asp-area="Admin" asp-controller="AdminRoles" asp-action="Index">Quản lý Role</a>
-                    </li>
-                    <li>
-                        <a href="data-table.html">Quản lý tỉnh thành</a>
                     </li>
                 </ul>
             </li>
