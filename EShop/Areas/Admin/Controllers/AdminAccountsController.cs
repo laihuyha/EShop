@@ -74,7 +74,7 @@ namespace EShop.Areas.Admin.Controllers
             if (ModelState.IsValid)
             {
                 var _account = from m in _context.Accounts.Include(a => a.Role) select m;
-                if(_account.Any(a=>a.Username == account.Username))
+                if (_account.Any(a => a.Username == account.Username))
                 {
                     _notyfService.Error("Tên tài khoản đã được sử dụng");
                     return RedirectToAction(nameof(Create));
@@ -121,19 +121,10 @@ namespace EShop.Areas.Admin.Controllers
             {
                 try
                 {
-                    var _account = from m in _context.Accounts.Include(a => a.Role) select m;
-                    if(_account.Any(a=>a.Username == account.Username && a.Email == account.Email))
-                    {
-                        _notyfService.Error("Update Lỗi!");
-                        return RedirectToAction(nameof(Edit));
+                    _context.Update(account);
+                    _notyfService.Success("Sửa thành công!");
+                    await _context.SaveChangesAsync();
 
-                    }
-                    else
-                    {
-                        _context.Update(account);
-                        _notyfService.Success("Sửa thành công!");
-                        await _context.SaveChangesAsync();
-                    }
                 }
                 catch (DbUpdateConcurrencyException)
                 {
