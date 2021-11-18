@@ -6,6 +6,10 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using EShop.Models;
+using AspNetCoreHero.ToastNotification.Abstractions;
+using System.Globalization;
+using System.IO;
+using EShop.Helpper;
 
 namespace EShop.Areas.Admin.Controllers
 {
@@ -13,9 +17,11 @@ namespace EShop.Areas.Admin.Controllers
     public class AdminBrandsController : Controller
     {
         private readonly EcommerceVer2Context _context;
-
-        public AdminBrandsController(EcommerceVer2Context context)
+        public static string image;
+        public INotyfService _notyfService { get; }
+        public AdminBrandsController(EcommerceVer2Context context, INotyfService notyfService)
         {
+            _notyfService = notyfService;
             _context = context;
         }
 
@@ -54,10 +60,19 @@ namespace EShop.Areas.Admin.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("BrandId,BrandName,Logo")] Brand brand)
+        public async Task<IActionResult> Create([Bind("BrandId,BrandName,Logo")] Brand brand , Microsoft.AspNetCore.Http.IFormFile fLogo)
         {
             if (ModelState.IsValid)
             {
+                brand.BrandName = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(brand.BrandName);
+                if (fLogo != null)
+                {
+                    string extennsion = Path.GetExtension(fLogo.FileName);
+                    image = Utilities.ToUrlFriendly(brand.BrandName) + extennsion;
+                    brand.Logo = await Utilities.UploadFile(fLogo, @"categories", image.ToLower());
+                }
+                if (string.IsNullOrEmpty(brand.Logo)) brand.Logo = "thumb-6.jpg";
+                _notyfService.Success("Thêm thành công!");
                 _context.Add(brand);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -86,7 +101,7 @@ namespace EShop.Areas.Admin.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("BrandId,BrandName,Logo")] Brand brand)
+        public async Task<IActionResult> Edit(int id, [Bind("BrandId,BrandName,Logo")] Brand brand, Microsoft.AspNetCore.Http.IFormFile fLogo)
         {
             if (id != brand.BrandId)
             {
@@ -97,6 +112,15 @@ namespace EShop.Areas.Admin.Controllers
             {
                 try
                 {
+                    brand.BrandName = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(brand.BrandName);
+                    if (fLogo != null)
+                    {
+                        string extennsion = Path.GetExtension(fLogo.FileName);
+                        image = Utilities.ToUrlFriendly(brand.BrandName) + extennsion;
+                        brand.Logo = await Utilities.UploadFile(fLogo, @"categories", image.ToLower());
+                    }
+                    if (string.IsNullOrEmpty(brand.Logo)) brand.Logo = "thumb-6.jpg";
+                    _notyfService.Success("Sửa thành công!");
                     _context.Update(brand);
                     await _context.SaveChangesAsync();
                 }
@@ -104,6 +128,7 @@ namespace EShop.Areas.Admin.Controllers
                 {
                     if (!BrandExists(brand.BrandId))
                     {
+                        _notyfService.Error("Lỗi!!!!!!!!!!!!!");
                         return NotFound();
                     }
                     else
