@@ -33,7 +33,7 @@ namespace EShop.Areas.Admin.Controllers
             _Status.Add(new SelectListItem() { Text = "Disable", Value = "0" });
             ViewData["Status"] = _Status;
 
-            var ecommerceVer2Context = _context.Accounts.Include(a => a.Cart).Include(a => a.Role);
+            var ecommerceVer2Context = _context.Accounts.Include(a => a.Role);
             return View(await ecommerceVer2Context.ToListAsync());
         }
 
@@ -46,7 +46,6 @@ namespace EShop.Areas.Admin.Controllers
             }
 
             var account = await _context.Accounts
-                .Include(a => a.Cart)
                 .Include(a => a.Role)
                 .FirstOrDefaultAsync(m => m.UserId == id);
             if (account == null)
@@ -79,7 +78,6 @@ namespace EShop.Areas.Admin.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CartId"] = new SelectList(_context.Carts, "CartId", "CartId", account.CartId);
             ViewData["RoleId"] = new SelectList(_context.Roles, "RoleId", "RoleId", account.RoleId);
             return View(account);
         }
@@ -97,7 +95,6 @@ namespace EShop.Areas.Admin.Controllers
             {
                 return NotFound();
             }
-            ViewData["CartId"] = new SelectList(_context.Carts, "CartId", "CartId", account.CartId);
             ViewData["RoleId"] = new SelectList(_context.Roles, "RoleId", "RoleId", account.RoleId);
             return View(account);
         }
@@ -136,7 +133,6 @@ namespace EShop.Areas.Admin.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CartId"] = new SelectList(_context.Carts, "CartId", "CartId", account.CartId);
             ViewData["RoleId"] = new SelectList(_context.Roles, "RoleId", "RoleId", account.RoleId);
             return View(account);
         }
@@ -150,7 +146,6 @@ namespace EShop.Areas.Admin.Controllers
             }
 
             var account = await _context.Accounts
-                .Include(a => a.Cart)
                 .Include(a => a.Role)
                 .FirstOrDefaultAsync(m => m.UserId == id);
             if (account == null)

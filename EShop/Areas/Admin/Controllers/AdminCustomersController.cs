@@ -33,7 +33,7 @@ namespace EShop.Areas.Admin.Controllers
             ViewData["NameSortParm"] = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
             ViewData["DateSortParm"] = sortOrder == "Date" ? "date_desc" : "Date";
             ViewData["CurrentSort"] = sortOrder;
-            var _customer = from m in _context.Customers.Include(m => m.Cart) select m;
+            var _customer = from m in _context.Customers select m;
             switch (sortOrder)
             {
                 case "name_desc":
@@ -76,7 +76,6 @@ namespace EShop.Areas.Admin.Controllers
             }
 
             var customer = await _context.Customers
-                .Include(c => c.Cart)
                 .FirstOrDefaultAsync(m => m.CustommerId == id);
             if (customer == null)
             {
@@ -117,7 +116,6 @@ namespace EShop.Areas.Admin.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CartId"] = new SelectList(_context.Carts, "CartId", "CartId", customer.CartId);
             return View(customer);
         }
 
@@ -134,7 +132,6 @@ namespace EShop.Areas.Admin.Controllers
             {
                 return NotFound();
             }
-            ViewData["CartId"] = new SelectList(_context.Carts, "CartId", "CartId", customer.CartId);
             return View(customer);
         }
 
@@ -181,7 +178,6 @@ namespace EShop.Areas.Admin.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CartId"] = new SelectList(_context.Carts, "CartId", "CartId", customer.CartId);
             return View(customer);
         }
 
@@ -194,7 +190,6 @@ namespace EShop.Areas.Admin.Controllers
             }
 
             var customer = await _context.Customers
-                .Include(c => c.Cart)
                 .FirstOrDefaultAsync(m => m.CustommerId == id);
             if (customer == null)
             {
