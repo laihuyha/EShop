@@ -204,15 +204,24 @@
                                 <div class="product">
                                     <div class="product-img" style="height:300px; width:260px;">
                                         <img src="~/images/products/@item.ThumbImg" alt="@item.Title">
-                                        <div class="product-label">
-                                            <span class="sale">-@item.Discount%</span>
-                                            @*<span class="new">NEW</span>*@
-                                        </div>
+                                        @if (item.Discount.Value > 0)
+                                        {
+                                            <div class="product-label">
+                                                <span class="sale">-@item.Discount.Value%</span>
+                                            </div>
+                                        }
                                     </div>
                                     <div class="product-body">
                                         <p class="product-category">@item.Cate.CategoryName</p>
                                         <h3 class="product-name"><a href="@url">@item.ProductName</a></h3>
-                                        <h4 class="product-price">@item.Price.Value.ToString("#,##0") VNĐ</h4>
+                                        @if (item.Discount.Value > 0)
+                                        {
+                                            <h4 class="product-price">@item.SalesPrice.Value.ToString("#,##0") VNĐ<del class="product-old-price" style="margin-left:5px;">@item.Price.Value.ToString("#,##0") VNĐ</del></h4>
+                                        }
+                                        else
+                                        {
+                                            <h4 class="product-price">@item.Price.Value.ToString("#,##0") VNĐ</h4>
+                                        }
                                         <div class="product-rating">
                                             <i class="fa fa-star"></i>
                                             <i class="fa fa-star"></i>

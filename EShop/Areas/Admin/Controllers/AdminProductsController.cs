@@ -11,6 +11,7 @@ using System.Globalization;
 using System.IO;
 using EShop.Helpper;
 using AspNetCoreHero.ToastNotification.Abstractions;
+using System.Data;
 
 namespace EShop.Areas.Admin.Controllers
 {
@@ -107,7 +108,7 @@ namespace EShop.Areas.Admin.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ProductId,ProductName,ShortDesc,Descriptions,CateId,Price,Discount,ThumbImg,Video,DateCreated,DateModified,IsBestsellers,Homeflag,IsActived,Tag,Title,Alias,UnitInStock,BrandId")] Product product, Microsoft.AspNetCore.Http.IFormFile fThumbImg)
+        public async Task<IActionResult> Create([Bind("ProductId,ProductName,ShortDesc,Descriptions,CateId,Price,Discount,ThumbImg,Video,DateCreated,DateModified,IsBestsellers,Homeflag,IsActived,Tag,Title,Alias,UnitInStock,BrandId,SalesPrice")] Product product, Microsoft.AspNetCore.Http.IFormFile fThumbImg)
         {
             if (ModelState.IsValid)
             {
@@ -122,6 +123,7 @@ namespace EShop.Areas.Admin.Controllers
                 product.Alias = Utilities.ToUrlFriendly(product.ProductName);
                 product.DateCreated = DateTime.Now;
                 product.DateModified = DateTime.Now;
+                product.SalesPrice = product.Price.Value - (product.Price.Value * (product.Discount.Value) / 100);
                 if (product.Discount == null)
                 {
                     product.Discount = 0;
@@ -159,7 +161,7 @@ namespace EShop.Areas.Admin.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ProductId,ProductName,ShortDesc,Descriptions,CateId,Price,Discount,ThumbImg,Video,DateCreated,DateModified,IsBestsellers,Homeflag,IsActived,Tag,Title,Alias,UnitInStock,BrandId")] Product product)
+        public async Task<IActionResult> Edit(int id, [Bind("ProductId,ProductName,ShortDesc,Descriptions,CateId,Price,Discount,ThumbImg,Video,DateCreated,DateModified,IsBestsellers,Homeflag,IsActived,Tag,Title,Alias,UnitInStock,BrandId,SalesPrice")] Product product, Microsoft.AspNetCore.Http.IFormFile fThumbImg)
         {
             if (id != product.ProductId)
             {
@@ -170,7 +172,23 @@ namespace EShop.Areas.Admin.Controllers
             {
                 try
                 {
+                    product.ProductName = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(product.ProductName);
+                    if (fThumbImg != null)
+                    {
+                        string extennsion = Path.GetExtension(fThumbImg.FileName);
+                        image = Utilities.ToUrlFriendly(product.ProductName) + extennsion;
+                        product.ThumbImg = await Utilities.UploadFile(fThumbImg, @"products", image.ToLower());
+                    }
+                    if (string.IsNullOrEmpty(product.ThumbImg)) product.ThumbImg = "thumb-6.jpg";
+                    product.Alias = Utilities.ToUrlFriendly(product.ProductName);
+                    product.DateModified = DateTime.Now;
+                    product.SalesPrice = product.Price.Value - (product.Price.Value * (product.Discount.Value) / 100);
+                    if (product.Discount == null)
+                    {
+                        product.Discount = 0;
+                    }
                     _context.Update(product);
+                    _notyfService.Success("Sửa thành công!");
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)

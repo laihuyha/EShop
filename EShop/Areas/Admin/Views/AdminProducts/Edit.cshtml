@@ -57,13 +57,13 @@
                         </div>
                         <div class="row">
                             <div class="form-group col-md-4">
-                                <label asp-for="Price" class="control-label">Giá bán</label>
+                                <label asp-for="Price" class="control-label">Giá gốc</label>
                                 <input asp-for="Price" class="form-control" />
                                 <span asp-validation-for="Price" class="text-danger"></span>
                             </div>
                             <div class="form-group col-md-4">
                                 <label asp-for="SalesPrice" class="control-label">Giá bán</label>
-                                <input asp-for="SalesPrice" class="form-control" disabled/>
+                                <input asp-for="SalesPrice" class="form-control" value="@Model.SalesPrice" disabled />
                                 <span asp-validation-for="SalesPrice" class="text-danger"></span>
                             </div>
                             <div class="form-group col-md-4">
