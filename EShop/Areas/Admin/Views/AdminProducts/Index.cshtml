@@ -82,7 +82,7 @@
                                     <td class="text-center align-items-center">@item.Brand.BrandName</td>
                                     <td>@item.Price.Value.ToString("#,##0") VNĐ</td>
                                     <td class="text-center align-items-center">@item.UnitInStock</td>
-                                    @if (item.IsActived)
+                                    @if (item.IsActived && item.UnitInStock > 0)
                                     {
                                         <td>
                                             <div class="d-flex align-items-center">
