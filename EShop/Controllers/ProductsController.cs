@@ -39,13 +39,13 @@ namespace EShop.Controllers
         {
             var pageNo = page == null || page <= 0 ? 1 : page.Value;
             var pageSize = 6;
-            var lstLaptop = _context.Products
+            var lstSmartPhone = _context.Products
                 .AsNoTracking()
                 .Include(a => a.Cate)
                 .Where(a => a.IsActived && a.UnitInStock > 0 && a.Cate.CategoryName == "SmartPhone")
                 .Include(a => a.Brand)
                 .OrderByDescending(a => a.DateCreated);
-            PagedList<Product> model = new PagedList<Product>(lstLaptop, pageNo, pageSize);
+            PagedList<Product> model = new PagedList<Product>(lstSmartPhone, pageNo, pageSize);
             ViewBag.CurrentPage = pageNo;
             return View(model);
         }
@@ -55,13 +55,29 @@ namespace EShop.Controllers
         {
             var pageNo = page == null || page <= 0 ? 1 : page.Value;
             var pageSize = 6;
-            var lstLaptop = _context.Products
+            var lstSale = _context.Products
                 .AsNoTracking()
                 .Include(a => a.Cate)
                 .Where(a => a.IsActived && a.Discount > 0 && a.UnitInStock > 0)
                 .Include(a => a.Brand)
                 .OrderByDescending(a => a.DateCreated);
-            PagedList<Product> model = new PagedList<Product>(lstLaptop, pageNo, pageSize);
+            PagedList<Product> model = new PagedList<Product>(lstSale, pageNo, pageSize);
+            ViewBag.CurrentPage = pageNo;
+            return View(model);
+        }
+
+        [Route("PhuKien.html", Name = "PhuKien")]
+        public IActionResult PhuKien(int? page)
+        {
+            var pageNo = page == null || page <= 0 ? 1 : page.Value;
+            var pageSize = 6;
+            var lstPhuKien = _context.Products
+                .AsNoTracking()
+                .Include(a => a.Cate)
+                .Where(a => a.IsActived && a.Cate.CategoryName == "PhuKien" && a.UnitInStock > 0)
+                .Include(a => a.Brand)
+                .OrderByDescending(a => a.DateCreated);
+            PagedList<Product> model = new PagedList<Product>(lstPhuKien, pageNo, pageSize);
             ViewBag.CurrentPage = pageNo;
             return View(model);
         }
