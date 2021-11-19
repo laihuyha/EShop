@@ -28,7 +28,7 @@ namespace EShop.Areas.Admin.Controllers
         }
 
         // GET: Admin/AdminProducts
-        public async Task<IActionResult> Index(string sortOrder, string currentFilter, string searchStr, int? page)
+        public IActionResult Index(string sortOrder, string currentFilter, string searchStr, int? page)
         {
             ViewData["CateId"] = new SelectList(_context.Categories, "CateId", "CategoryName");
             ViewData["BrandId"] = new SelectList(_context.Brands, "BrandId", "BrandName");

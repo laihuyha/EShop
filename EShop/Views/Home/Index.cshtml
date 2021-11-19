@@ -6,7 +6,7 @@
     Layout = "~/Views/Layout/_Layout.cshtml";
 }
 
-@{ 
+@{
     IEnumerable<Product> _lstNewProduct = (IEnumerable<Product>)ViewBag.ListNPD;
 }
 
@@ -32,7 +32,7 @@
                         <div id="tab1" class="tab-pane active">
                             <div class="products-slick" data-nav="#slick-nav-1">
                                 <!-- product -->
-                                @Html.Partial("~/Views/Product/NewProductPartial.cshtml", _lstNewProduct)
+                                @Html.Partial("~/Views/Home/NPPartial.cshtml", _lstNewProduct)
                                 <!-- /product -->
                             </div>
                             <div id="slick-nav-1" class="products-slick-nav"></div>
@@ -70,7 +70,7 @@
                         <div id="tab2" class="tab-pane fade in active">
                             <div class="products-slick" data-nav="#slick-nav-2">
                                 <!-- product -->
-                                @Html.Partial("~/Views/Product/NewProductPartial.cshtml", _lstNewProduct)
+                                @Html.Partial("~/Views/Home/NPPartial.cshtml", _lstNewProduct)
                                 <!-- /product -->
                             </div>
                             <div id="slick-nav-2" class="products-slick-nav"></div>

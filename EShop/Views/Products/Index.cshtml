@@ -1,7 +1,10 @@
-﻿@using EShop.Models
-@model IEnumerable<Product>
+﻿@using PagedList.Core.Mvc
+@model PagedList.Core.IPagedList<EShop.Models.Product>
+
 @{
-    ViewData["Title"] = "SmartPhone";
+    int _current = ViewBag.CurrentPage;
+    int _next = _current + 1;
+    ViewData["Title"] = "Index";
     Layout = "~/Views/Layout/_StoreLayout.cshtml";
 }
 
@@ -191,54 +194,31 @@
             <div id="store" class="col-md-9">
                 <!-- store products -->
                 <div class="row">
-                    <!-- product -->
-                    <!--<div class="col-md-4 col-xs-6">
-                        <div class="product">
-                            <div class="product-img">
-                                <img src="./img/product01.png" alt="">
-                                <div class="product-label">
-                                    <span class="sale">-30%</span>
-                                    <span class="new">NEW</span>
-                                </div>
-                            </div>
-                            <div class="product-body">
-                                <p class="product-category">Category</p>
-                                <h3 class="product-name"><a href="#">product name goes here</a></h3>
-                                <h4 class="product-price">$980.00 <del class="product-old-price">$990.00</del></h4>
-                                <div class="product-rating">
-                                    <i class="fa fa-star"></i>
-                                    <i class="fa fa-star"></i>
-                                    <i class="fa fa-star"></i>
-                                    <i class="fa fa-star"></i>
-                                    <i class="fa fa-star"></i>
-                                </div>
-                                <div class="product-btns">
-                                    <button class="add-to-wishlist"><i class="fa fa-heart-o"></i><span class="tooltipp">add to wishlist</span></button>
-                                    <button class="add-to-compare"><i class="fa fa-exchange"></i><span class="tooltipp">add to compare</span></button>
-                                    <button class="quick-view"><i class="fa fa-eye"></i><span class="tooltipp">quick view</span></button>
-                                </div>
-                            </div>
-                            <div class="add-to-cart">
-                                <button class="add-to-cart-btn"><i class="fa fa-shopping-cart"></i> add to cart</button>
-                            </div>
-                        </div>
-                    </div>-->
-                    <!-- /product -->
-                    @if (Model != null)
+                    @if (Model != null && Model.Count() > 0)
                     {
                         foreach (var item in Model)
                         {
+                            string url = $"/{item.Alias}-{item.ProductId}.html";
                             <!-- product -->
                             <div class="col-md-4 col-xs-6">
                                 <div class="product">
-                                    <div class="product-img">
+                                    <div class="product-img" style="height:300px; width:260px;">
                                         <img src="~/images/products/@item.ThumbImg" alt="@item.Title">
+                                        @*<div class="product-label">
+                                    <span class="sale">-30%</span>
+                                    <span class="new">NEW</span>
+                                </div>*@
                                     </div>
                                     <div class="product-body">
                                         <p class="product-category">@item.Cate.CategoryName</p>
-                                        <h3 class="product-name"><a href="#">@item.ProductName</a></h3>
+                                        <h3 class="product-name"><a href="@url">@item.ProductName</a></h3>
                                         <h4 class="product-price">@item.Price.Value.ToString("#,##0") VNĐ</h4>
                                         <div class="product-rating">
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star"></i>
                                         </div>
                                         <div class="product-btns">
                                             <button class="add-to-wishlist"><i class="fa fa-heart-o"></i><span class="tooltipp">add to wishlist</span></button>
@@ -252,22 +232,17 @@
                                 </div>
                             </div>
                             <!-- /product -->
+                            <div class="clearfix visible-sm visible-xs"></div>
                         }
                     }
                 </div>
                 <!-- /store products -->
                 <!-- store bottom filter -->
-                <pager class="paper-container" list="@Model" asp-controller="Home" asp-action="SmartPhone"></pager>
                 @*<div class="store-filter clearfix">
-                        <span class="store-qty">Showing 20-100 products</span>
-                        <ul class="store-pagination">
-                            <li class="active">1</li>
-                            <li><a href="#">2</a></li>
-                            <li><a href="#">3</a></li>
-                            <li><a href="#">4</a></li>
-                            <li><a href="#"><i class="fa fa-angle-right"></i></a></li>
-                        </ul>
-                    </div>*@
+                    <ul class="store-pagination">
+                    </ul>
+                </div>*@
+                <pager class="paper-container" list="@Model" asp-area="" asp-controller="Products" asp-action="Index"></pager>
                 <!-- /store bottom filter -->
             </div>
             <!-- /STORE -->
