@@ -33,6 +33,22 @@ namespace EShop.Controllers
             ViewBag.CurrentPage = pageNo;
             return View(model);
         }
+        
+        [Route("SmartPhone.html", Name = "SmartPhone")]
+        public IActionResult SmartPhone(int? page)
+        {
+            var pageNo = page == null || page <= 0 ? 1 : page.Value;
+            var pageSize = 6;
+            var lstLaptop = _context.Products
+                .AsNoTracking()
+                .Include(a => a.Cate)
+                .Where(a => a.IsActived && a.UnitInStock > 0 && a.Cate.CategoryName == "SmartPhone")
+                .Include(a => a.Brand)
+                .OrderByDescending(a => a.DateCreated);
+            PagedList<Product> model = new PagedList<Product>(lstLaptop, pageNo, pageSize);
+            ViewBag.CurrentPage = pageNo;
+            return View(model);
+        }
 
         [Route("Sales.html", Name = "Sales")]
         public IActionResult Sales(int? page)
