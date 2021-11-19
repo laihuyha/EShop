@@ -23,10 +23,12 @@ namespace EShop.Models
         [Display(Name = "Mô tả sản phẩm")]
         public string Descriptions { get; set; }
         public int? CateId { get; set; }
-        [Display(Name ="Giá")]
+        [Display(Name ="Giá gốc")]
         [Required(ErrorMessage ="Không để trống giá")]
         [Range(0, 100000000)]
         public int? Price { get; set; }
+        [Display(Name ="Giá")]
+        public int? SalesPrice { get; set; }
         [Display(Name ="Chiết khấu")]
         public int? Discount { get; set; }
         public string ThumbImg { get; set; }
