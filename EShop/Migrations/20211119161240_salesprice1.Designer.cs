@@ -4,14 +4,16 @@ using EShop.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace EShop.Migrations
 {
     [DbContext(typeof(EcommerceVer2Context))]
-    partial class EcommerceVer2ContextModelSnapshot : ModelSnapshot
+    [Migration("20211119161240_salesprice1")]
+    partial class salesprice1
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -416,17 +418,17 @@ namespace EShop.Migrations
                     b.Property<bool>("IsBestsellers")
                         .HasColumnType("bit");
 
-                    b.Property<decimal?>("Price")
+                    b.Property<float?>("Price")
                         .IsRequired()
-                        .HasColumnType("decimal(18,2)");
+                        .HasColumnType("real");
 
                     b.Property<string>("ProductName")
                         .IsRequired()
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
 
-                    b.Property<decimal?>("SalesPrice")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<float?>("SalesPrice")
+                        .HasColumnType("real");
 
                     b.Property<string>("ShortDesc")
                         .HasMaxLength(255)
