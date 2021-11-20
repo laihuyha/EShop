@@ -1,6 +1,7 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
+using EShop.ViewModel;
 
 #nullable disable
 
@@ -330,5 +331,9 @@ namespace EShop.Models
         }
 
         partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
+
+        public DbSet<EShop.ViewModel.RegisterViewModel> RegisterViewModel { get; set; }
+
+        public DbSet<EShop.ViewModel.LoginViewModel> LoginViewModel { get; set; }
     }
 }
