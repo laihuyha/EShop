@@ -13,7 +13,6 @@ namespace EShop.ViewModel
         [Required(ErrorMessage ="Vui lòng nhập tên tài khoản")]
         public string UserName { get; set; }
 
-        [MaxLength]
         [Required(ErrorMessage = "Vui lòng nhập mật khẩu")]
         [MinLength(5,ErrorMessage ="Mật khẩu tối thiểu cần 6 ký tự")]
         [DataType(DataType.Password)]

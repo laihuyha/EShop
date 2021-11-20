@@ -11,6 +11,7 @@ using EShop.Helpper;
 using System.IO;
 using System.Globalization;
 using AspNetCoreHero.ToastNotification.Abstractions;
+using EShop.Extension;
 
 namespace EShop.Areas.Admin.Controllers
 {
@@ -97,11 +98,12 @@ namespace EShop.Areas.Admin.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("CustommerId,Username,Password,FullName,BirthDay,Avatar,Address,Mail,Phone,Province,District,Ward,CreateDate,LastLogin,IsActived,CartId")] Customer customer, Microsoft.AspNetCore.Http.IFormFile fAvatar)
+        public async Task<IActionResult> Create([Bind("CustommerId,Username,Password,FullName,BirthDay,Avatar,Address,Mail,Phone,Province,District,Ward,CreateDate,LastLogin,IsActived,Randomkey,CartId")] Customer customer, Microsoft.AspNetCore.Http.IFormFile fAvatar)
         {
             if (ModelState.IsValid)
             {
                 customer.FullName = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(customer.FullName);
+                string RandomKey = Utilities.GetRandomKey();
                 if (fAvatar != null)
                 {
                     string extennsion = Path.GetExtension(fAvatar.FileName);
@@ -111,6 +113,7 @@ namespace EShop.Areas.Admin.Controllers
                 if (string.IsNullOrEmpty(customer.Avatar)) customer.Avatar = "avatar.png";
                 customer.CreateDate = DateTime.Now;
                 customer.LastLogin = DateTime.Now;
+                customer.Password = (customer.Password + RandomKey.Trim()).PassToMD5();
                 _context.Add(customer);
                 _notyfService.Success("Thêm thành công!");
                 await _context.SaveChangesAsync();
@@ -140,7 +143,7 @@ namespace EShop.Areas.Admin.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("CustommerId,Username,Password,FullName,BirthDay,Avatar,Address,Mail,Phone,Province,District,Ward,CreateDate,LastLogin,IsActived,CartId")] Customer customer, Microsoft.AspNetCore.Http.IFormFile fAvatar)
+        public async Task<IActionResult> Edit(int id, [Bind("CustommerId,Username,Password,FullName,BirthDay,Avatar,Address,Mail,Phone,Province,District,Ward,CreateDate,LastLogin,IsActived,Randomkey,CartId")] Customer customer, Microsoft.AspNetCore.Http.IFormFile fAvatar)
         {
             if (id != customer.CustommerId)
             {
