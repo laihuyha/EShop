@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
@@ -14,7 +15,11 @@ namespace EShop.Models
         }
 
         public int CustommerId { get; set; }
+        [Remote(action: "ValidateUserName", controller: "Accounts")]
         public string Username { get; set; }
+        [Display(Name = "Mật khẩu")]
+        [MinLength(6, ErrorMessage = "Mật khẩu cần tối thiểu 6 ký tự")]
+        [DataType(DataType.Password)]
         public string Password { get; set; }
         [Display(Name = "Họ và Tên")]
         public string FullName { get; set; }
@@ -23,6 +28,7 @@ namespace EShop.Models
         [Display(Name ="Địa chỉ")]
         public string Address { get; set; }
         [DataType(DataType.EmailAddress, ErrorMessage = "Sai định dạng Email")]
+        [Remote(action: "ValidateEmail", controller: "Accounts")]
         public string Mail { get; set; }
         [Display(Name = "SĐT")]
         [DataType(DataType.PhoneNumber)]

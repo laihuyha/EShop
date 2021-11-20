@@ -68,11 +68,10 @@
     <!-- END: Theme JS-->
     <!-- BEGIN: Page JS-->
     <!-- END: Page JS-->
-
+    @await Component.InvokeAsync("Notyf")
+    @await RenderSectionAsync("Scripts", required: false)
+    @await RenderSectionAsync("Styles", required: false)
 </body>
 <!-- END: Body-->
 
 </html>
-@await Component.InvokeAsync("Notyf")
-@await RenderSectionAsync("Scripts", required: false)
-@await RenderSectionAsync("Styles", required: false)

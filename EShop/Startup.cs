@@ -1,5 +1,6 @@
 using AspNetCoreHero.ToastNotification;
 using EShop.Models;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -29,14 +30,19 @@ namespace EShop
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDistributedMemoryCache();
-
             services.AddSession(options =>
             {
-                options.IdleTimeout = TimeSpan.FromSeconds(300);
+                options.IdleTimeout = TimeSpan.FromSeconds(30);
                 options.Cookie.Name = ".Eshop.Session";
                 options.Cookie.HttpOnly = true;
                 options.Cookie.IsEssential = true;
             });
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+                .AddCookie(p =>
+                {
+                    p.LoginPath = "/login.html";
+                    p.AccessDeniedPath = "/";
+                });
 
             services.AddDbContext<EcommerceVer2Context>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("EShopDb")));

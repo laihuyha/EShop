@@ -8,7 +8,7 @@
     <link rel="shortcut icon" type="image/jpg" href="~/icons8-osu-16.ico" />
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
 
-    <title>Eshop</title>
+    <title>@ViewBag.Title</title>
 
     <!-- Google font -->
     <link href="https://fonts.googleapis.com/css?family=Montserrat:400,500,700" rel="stylesheet">
@@ -24,6 +24,7 @@
     <link type="text/css" rel="stylesheet" href="~/_UserAssets/css/nouislider.min.css" />
 
     <!-- Font Awesome Icon -->
+    <script src="https://kit.fontawesome.com/03e6f106ae.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="~/_UserAssets/css/font-awesome.min.css">
 
     <!-- Custom stlylesheet -->
@@ -52,8 +53,16 @@
                     <li><a href="#"><i class="fa fa-map-marker"></i> TP.HCM</a></li>
                 </ul>
                 <ul class="header-links pull-right">
-                    <li><a href="#"><i class="fa fa-dollar"></i> VNĐ</a></li>
-                    <li><a href="#"><i class="fa fa-user-o"></i> My Account</a></li>
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        <li><a href="MyAccount.html"><i class="fa fa-user-o"></i>Tài khoản của tôi</a></li>
+                        <li><a href="logout"><i class="fas fa-power-off"></i>Đăng xuất</a></li>
+                    }
+                    else
+                    {
+                        <li><a href="register.html"><i class="far fa-registered"></i>Đăng ký</a></li>
+                        <li><a href="login.html"><i class="fas fa-power-off"></i>Đăng nhập</a></li>
+                    }
                 </ul>
             </div>
         </div>
