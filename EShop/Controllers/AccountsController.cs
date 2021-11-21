@@ -22,7 +22,7 @@ namespace EShop.Controllers
     public class AccountsController : Controller
     {
         private readonly EcommerceVer2Context _context;
-        public INotyfService _notyfService { get; }
+        public INotyfService _notyfService { get; } //Import services
         public static string image;
 
         public AccountsController(EcommerceVer2Context context, INotyfService notyfService)
@@ -47,6 +47,13 @@ namespace EShop.Controllers
                 var _custommer = _context.Customers.AsNoTracking().SingleOrDefault(x => x.CustommerId == Convert.ToInt32(AccID));
                 if (_custommer != null)
                 {
+                    var lstOrder = _context.Orders
+                        .AsNoTracking()
+                        .Include(x => x.TransactionStatus)
+                        .Where(x => x.CustomerId == _custommer.CustommerId)
+                        .OrderByDescending(x => x.OrderDate)
+                        .ToList();
+                    ViewBag._lstOrder = lstOrder;
                     return View(_custommer);
                 }
             }
@@ -72,6 +79,12 @@ namespace EShop.Controllers
             if (id == null)
             {
                 return NotFound();
+            }
+
+            var AccID = HttpContext.Session.GetString("CustommerId"); // So sánh ID trong Session với ID của tài khoản đang được Edit
+            if (id != Convert.ToInt32(AccID))
+            {
+                return RedirectToAction("Logout", "Accounts");
             }
 
             var customer = await _context.Customers.FindAsync(id);
@@ -289,7 +302,7 @@ namespace EShop.Controllers
         public IActionResult Login(string returnUrl = null)
         {
             var AccID = HttpContext.Session.GetString("CustommerId");
-            if(AccID != null)
+            if (AccID != null)
             {
                 return RedirectToAction("Index", "Home");
             }
@@ -300,14 +313,14 @@ namespace EShop.Controllers
         [HttpPost]
         [AllowAnonymous]
         [Route("Login.html", Name = "DangNhap")]
-        public async Task<IActionResult> Login(LoginViewModel model,string returnUrl = null)
+        public async Task<IActionResult> Login(LoginViewModel model, string returnUrl = null)
         {
             try
             {
                 if (ModelState.IsValid)
                 {
                     var CTM = _context.Customers.AsNoTracking().SingleOrDefault(x => x.Username.Trim() == model.UserName);
-                    if(CTM == null)
+                    if (CTM == null)
                     {
                         _notyfService.Error("Thông tin đăng nhập không chính xác");
                         return RedirectToAction("Register", "Accounts");
@@ -315,14 +328,14 @@ namespace EShop.Controllers
                     string pass = (model.Password + CTM.Randomkey.Trim()).PassToMD5();
 
                     //Kiểm tra pass có giống vs Password ko
-                    if(CTM.Password != pass)
+                    if (CTM.Password != pass)
                     {
                         _notyfService.Error("Thông tin đăng nhập không chính xác");
                         return View(CTM);
                     }
 
                     //Kiểm tra Acc có bị Disable không
-                    if(CTM.IsActived == false)
+                    if (CTM.IsActived == false)
                     {
                         return RedirectToAction("Notice", "Accounts");
                     }
@@ -340,7 +353,7 @@ namespace EShop.Controllers
                     ClaimsIdentity claimsIdentity = new ClaimsIdentity(claims, "Login");
                     ClaimsPrincipal claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
                     await HttpContext.SignInAsync(claimsPrincipal);
-                    _notyfService.Custom("Đăng nhập thành công!",5,"#EAB14E","fas fa-crown");
+                    _notyfService.Custom("Đăng nhập thành công!", 5, "#EAB14E", "fas fa-crown");
                     return RedirectToAction("Index", "Home");
                 }
                 _notyfService.Error("Thông tin đăng nhập không chính xác");

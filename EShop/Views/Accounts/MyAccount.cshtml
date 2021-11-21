@@ -2,7 +2,8 @@
 @{
     ViewData["Title"] = Model.Username + " Profile Page";
     Layout = "~/Views/Layout/_ProfileLayout.cshtml";
-    string url = $"/{@Model.CustommerId}.html";
+    string url = $"/{Model.CustommerId}.html";
+    List<Order> _lstDonHang = ViewBag._lstOrder;
 }
 
 <div class="container emp-profile">
@@ -17,7 +18,7 @@
                     </div>*@
                 </div>
             </div>
-            <div class="col-md-6">
+            <div class="col-md-7">
                 <div class="profile-head">
                     <h5>
                         @Model.FullName
@@ -33,13 +34,16 @@
                         <li class="nav-item">
                             <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Địa Chỉ</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="profile-tab" data-toggle="tab" href="#lstOrder" role="tab" aria-controls="profile" aria-selected="false">Danh sách đơn hàng</a>
+                        </li>
                     </ul>
                 </div>
             </div>
             <div class="col-md-2">
                 @*<a asp-action="Edit" asp-route-id="@Model.CustommerId" class="btn btn-primary btn-block btn-sm profile-edit-btn">
-                    <i class="fas fa-edit" style="margin-right:5px;"></i>Edit Profile
-                </a>*@
+            <i class="fas fa-edit" style="margin-right:5px;"></i>Edit Profile
+        </a>*@
                 <a href="@url" class="btn btn-primary btn-block btn-sm profile-edit-btn">
                     <i class="fas fa-edit" style="margin-right:5px;"></i>Edit Profile
                 </a>
@@ -51,12 +55,12 @@
         <div class="row">
             <div class="col-md-3">
             </div>
-            <div class="col-md-8">
+            <div class="col-md-9">
                 <div class="tab-content profile-tab" id="myTabContent">
                     <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
                         <div class="row">
                             <div class="col-md-6">
-                                <label>User Id</label>
+                                <label>Username</label>
                             </div>
                             <div class="col-md-6">
                                 <p>@Model.Username</p>
@@ -113,6 +117,7 @@
                             </div>
                         </div>
                     </div>
+                    @await Html.PartialAsync("_OrderPartial.cshtml", _lstDonHang)
                 </div>
             </div>
         </div>

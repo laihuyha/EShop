@@ -21,7 +21,7 @@ namespace EShop.ViewModel
         [DataType(DataType.Password)]
         public string Password { get; set; }
 
-        [MinLength(5, ErrorMessage = "Bạn cần đặt mật khẩu tối thiểu 5 ký tự")]
+        [MinLength(6, ErrorMessage = "Bạn cần đặt mật khẩu tối thiểu 5 ký tự")]
         [Display(Name = "Nhập lại mật khẩu")]
         [Compare("Password", ErrorMessage = "Vui lòng nhập mật khẩu giống nhau")]
         [DataType(DataType.Password)]
