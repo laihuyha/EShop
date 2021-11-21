@@ -6,8 +6,8 @@ using EShop.ViewModel;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -116,8 +116,7 @@ namespace EShop.Controllers
         }
         #endregion
 
-        //Edit
-        #region
+        #region  //Edit
         // GET: Admin/AdminCustomers/Edit/5
         [Route("{id}.html", Name = "ChinhSua")]
         public async Task<IActionResult> Edit(int? id)
@@ -194,8 +193,7 @@ namespace EShop.Controllers
         }
         #endregion
 
-        //Validate
-        #region
+        #region //Validate
         [HttpGet]
         [AllowAnonymous]
         public IActionResult ValidatePhone(string Phone)
@@ -257,8 +255,7 @@ namespace EShop.Controllers
         }
         #endregion
 
-        //Đăng ký
-        #region
+        #region //Đăng ký
         [HttpGet]
         [AllowAnonymous]
         [Route("Register.html", Name = "DangKy")]
@@ -341,8 +338,7 @@ namespace EShop.Controllers
         }
         #endregion
 
-        //Đăng nhập
-        #region
+        #region //Đăng nhập
         [AllowAnonymous]
         [Route("Login.html", Name = "DangNhap")]
         public IActionResult Login(string returnUrl = null)
