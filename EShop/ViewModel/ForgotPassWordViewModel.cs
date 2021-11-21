@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace EShop.ViewModel
 {
-    public class ForgotPassWordViewModel
+    public class ForgotPasswordViewModel
     {
         [Key]
         [MaxLength(100)]

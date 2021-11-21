@@ -28,7 +28,6 @@ namespace EShop.Models
         [Display(Name ="Địa chỉ")]
         public string Address { get; set; }
         [DataType(DataType.EmailAddress, ErrorMessage = "Sai định dạng Email")]
-        [Remote(action: "ValidateEmail", controller: "Accounts")]
         public string Mail { get; set; }
         [Display(Name = "SĐT")]
         [DataType(DataType.PhoneNumber)]

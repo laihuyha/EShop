@@ -335,5 +335,6 @@ namespace EShop.Models
         public DbSet<EShop.ViewModel.RegisterViewModel> RegisterViewModel { get; set; }
 
         public DbSet<EShop.ViewModel.LoginViewModel> LoginViewModel { get; set; }
+
     }
 }
