@@ -4,6 +4,7 @@
     Layout = "~/Views/Layout/_ProfileLayout.cshtml";
     string url = $"/{Model.CustommerId}.html";
     List<Order> _lstDonHang = ViewBag._lstOrder;
+    //EShop.ViewModel.ChangePasswordViewModel ChangePassword = new EShop.ViewModel.ChangePasswordViewModel();
 }
 
 <div class="container emp-profile">
@@ -46,6 +47,9 @@
         </a>*@
                 <a href="@url" class="btn btn-primary btn-block btn-sm profile-edit-btn">
                     <i class="fas fa-edit" style="margin-right:5px;"></i>Edit Profile
+                </a>
+                <a asp-controller="Accounts" asp-action="ChangePassword" class="btn btn-default btn-block btn-sm profile-edit-btn">
+                    <i class="fas fa-arrow-circle-left" style="margin-right:5px;"></i>Đổi mật khẩu
                 </a>
                 <a asp-controller="Home" asp-action="Index" class="btn btn-default btn-block btn-sm profile-edit-btn">
                     <i class="fas fa-arrow-circle-left" style="margin-right:5px;"></i>Back to list

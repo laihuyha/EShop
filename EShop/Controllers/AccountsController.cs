@@ -70,6 +70,52 @@ namespace EShop.Controllers
             return RedirectToAction("Index", "Accounts");
         }
 
+        #region //Change Pass
+
+        [HttpGet]
+        [Route("ChangePassword.html", Name = "DoiMatKhau")]
+        public IActionResult ChangePassword()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [Route("ChangePassword.html", Name = "DoiMatKhau")]
+        public IActionResult ChangePassword(ChangePasswordViewModel changePassword)
+        {
+            try
+            {
+                var AccID = HttpContext.Session.GetString("CustommerId");
+                if (AccID == null)
+                {
+                    return RedirectToAction("Login", "Accounts");
+                }
+                if (ModelState.IsValid)
+                {
+                    var _customer = _context.Customers.Find(Convert.ToInt32(AccID));
+                    if (_customer == null) return RedirectToAction("Login", "Accounts");
+                    var pass = (changePassword.CurrentPassword.Trim() + _customer.Randomkey.Trim()).PassToMD5();
+                    if (pass == _customer.Password)
+                    {
+                        string newpass = (changePassword.Password.Trim() + _customer.Randomkey.Trim()).PassToMD5();
+                        _customer.Password = newpass;
+                        _context.Update(_customer);
+                        _notyfService.Success("Update thành công");
+                        _context.SaveChanges();
+                        return RedirectToAction("MyAccount", "Accounts");
+                    }
+                }
+            }
+            catch
+            {
+                _notyfService.Error("Update 0 thành công");
+                return RedirectToAction("MyAccount", "Accounts");
+            }
+            _notyfService.Error("Update 0 thành công");
+            return RedirectToAction("MyAccount", "Accounts");
+        }
+        #endregion
+
         //Edit
         #region
         // GET: Admin/AdminCustomers/Edit/5
