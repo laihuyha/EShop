@@ -113,9 +113,8 @@ namespace EShop.Areas.Admin.Controllers
                 if (string.IsNullOrEmpty(customer.Avatar)) customer.Avatar = "avatar.png";
                 customer.CreateDate = DateTime.Now;
                 customer.LastLogin = DateTime.Now;
-                var _custommer = _context.Customers.AsNoTracking().SingleOrDefault(x => x.CustommerId == customer.CustommerId);
-                string newpass = (customer.Password.Trim() + _custommer.Randomkey.Trim()).PassToMD5();
-                customer.Password = newpass;
+                customer.Password = (customer.Password + RandomKey.Trim()).PassToMD5();
+                customer.Randomkey = RandomKey;
                 _context.Add(customer);
                 _notyfService.Success("Thêm thành công!");
                 await _context.SaveChangesAsync();

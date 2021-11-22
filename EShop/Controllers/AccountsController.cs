@@ -365,7 +365,7 @@ namespace EShop.Controllers
                     if (CTM == null)
                     {
                         _notyfService.Error("Thông tin đăng nhập không chính xác");
-                        return RedirectToAction("Register", "Accounts");
+                        return RedirectToAction("Login", "Accounts");
                     }
                     string pass = (model.Password + CTM.Randomkey.Trim()).PassToMD5();
 
