@@ -1,4 +1,6 @@
 ﻿using AspNetCoreHero.ToastNotification.Abstractions;
+using EShop.Extension;
+using EShop.Helpper;
 using EShop.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -69,7 +71,7 @@ namespace EShop.Areas.Admin.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("UserId,Username,Password,Email,FullName,Phone,CreateDate,LastLogin,RoleId,IsActived,CartId")] Account account)
+        public async Task<IActionResult> Create([Bind("UserId,Username,Password,Email,FullName,Phone,CreateDate,LastLogin,RoleId,IsActived,CartId,Randomkey")] Account account)
         {
             if (ModelState.IsValid)
             {
@@ -79,6 +81,9 @@ namespace EShop.Areas.Admin.Controllers
                     _notyfService.Error("Tên tài khoản đã được sử dụng");
                     return RedirectToAction(nameof(Create));
                 }
+                string RandomKey = Utilities.GetRandomKey();
+                account.Password = (account.Password + RandomKey.Trim()).PassToMD5();
+                account.Randomkey = RandomKey;
                 _context.Add(account);
                 _notyfService.Success("Thêm thành công!");
                 await _context.SaveChangesAsync();
@@ -110,7 +115,7 @@ namespace EShop.Areas.Admin.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("UserId,Username,Password,Email,FullName,Phone,CreateDate,LastLogin,RoleId,IsActived,CartId")] Account account)
+        public async Task<IActionResult> Edit(int id, [Bind("UserId,Username,Password,Email,FullName,Phone,CreateDate,LastLogin,RoleId,IsActived,CartId,Randomkey")] Account account)
         {
             if (id != account.UserId)
             {
@@ -121,6 +126,9 @@ namespace EShop.Areas.Admin.Controllers
             {
                 try
                 {
+                    var _Account = _context.Accounts.AsNoTracking().SingleOrDefault(x => x.UserId == account.UserId);
+                    string newpass = (account.Password.Trim() + _Account.Randomkey.Trim()).PassToMD5();
+                    account.Password = newpass;
                     _context.Update(account);
                     _notyfService.Success("Sửa thành công!");
                     await _context.SaveChangesAsync();
