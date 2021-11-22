@@ -31,12 +31,6 @@ namespace EShop.Controllers
             _context = context;
         }
 
-        [Route("Index.html", Name = "TrangChu")]
-        public IActionResult Index()
-        {
-            return View();
-        }
-
         //MyAccount
         [Route("MyAccount.html", Name = "TaiKhoanCuaToi")]
         public IActionResult MyAccount()
@@ -67,7 +61,7 @@ namespace EShop.Controllers
         {
             HttpContext.SignOutAsync();
             HttpContext.Session.Remove("CustommerId");
-            return RedirectToAction("Index", "Accounts");
+            return RedirectToAction("Index", "Home");
         }
 
         #region //Change Pass

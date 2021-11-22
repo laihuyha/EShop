@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace EShop.Areas.Admin.Controllers
 {
-    //[Authorize(Roles = "Admin,Staff")]
+    [Authorize(Roles = "Admin,Staff")]
     public class HomeController : Controller
     {
         [Area("Admin")]

@@ -23,6 +23,7 @@
   <ItemGroup>
     <Folder Include="Areas\Admin\Data\" />
     <Folder Include="Enums\" />
+    <Folder Include="Views\ShopCart\" />
     <Folder Include="wwwroot\images\categories\" />
     <Folder Include="wwwroot\images\brands\" />
     <Folder Include="wwwroot\images\products\" />

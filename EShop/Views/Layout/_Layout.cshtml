@@ -56,7 +56,7 @@
                     @if (User.Identity.IsAuthenticated)
                     {
                         <li><a href="MyAccount.html"><i class="fa fa-user-o"></i>Xin chào @User.Identity.Name</a></li>
-                        <li><a href="logout"><i class="fas fa-power-off"></i>Đăng xuất</a></li>
+                        <li><a asp-controller="Accounts" asp-action="Logout"><i class="fas fa-power-off"></i>Đăng xuất</a></li>
                     }
                     else
                     {

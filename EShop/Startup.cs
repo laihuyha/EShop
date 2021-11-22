@@ -41,6 +41,8 @@ namespace EShop
                 .AddCookie(p =>
                 {
                     p.LoginPath = "/login.html";
+                    p.LoginPath = "/Admin/Login/Index";
+                    //p.LogoutPath = "/Tranngchu.html";
                     p.AccessDeniedPath = "/";
                 });
 
