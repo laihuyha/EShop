@@ -4,7 +4,7 @@
     <span>Your Cart</span>
     @if (Model != null && Model.Count() > 0)
     {
-        <div class="qty">@Model.Count()</div>
+        <div class="qty" id="numberCart">@Model.Count()</div>
     }
     else
     {
