@@ -1,5 +1,6 @@
 ﻿using EShop.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using PagedList.Core;
 using System;
@@ -96,6 +97,25 @@ namespace EShop.Controllers
             {
                 return View(product);
             }
+        }
+
+        public IActionResult Search( string searchStr, int? page)
+        {
+            var _product = from m in _context.Products.Include(p => p.Brand).Include(p => p.Cate) select m;
+            
+            //Search
+            ViewData["CurrentFilter"] = searchStr;
+            if (!String.IsNullOrEmpty(searchStr))
+            {
+                _product = _product.Where(p => p.ProductName.Contains(searchStr) || p.ProductId.ToString().Contains(searchStr));
+            }
+            //Paginate
+            var pageNo = page == null || page <= 0 ? 1 : page.Value;
+            var pageSize = 5;
+            PagedList<Product> models = new PagedList<Product>(_product, pageNo, pageSize);
+            ViewBag.CurrentPage = pageNo;
+
+            return View(models);
         }
     }
 }

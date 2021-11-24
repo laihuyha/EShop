@@ -1,0 +1,58 @@
+﻿@model IEnumerable<EShop.Models.Product>
+
+@{
+    ViewData["Title"] = "Search";
+    Layout = "~/Views/Layout/_StoreLayout.cshtml";
+    int _current = ViewBag.CurrentPage;
+    int _next = _current + 1;
+}
+
+@if (Model != null && Model.Count() > 0)
+{
+
+    foreach (var item in Model)
+    {
+        string url = $"/{item.Alias}-{item.ProductId}.html";
+        <div class="col-md-2 col-xs-4">
+            <div class="product">
+                <div class="product-img" style="height:150px">
+                    <img src="~/images/products/@item.ThumbImg" alt="@item.Title">
+                    @if (item.Discount.Value > 0)
+                    {
+                        <div class="product-label">
+                            <span class="sale">-@item.Discount.Value%</span>
+                        </div>
+                    }
+                </div>
+                <div class="product-body">
+                    <p class="product-category">@item.Cate.CategoryName</p>
+                    <h3 class="product-name"><a href="@url">@item.ProductName</a></h3>
+                    @if (item.Discount.Value > 0)
+                    {
+                        <h4 class="product-price">@item.SalesPrice.Value.ToString("#,##0") VNĐ<del class="product-old-price" style="margin-left:5px;">@item.Price.Value.ToString("#,##0") VNĐ</del></h4>
+                    }
+                    else
+                    {
+                        <h4 class="product-price">@item.Price.Value.ToString("#,##0") VNĐ</h4>
+                    }
+                    <div class="product-rating">
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star"></i>
+                    </div>
+                    <div class="product-btns">
+                        <button class="add-to-wishlist"><i class="fa fa-heart-o"></i><span class="tooltipp">add to wishlist</span></button>
+                        <button class="add-to-compare"><i class="fa fa-exchange"></i><span class="tooltipp">add to compare</span></button>
+                        <button class="quick-view"><i class="fa fa-eye"></i><span class="tooltipp">quick view</span></button>
+                    </div>
+                </div>
+                <div class="add-to-cart">
+                    <button class="add-to-cart-btn"><i class="fa fa-shopping-cart"></i> add to cart</button>
+                </div>
+            </div>
+        </div>
+        <div class="clearfix visible-sm visible-xs"></div>
+    }
+}
