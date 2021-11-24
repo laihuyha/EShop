@@ -1,18 +1,18 @@
 ﻿@model List<EShop.ViewModel.CartItem>
 @if (Model != null && Model.Count() > 0)
 {
-    <div class="cart-dropdown">
+    <div class="cart-dropdown" >
         <div class="cart-list">
             @foreach (var item in Model)
             {
                 string url = $"{item.product.Alias}-{item.product.ProductId}";
-                <div class="product-widget">
+                <div class="product-widget" id="miniCart">
                     <div class="product-img" style="height:60px; width:60px;">
                         <img src="~/images/products/@item.product.ThumbImg" alt="@item.product.Title">
                     </div>
                     <div class="product-body">
                         <h3 class="product-name"><a href="@url">@item.product.ProductName</a></h3>
-                        <h4 class="product-price"><span class="qty">@item.Qty x</span>@item.product.SalesPrice.Value.ToString("#,##0") VNĐ</h4>
+                        <h4 class="product-price"><span class="qty">@item.Qty.Value</span>@item.product.SalesPrice.Value.ToString("#,##0") VNĐ</h4>
                     </div>
                     <button class="delete"><i class="fa fa-close"></i></button>
                 </div>

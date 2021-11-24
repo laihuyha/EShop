@@ -62,12 +62,13 @@
                         <div class="qty-label">
                             Qty
                             <div class="input-number">
-                                <input type="number" value="1">
+                                <input id="txtsoluong" name="txtsoluong" type="number" value="1">
                                 <span class="qty-up">+</span>
                                 <span class="qty-down">-</span>
                             </div>
                         </div>
                         <button class="add-to-cart-btn"><i class="fa fa-shopping-cart"></i> add to cart</button>
+                        <input type ="hidden" asp-for="ProductId" />
                     </div>
 
                     <ul class="product-btns">
@@ -260,8 +261,32 @@
     <script>
         $(document).ready(function () {
             $(function () {
-                $()
-            })
-        })
+                $(".add-to-cart-btn").click(function () {
+                    var productID = $('#ProductId').val();
+                    var qty1 = $('#txtsoluong').val();
+                    $.ajax({
+                        url: '/api/cart/add',
+                        type: "POST",
+                        dataType: "JSON",
+                        data: {
+                            productId: productID,
+                            qty: qty1
+                        },
+                        success: function (response) {
+                            loadHeaderCart();
+                            location.reload();
+                        },
+                        error: function (error) {
+                            alert("Lỗi khi post data: " + error.responseText);
+                        }
+                    });
+                });
+            });
+
+            function loadHeaderCart() {
+                $("#miniCart").load("/AjaxContent/HeaderCart")
+                $("#miniCart").load("/AjaxContent/NumberCart")
+            }
+        });
     </script>
 }

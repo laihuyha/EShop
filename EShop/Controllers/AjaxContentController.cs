@@ -12,7 +12,7 @@ namespace EShop.Controllers
         {
             return ViewComponent("HeaderCart");
         }
-        public IActionResult HeaderFavor()
+        public IActionResult NumberCart()
         {
             return ViewComponent("NumberCart");
         }

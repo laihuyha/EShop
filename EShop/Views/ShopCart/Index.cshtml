@@ -22,6 +22,7 @@
                                     <th class="product-subtotal">Tổng tiền</th>
                                 </tr>
                             </thead>
+                           
                             <tbody>
                                 @if (Model != null && Model.Count() > 0)
                                 {
@@ -32,6 +33,7 @@
                                                 <a href="javascript:void(0)">
                                                     <i class="pe-7s-close" title="Remove"></i>
                                                 </a>
+                                                <input type="button" value="X" title="Remove" class="removecart btn btn-primary" data-mahh="@item.product.ProductId" />
                                             </td>
                                             <td class="product-thumbnail">
                                                 <a href="javascript:void(0)">
@@ -77,3 +79,16 @@
         </div>
     </div>
 </div>
+
+@section scripts {
+    <script>
+        $(function () {
+            function loadHeaderCart() {
+                $("#miniCart").load("/AjaxContent/HeaderCart")
+                $("#miniCart").load("/AjaxContent/NumberCart")
+            }
+
+            $(".")
+        });
+    </script>
+}
