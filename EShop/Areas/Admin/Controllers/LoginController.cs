@@ -1,10 +1,16 @@
 ﻿using AspNetCoreHero.ToastNotification.Abstractions;
 using EShop.Extension;
 using EShop.Models;
+using EShop.ViewModel;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace EShop.Areas.Admin.Controllers
@@ -14,10 +20,12 @@ namespace EShop.Areas.Admin.Controllers
     public class LoginController : Controller
     {
         private readonly EcommerceVer2Context _context;
-        private SecurityManager securityManager = new SecurityManager();
-        public INotyfService _notyfService { get; }
+        public INotyfService _notyfService { get; } //Import services
+        public static string image;
+
         public LoginController(EcommerceVer2Context context, INotyfService notyfService)
         {
+            _notyfService = notyfService;
             _context = context;
             _notyfService = notyfService;
         }
@@ -30,41 +38,63 @@ namespace EShop.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        [Route("process")]
-        public IActionResult Process(string username, string password)
+        [AllowAnonymous]
+        [Route("AdLogin.html", Name = "AdDangNhap")]
+        public async Task<IActionResult> AdLogin(LoginViewModel model, string returnUrl = null)
         {
-            var account = processLogin(username, password);
-            if(account!= null)
+            try
             {
-                securityManager.SignIn(this.HttpContext, account);
-                return RedirectToAction("Index", "Home", new { area = "Admin" });
-            }
-            else
-            {
-                ViewBag.Error = "Tài khoản hoặc mật khẩu không chính xác";
-                return View("Index");
-            }
-        }
-
-        private Account processLogin(string username, string password)
-        {
-            var account = _context.Accounts.SingleOrDefault(a => a.Username.Equals(username));
-            if(account != null)
-            {
-                string pass = (password.Trim() + account.Randomkey.Trim()).PassToMD5();
-                if(pass == account.Password)
+                if (ModelState.IsValid)
                 {
-                    return account;
-                }
-            }
-            return null;
-        }
+                    // phải include thằng role vào thì em mới lấy dc du lieu tu bang role
+                    var CTM = _context.Accounts.Include(x=>x.Role).AsNoTracking().SingleOrDefault(x => x.Username.Trim() == model.UserName);
+                    if (CTM == null)
+                    {
+                        _notyfService.Error("Thông tin đăng nhập không chính xác");
+                        return RedirectToAction("AdLogin", "Login", new { Area = "Admin" });
+                    }
+                    string pass = (model.Password + CTM.Randomkey.Trim()).PassToMD5(); //pass nhập vô
 
-        [Route("Signout")]
-        public IActionResult SignOut()
-        {
-            securityManager.SignOut(this.HttpContext);
-            return RedirectToAction("Index", "Login", new { area = "Admin" });
+                    //Kiểm tra pass có giống vs Password ko
+                    if (CTM.Password != pass)
+                    {
+                        _notyfService.Error("Thông tin đăng nhập không chính xác"); // so sánh pass
+                        return View(CTM);
+                    }
+
+                    //Kiểm tra Acc có bị Disable không
+                    if (CTM.IsActived == false)
+                    {
+                        return RedirectToAction("Notice", "Accounts");
+                    }
+
+                    //Lưu luôn Session đỡ phải Login lại
+                    //Lưu Session cho CustomerId
+                    HttpContext.Session.SetString("UserId", CTM.UserId.ToString());
+                    var AccID = HttpContext.Session.GetString("UserId");
+                    //Identity
+                    var claims = new List<Claim>
+                        {
+                            new Claim(ClaimTypes.Name, CTM.FullName),
+                            new Claim("UserId", CTM.UserId.ToString()),
+                            new Claim(ClaimTypes.Role, CTM.Role.RoleName)
+                        };
+                    ClaimsIdentity claimsIdentity = new ClaimsIdentity(claims, "Login");
+                    ClaimsPrincipal claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
+                    await HttpContext.SignInAsync(claimsPrincipal);
+                    _notyfService.Custom("Đăng nhập thành công!", 5, "#EAB14E", "fas fa-crown");
+                    return RedirectToAction("Index", "Home", new { Area = "Admin" }); // sau khi tài khoản mật khẩu đúng các kiểu r thì get từ session ra xong direct về index của Home admin
+
+                    //đợi t x
+                }
+                _notyfService.Error("Thông tin đăng nhập không chính xác");
+                return RedirectToAction("AdLogin", "Login", new { Area = "Admin" });
+            }
+            catch
+            {
+                _notyfService.Error("Thông tin đăng nhập không chính xác");
+                return RedirectToAction("AdLogin", "Login", new { Area = "Admin" });
+            }
         }
     }
 }

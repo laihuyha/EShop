@@ -1,4 +1,4 @@
-﻿
+﻿@model EShop.ViewModel.LoginViewModel
 @{
     ViewData["Title"] = "Index";
     Layout = "~/Views/Layout/_AuthLayout.cshtml";
@@ -19,22 +19,27 @@
                         </div>
                         <div class="card-content">
                             <div class="card-body">
-                                <form asp-area="Admin" asp-controller="Login" asp-action="Process" method="post">
-                                    <span class="text-danger">@ViewBag.Error</span>
+                                <div class="d-flex flex-md-row flex-column justify-content-around">
+                                </div>
+                                <div class="divider">
+                                </div>
+                                <form asp-area="Admin" asp-controller="Login" asp-action="AdLogin" method="post">
                                     <div class="form-group mb-50">
-                                        <label class="control-label">Username</label>
-                                        <input type="text" required="required" class="form-control" placeholder="Tên tài khoản" name="username" />
+                                        <label class="text-bold-600" for="exampleInputEmail1">Email address</label>
+                                        <input type="text" asp-for="UserName" class="form-control" id="exampleInputEmail1" placeholder="Email address">
                                     </div>
                                     <div class="form-group">
-                                        <label class="control-label">Password</label>
-                                        <input type="password" required="required" class="form-control" placeholder="Mật khẩu" name="password" />
+                                        <label class="text-bold-600" for="exampleInputPassword1">Password</label>
+                                        <input type="password" asp-for="Password" class="form-control" id="exampleInputPassword1" placeholder="Password">
                                     </div>
                                     <div class="form-group d-flex flex-md-row flex-column justify-content-between align-items-center">
                                         <div class="text-left">
+                                            <div class="checkbox checkbox-sm">
+                                            </div>
                                         </div>
                                         <div class="text-right"></div>
                                     </div>
-                                    <button type="submit" class="btn btn-primary glow w-100 position-relative">Đăng nhập<i id="icon-arrow" class="bx bx-right-arrow-alt"></i></button>
+                                    <button type="submit" class="btn btn-primary glow w-100 position-relative">Login<i id="icon-arrow" class="bx bx-right-arrow-alt"></i></button>
                                 </form>
                             </div>
                         </div>

@@ -14,7 +14,7 @@
             <!-- Product main img -->
             <div class="col-md-5 col-md-push-2">
                 <div id="product-main-img">
-                    <div class="product-preview">
+                    <div class="product-preview" style="height :458px; width:458px;">
                         <img src="~/images/products/@Model.ThumbImg" alt="@Model.Title">
                     </div>
                 </div>
@@ -105,7 +105,7 @@
                         <div id="tab1" class="tab-pane fade in active">
                             <div class="row">
                                 <div class="col-md-12">
-                                    <p>@Model.Descriptions</p>
+                                    <p>@Html.Raw(Model.Descriptions)</p>
                                 </div>
                             </div>
                         </div>
@@ -256,3 +256,12 @@
     <!-- /container -->
 </div>
 <!-- End RelateProduct Section -->
+@section scripts {
+    <script>
+        $(document).ready(function () {
+            $(function () {
+                $()
+            })
+        })
+    </script>
+}

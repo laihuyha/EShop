@@ -112,7 +112,6 @@ namespace EShop.Controllers
 
         #region  //Edit
         // GET: Admin/AdminCustomers/Edit/5
-        [Route("{id}.html", Name = "ChinhSua")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -139,7 +138,6 @@ namespace EShop.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Route("{id}.html", Name = "ChinhSua")]
         public async Task<IActionResult> Edit(int id, [Bind("CustommerId,Username,Password,FullName,BirthDay,Avatar,Address,Mail,Phone,Province,District,Ward,CreateDate,LastLogin,IsActived,Randomkey")] Customer customer, Microsoft.AspNetCore.Http.IFormFile fAvatar)
         {
             if (id != customer.CustommerId)
@@ -181,9 +179,9 @@ namespace EShop.Controllers
             return View(customer);
         }
 
-        private bool CustomerExists(int id)
+        private bool CustomerExists(int UserId)
         {
-            return _context.Customers.Any(e => e.CustommerId == id);
+            return _context.Customers.Any(e => e.CustommerId == UserId);
         }
         #endregion
 
