@@ -32,7 +32,8 @@ namespace EShop
             services.AddDistributedMemoryCache();
             services.AddSession(options =>
             {
-                options.IdleTimeout = TimeSpan.FromSeconds(120);
+                options.Cookie.Name = ".EShop";
+                options.IdleTimeout = TimeSpan.FromSeconds(300);
                 options.Cookie.HttpOnly = true;
                 options.Cookie.IsEssential = true;
             });
@@ -47,7 +48,7 @@ namespace EShop
             services.AddDbContext<EcommerceVer2Context>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("EShopDb")));
             services.AddSingleton<HtmlEncoder>(HtmlEncoder.Create(allowedRanges: new[] { UnicodeRanges.All }));
-            services.AddControllersWithViews().AddRazorRuntimeCompilation();
+            services.AddControllersWithViews().AddRazorRuntimeCompilation().AddSessionStateTempDataProvider();
             services.AddNotyf(config => { config.DurationInSeconds = 1; config.IsDismissable = false; config.Position = NotyfPosition.TopRight; });
         }
 
