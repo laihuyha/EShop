@@ -7,16 +7,19 @@
     int _next = _current + 1;
 }
 
-@if (Model != null && Model.Count() > 0)
+@if (Model.Count() == 0 )
 {
-
+    <h4 style="text-align:center">Không tìm thấy </h4>
+}
+else
+{
     foreach (var item in Model)
     {
         string url = $"/{item.Alias}-{item.ProductId}.html";
         <div class="col-md-2 col-xs-4">
             <div class="product">
-                <div class="product-img" style="height:150px">
-                    <img src="~/images/products/@item.ThumbImg" alt="@item.Title">
+                <div class="product-img" style="height:150px" >
+                    <img style="height:150px" src="~/images/products/@item.ThumbImg" alt="@item.Title">
                     @if (item.Discount.Value > 0)
                     {
                         <div class="product-label">

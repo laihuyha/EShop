@@ -41,10 +41,10 @@
                 <!-- SEARCH BAR -->
                 <div class="col-md-6">
                     <div class="header-search">
-                        @using (Html.BeginForm("Search", "Products", FormMethod.Get))
+                        @using (Html.BeginForm("Search", "Products", FormMethod.Post))
                         {
                             <form asp-controller="Products" asp-action="Search">
-                                <input class="input" placeholder="Search here" value="@ViewData["CurrentFilter"]" required />
+                                <input class="input" name="searchStr" placeholder="Search here" value="@ViewData["CurrentFilter"]" required />
                                 <button type="submit" class="search-btn">Search</button>
                             </form>
                         }
