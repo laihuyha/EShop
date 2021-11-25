@@ -42,6 +42,7 @@ namespace EShop
                 {
                     p.LoginPath = "/login.html";
                     p.LoginPath = "/Admin/Login/Index";
+                    p.LogoutPath = "/";
                     p.AccessDeniedPath = "/";
                 });
 

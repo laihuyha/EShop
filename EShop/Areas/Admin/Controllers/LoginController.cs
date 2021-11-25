@@ -94,5 +94,15 @@ namespace EShop.Areas.Admin.Controllers
                 return RedirectToAction("AdLogin", "Login", new { Area = "Admin" });
             }
         }
+
+        [HttpGet]
+        [Route("SignOut", Name = "DangXuatAd")]
+        public IActionResult Logout(string url = null)
+        {
+            url = "/Home/Index";
+            HttpContext.SignOutAsync();
+            HttpContext.Session.Remove("CustommerId");
+            return RedirectToAction(url);
+        }
     }
 }
