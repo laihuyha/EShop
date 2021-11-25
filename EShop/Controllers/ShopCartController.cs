@@ -154,6 +154,7 @@ namespace EShop.Controllers
                     }
 
                     GetSession.Set(HttpContext.Session, "GioHang", carts);
+                    _notyfService.Success("Update thành công");
                     return Json(new { succcess = true });
                 }
                 return Json(new { succcess = false });
@@ -178,6 +179,7 @@ namespace EShop.Controllers
                     carts.Remove(item);
                 }
                 GetSession.Set(HttpContext.Session, "GioHang", carts);
+                _notyfService.Success("Xóa thành công sản phẩm khỏi giỏ hàng");
                 return Json(new { succcess = true });
             }
             catch (Exception)
