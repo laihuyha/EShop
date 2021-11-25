@@ -1,4 +1,5 @@
 ﻿using AspNetCoreHero.ToastNotification.Abstractions;
+using EShop.Models;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -7,22 +8,19 @@ using System.Threading.Tasks;
 
 namespace EShop.Controllers
 {
-    public class AjaxContentController : Controller
+    public class CheckoutController : Controller
     {
+        private readonly EcommerceVer2Context _context;
         public INotyfService _notyfService { get; } //Import services
 
-        public AjaxContentController(INotyfService notyfService)
+        public CheckoutController(EcommerceVer2Context context, INotyfService notyfService)
         {
             _notyfService = notyfService;
+            _context = context;
         }
-
-        public IActionResult HeaderCart()
+        public IActionResult Index()
         {
-            return ViewComponent("HeaderCart");
-        }
-        public IActionResult NumberCart()
-        {
-            return ViewComponent("NumberCart");
+            return View();
         }
     }
 }

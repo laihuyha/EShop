@@ -3,6 +3,7 @@
 @{
     ViewData["Title"] = "Details";
     Layout = "~/Views/Layout/_ProductLayout.cshtml";
+    string url1 = $"{Model.Cate.CategoryName}.html";
 }
 
 <!-- SECTION -->
@@ -71,14 +72,14 @@
                         <input type ="hidden" asp-for="ProductId" />
                     </div>
 
-                    <ul class="product-btns">
+                    @*<ul class="product-btns">
                         <li><a href="#"><i class="fa fa-heart-o"></i> add to wishlist</a></li>
                         <li><a href="#"><i class="fa fa-exchange"></i> add to compare</a></li>
-                    </ul>
+                    </ul>*@
 
                     <ul class="product-links">
                         <li>Category:</li>
-                        <li><a href="#">@Model.Cate.CategoryName</a></li>
+                        <li><a href="@url1">@Model.Cate.CategoryName</a></li>
                     </ul>
 
                     <ul class="product-links">
@@ -280,6 +281,24 @@
                             alert("Lỗi khi post data: " + error.responseText);
                         }
                     });
+                });
+            });
+
+            $(".delete").click(function () {
+                var productID = $(this).attr("data-mahh");
+                $.ajax({
+                    url: "api/cart/remove",
+                    type: "POST",
+                    dataType: "JSON",
+                    data: {
+                        productId: productID,
+                    },
+                    success: function (result) {
+                        location.reload();
+                    },
+                    error: function (rs) {
+                        alert("Lỗi khi Xóa !!!");
+                    }
                 });
             });
 
