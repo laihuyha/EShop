@@ -22,7 +22,7 @@
                                     <th class="product-subtotal">Tổng tiền</th>
                                 </tr>
                             </thead>
-                           
+
                             <tbody>
                                 @if (Model != null && Model.Count() > 0)
                                 {
@@ -30,21 +30,18 @@
                                     {
                                         <tr>
                                             <td class="product_remove">
-                                                <a href="javascript:void(0)">
-                                                    <i class="pe-7s-close" title="Remove"></i>
-                                                </a>
                                                 <input type="button" value="X" title="Remove" class="removecart btn btn-primary" data-mahh="@item.product.ProductId" />
                                             </td>
                                             <td class="product-thumbnail">
                                                 <a href="javascript:void(0)">
-                                                    <img src="~/images/products/@item.product.ThumbImg" alt="@item.product.Title">
+                                                    <img src="~/images/products/@item.product.ThumbImg" alt="@item.product.Title" style="height: 124px; width:112px;">
                                                 </a>
                                             </td>
                                             <td class="product-name"><a href="javascript:void(0)">@item.product.ProductName</a></td>
                                             <td class="product-price"><span class="amount">@item.product.SalesPrice.Value.ToString("#,##0") VNĐ</span></td>
                                             <td class="quantity">
                                                 <div class="cart-plus-minus">
-                                                    <input class="cart-plus-minus-box" value="@item.Qty" type="text">
+                                                    <input class="cart-plus-minus-box" value="@item.Qty" type="text" data-mahh="@item.product.ProductId">
                                                 </div>
                                             </td>
                                             <td class="product-subtotal"><span class="amount">@item.TotalMoney.Value.ToString("#,##0") VNĐ</span></td>
@@ -68,7 +65,7 @@
                             <div class="cart-page-total">
                                 <h2>Tổng cộng</h2>
                                 <ul>
-                                    <li>Total<span>@Model.Sum(x=>x.TotalMoney.Value).ToString("#,##0") VNĐ</span></li>
+                                    <li>Total<span>@Model.Sum(x => x.TotalMoney.Value).ToString("#,##0") VNĐ</span></li>
                                 </ul>
                                 <a href="javascript:void(0)">Thanh Toán</a>
                             </div>
@@ -82,13 +79,54 @@
 
 @section scripts {
     <script>
+        /*import { error } from "toastr";*/
+
         $(function () {
             function loadHeaderCart() {
                 $("#miniCart").load("/AjaxContent/HeaderCart")
                 $("#miniCart").load("/AjaxContent/NumberCart")
             }
 
-            $(".")
+            $(".cart-plus-minus-box").click(function () {
+                var productID = $(this).attr("data-mahh");
+                console.log(productID);
+                var qty1 = parseInt($(this).val());
+                console.log(productID);
+                $.ajax({
+                    url: "api/cart/update",
+                    type: "POST",
+                    dataType: "JSON",
+                    data: {
+                        productId: productID,
+                        qty: qty1
+                    },
+                    success: function (result) {
+                        window.location = 'cartItem.html';
+                    },
+                    error: function (rs) {
+                        alert("Lỗi cập nhật !!!");
+                    }
+                });
+            });
+
+
+            $(".removecart").click(function () {
+                var productID = $(this).attr("data-mahh");
+                $.ajax({
+                    url: "api/cart/remove",
+                    type: "POST",
+                    dataType: "JSON",
+                    data: {
+                        productId: productID,
+                    },
+                    success: function (result) {
+                        location.reload();
+                    },
+                    error: function (rs) {
+                        alert("Lỗi khi Xóa !!!");
+                    }
+                });
+            });
         });
     </script>
 }

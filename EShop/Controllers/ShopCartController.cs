@@ -122,26 +122,41 @@ namespace EShop.Controllers
             }
         }
 
-
         // 2. Cập nhật giỏ hàng
         [HttpPost]
         [Route("api/cart/update")]
         public IActionResult UpdateCart(int productId, int? qty)
         {
-            var carts = HttpContext.Session.Get<List<CartItem>>("GioHang");
+            List<CartItem> carts = GioHang;
             try
             {
                 if (carts != null)
                 {
-                    CartItem item = GioHang.SingleOrDefault(x => x.product.ProductId == productId);
-                    if (item != null && qty.HasValue) // giỏ hàng có đồ
+                    //CartItem item = GioHang.SingleOrDefault(x => x.product.ProductId == productId);
+                    //if (item != null && qty.HasValue) // giỏ hàng có đồ
+                    //{
+                    //    item.Qty = qty.Value; // số lượng = số lượng nhập vào
+                    //}
+
+                    Product hh = _context.Products.SingleOrDefault(p => p.ProductId == productId);
+                    int index = Exists(carts, productId);
+                    if (index == -1)
                     {
-                        item.Qty = qty.Value; // số lượng = số lượng nhập vào
+                        carts.Add(new CartItem
+                        {
+                            Qty = qty.HasValue ? qty.Value : 1, // chưa có mặc định nó về 1
+                            product = hh
+                        });
+                    }
+                    else
+                    {
+                        carts[index].Qty = qty.Value;
                     }
 
-                    HttpContext.Session.Set<List<CartItem>>("GioHang", carts);
+                    GetSession.Set(HttpContext.Session, "GioHang", carts);
+                    return Json(new { succcess = true });
                 }
-                return Json(new { succcess = true });
+                return Json(new { succcess = false });
             }
             catch
             {
@@ -162,13 +177,12 @@ namespace EShop.Controllers
                 {
                     carts.Remove(item);
                 }
-                HttpContext.Session.Set<List<CartItem>>("GioHang", carts);
+                GetSession.Set(HttpContext.Session, "GioHang", carts);
                 return Json(new { succcess = true });
             }
             catch (Exception)
             {
                 return Json(new { succcess = false });
-                throw;
             }
         }
         #endregion
