@@ -202,11 +202,6 @@ namespace EShop.Models
                     .HasColumnType("datetime")
                     .HasDefaultValueSql("('0001-01-01T00:00:00.000')");
 
-                entity.Property(e => e.PaymentDate).HasColumnType("datetime");
-
-                entity.Property(e => e.PaymentId).HasColumnName("PaymentID");
-
-                entity.Property(e => e.ShipDate).HasColumnType("datetime");
 
                 entity.Property(e => e.TransactionStatusId).HasColumnName("TransactionStatusID");
 
@@ -233,7 +228,7 @@ namespace EShop.Models
 
                 entity.Property(e => e.ProductId).HasColumnName("ProductID");
 
-                entity.Property(e => e.Shipdate).HasColumnType("datetime");
+                entity.Property(e => e.CreateDate).HasColumnType("datetime");
 
                 entity.HasOne(d => d.Order)
                     .WithMany(p => p.OrderDetails)

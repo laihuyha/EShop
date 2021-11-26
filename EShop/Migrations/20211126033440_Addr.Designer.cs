@@ -4,14 +4,16 @@ using EShop.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace EShop.Migrations
 {
     [DbContext(typeof(EcommerceVer2Context))]
-    partial class EcommerceVer2ContextModelSnapshot : ModelSnapshot
+    [Migration("20211126033440_Addr")]
+    partial class Addr
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -298,9 +300,6 @@ namespace EShop.Migrations
                         .HasColumnName("OrderID")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("Address")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<int?>("CustomerId")
                         .HasColumnType("int")
                         .HasColumnName("CustomerID");
@@ -322,8 +321,18 @@ namespace EShop.Migrations
                         .HasColumnType("datetime")
                         .HasDefaultValueSql("('0001-01-01T00:00:00.000')");
 
+                    b.Property<DateTime?>("PaymentDate")
+                        .HasColumnType("datetime");
+
+                    b.Property<int?>("PaymentId")
+                        .HasColumnType("int")
+                        .HasColumnName("PaymentID");
+
                     b.Property<string>("Province")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("ShipDate")
+                        .HasColumnType("datetime");
 
                     b.Property<decimal?>("TotalMoney")
                         .HasColumnType("decimal(18,2)");
@@ -352,9 +361,6 @@ namespace EShop.Migrations
                         .HasColumnName("OrderDetailID")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<DateTime?>("CreateDate")
-                        .HasColumnType("datetime");
-
                     b.Property<int?>("Discount")
                         .HasColumnType("int");
 
@@ -365,9 +371,6 @@ namespace EShop.Migrations
                     b.Property<int?>("OrderNumber")
                         .HasColumnType("int");
 
-                    b.Property<decimal?>("Price")
-                        .HasColumnType("decimal(18,2)");
-
                     b.Property<int?>("ProductId")
                         .HasColumnType("int")
                         .HasColumnName("ProductID");
@@ -375,8 +378,11 @@ namespace EShop.Migrations
                     b.Property<int?>("Quantity")
                         .HasColumnType("int");
 
-                    b.Property<decimal?>("Total")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<DateTime?>("Shipdate")
+                        .HasColumnType("datetime");
+
+                    b.Property<int?>("Total")
+                        .HasColumnType("int");
 
                     b.HasKey("OrderDetailId");
 

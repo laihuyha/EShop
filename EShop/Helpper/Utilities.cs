@@ -32,6 +32,22 @@ namespace EShop.Helpper
             return result;
         }
 
+        public static string StripHTML(string input)
+        {
+            try
+            {
+                if (!string.IsNullOrEmpty(input))
+                {
+                    return Regex.Replace(input, "<.*?>", String.Empty);
+                }
+            }
+            catch
+            {
+                return null;
+            }
+            return null;
+        }
+
         public static string GetRandomKey(int length = 5)
         {
             //chuỗi mẫu (pattern)
