@@ -3,7 +3,7 @@
     ViewData["Title"] = Model.Username + " Profile Page";
     Layout = "~/Views/Layout/_ProfileLayout.cshtml";
     //string url = $"/{Model.CustommerId}.html";
-    List<Order> _lstDonHang = ViewBag._lstOrder;    
+    List<Order> _lstDonHang = ViewBag._lstOrder;
 }
 
 <div class="container emp-profile">
@@ -13,9 +13,9 @@
                 <div class="profile-img" style="height:135px; width:235px;">
                     <img src="~/images/User/@Model.Avatar" alt="@Model.FullName" />
                     @*<div class="file btn btn-lg btn-primary">
-                        Change Photo
-                        <input type="file" name="file" />
-                    </div>*@
+                            Change Photo
+                            <input type="file" name="file" />
+                        </div>*@
                 </div>
             </div>
             <div class="col-md-7">
@@ -42,8 +42,8 @@
             </div>
             <div class="col-md-2">
                 @*<a asp-action="Edit" asp-route-id="@Model.CustommerId" class="btn btn-primary btn-block btn-sm profile-edit-btn">
-            <i class="fas fa-edit" style="margin-right:5px;"></i>Edit Profile
-        </a>*@
+                        <i class="fas fa-edit" style="margin-right:5px;"></i>Edit Profile
+                    </a>*@
                 <a asp-controller="Accounts" asp-action="Edit" asp-route-id="@Model.CustommerId" class="btn btn-primary btn-block btn-sm profile-edit-btn">
                     <i class="fas fa-edit" style="margin-right:5px;"></i>Edit Profile
                 </a>
@@ -120,7 +120,82 @@
                             </div>
                         </div>
                     </div>
-                    @await Html.PartialAsync("_OrderPartial.cshtml", _lstDonHang)
+                    @if (_lstDonHang != null && _lstDonHang.Count() > 0)
+                    {
+                        <div class="tab-pane fade" id="lstOrder" role="tabpanel" aria-labelledby="profile-tab">
+                            <div class="table-responsive">
+                                <table class="table align-items-center mb-0">
+                                    <thead>
+                                        <tr>
+                                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Mã Đơn Hàng</th>
+                                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                                Ngày mua
+                                            </th>
+                                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                                Trạng thái giao dịch
+                                            </th>
+                                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                                Trạng thái
+                                            </th>
+                                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                                Tổng tiền
+                                            </th>
+                                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                                Note
+                                            </th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var item in _lstDonHang)
+                                        {
+                                            string url = $"/chi-tiet-don-hang-{item.OrderId}.html";
+                                            <tr>
+                                                <td>
+                                                    <div class="d-flex px-2">
+                                                        <div class="my-auto">
+                                                            <h6 class="mb-0 text-xs">@item.OrderId</h6>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <p class="text-xs font-weight-normal mb-0">@item.OrderDate</p>
+                                                </td>
+                                                <td>
+                                                    <p class="text-xs font-weight-normal mb-0">@item.TransactionStatus.Descriptions</p>
+                                                </td>
+                                                <td>
+                                                    <p class="text-xs font-weight-normal mb-0">@item.IsPaid</p>
+                                                </td>
+                                                <td>
+                                                    <p class="text-xs font-weight-normal mb-0">@item.TotalMoney.Value.ToString("#,##0") VNĐ</p>
+                                                </td>
+                                                <td>
+                                                    <p class="text-xs font-weight-normal mb-0">@item.Note</p>
+                                                </td>
+                                                <td>
+                                                    <a class="btn btn-secondary btn-primary-hover" href="@url" id="xemdonhang" data-madonhang="@item.OrderId">Xem chi tiết</a>
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                                <br />
+                                <br />
+                                <br />
+                                <hr />
+                                <div id="record_table">
+
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="tab-pane fade" id="lstOrder" role="tabpanel" aria-labelledby="profile-tab">
+                            <p>Danh sách đơn hàng rỗng</p>
+                        </div>
+                    }
                 </div>
             </div>
         </div>
@@ -251,12 +326,12 @@
     <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 
-    <script>
+    @*<script>
         $(document).ready(function () {
             $("#xemdonhang").click(function () {
                 var madonhang = $(this).attr("data-madonhang")
                 $.ajax({
-                    url: '/DonHang/Index',
+                    url: '/DonHang/Details',
                     dataType: "JSON",
                     type: "POST",
                     data: { id: madonhang },
@@ -271,5 +346,5 @@
                 });
             });
         });
-    </script>
+    </script>*@
 }
