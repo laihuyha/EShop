@@ -22,43 +22,41 @@ namespace EShop.Controllers
             _context = context;
         }
 
-        [HttpPost]
-        public IActionResult Index(int? id)
+        public Order Detail { get; set; }
+        
+        
+        [HttpGet]
+        [Route("chi-tiet-don-hang-{id}.html", Name = "Chitietdonhang")]
+        public IActionResult Details(int? id)
         {
-            if(id == null)
+            if (id == null)
             {
                 return NotFound();
             }
-            try
+            var taikhoannID = HttpContext.Session.GetString("CustommerId");
+            if (string.IsNullOrEmpty(taikhoannID))
+                return RedirectToAction("Login", "Accounts");
+            var khachhang = _context.Customers.AsNoTracking().SingleOrDefault(x => x.CustommerId == Convert.ToInt32(taikhoannID));
+            if (khachhang == null)
+                return NotFound();
+            var donhang = _context.Orders
+                .Include(x => x.TransactionStatus)
+                .Include(x=>x.Customer)
+                .FirstOrDefault(m => m.OrderId == id && Convert.ToInt32(taikhoannID) == m.CustomerId);
+            if (donhang == null)
             {
-                var taikhoannID = HttpContext.Session.GetString("CustommerId");
-                if (string.IsNullOrEmpty(taikhoannID)) return RedirectToAction("Login", "Accounts");
-                var khachhang = _context.Customers.AsNoTracking().SingleOrDefault(x => x.CustommerId == Convert.ToInt32(taikhoannID));
-                if (khachhang == null) return NotFound();
-                var donhang = _context.Orders
-                    .Include(x => x.TransactionStatus)
-                    .FirstOrDefault(m => m.OrderId == id && Convert.ToInt32(taikhoannID) == m.CustomerId);
-                if(donhang == null)
-                {
-                    return NotFound();
-                }
-                var chitietdonhang = _context.OrderDetails
-                    .Include(x => x.Product).AsNoTracking()
-                    .Where(x => x.OrderId == id)
-                    .OrderBy(x => x.OrderDetailId)
-                    .ToList();
-                XemDonHang donHang = new XemDonHang();
-                donHang.DonHang = donhang;
-                donHang.ChiTietDonHang = chitietdonhang;
-                ViewBag.donHang = donHang;
-                return View(donHang);
+                return NotFound();
             }
-            catch (Exception)
-            {
-
-                throw;
-            }
-            //return View();
+            var chitietdonhang = _context.OrderDetails
+                .Include(x => x.Product).AsNoTracking()
+                .Where(x => x.OrderId == id)
+                .OrderBy(x => x.OrderDetailId).ToList(); // ma de kieu do thi no bi conflict
+            XemDonHang donHang = new XemDonHang(); // khoi tao viewmodel, oce nay dm k thay, TA TV lung tung dau ca mat
+            donHang.DonHang = donhang;
+            donHang.ChiTietDonHang = chitietdonhang;
+            ViewBag.donHang = donHang;
+            return View(donHang);
+            //return PartialView("Details", donHang);
         }
     }
 }

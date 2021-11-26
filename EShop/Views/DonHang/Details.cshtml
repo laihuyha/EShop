@@ -2,7 +2,6 @@
 @{
     ViewData["Title"] = "Index";
     Layout = "~/Views/Layout/_InvoiceLayout.cshtml";
-    List<EShop.ViewModel.XemDonHang> xemDonHangs = ViewBag.donHang;
 }
 
 <div class="main-content" style="margin-left: -20%">
@@ -12,7 +11,7 @@
                 <div id="invoice" class="p-h-30">
                     <div class="m-t-15 lh-2">
                         <div class="inline-block">
-                            <img class="img-fluid" src="assets/images/logo/logo.png" alt="">
+                            <img class="img-fluid" src="~/_AdminAssets/images/logo/logo.png" alt="" style="height:130px;width:260px;">
                             <address class="p-l-10">
                                 <span class="font-weight-semibold text-dark">EShop, Inc.</span><br>
                                 <span>9498 Harvard Street</span><br>
@@ -29,15 +28,24 @@
                         <div class="col-sm-9">
                             <h3 class="p-l-10 m-t-10">Invoice To:</h3>
                             <address class="p-l-10 m-t-10">
-                                <span class="font-weight-semibold text-dark">@Model.DonHang.Address</span><br>
-                                <span>@Model.DonHang.Province </span><br>
-                                <span>@Model.DonHang.Province</span>
-                                <span>@Model.DonHang.Province</span>
-                                <span>@Model.DonHang.Province</span>
-                                <span>@Model.DonHang.Province</span>
-                                <span>@Model.DonHang.Customer.FullName</span>
-                                <span>@Model.DonHang.Customer.Phone</span>
-                                <span>@Model.DonHang.Customer.Mail</span>
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <span><a style="font-weight: 800; margin-right:10px;">Họ tên khách hàng:</a></span><br>
+                                        <span><a style="font-weight: 800; margin-right: 10px;">Địa chỉ:</a></span><br>
+                                        <span><a style="font-weight: 800; margin-right: 10px;">Số điện thoại:</a></span><br>
+                                        <span><a style="font-weight: 800; margin-right: 10px;">Tỉnh/Thành phố:</a></span><br>
+                                        <span><a style="font-weight: 800; margin-right: 10px;">Quận huyện:</a></span><br>
+                                        <span><a style="font-weight: 800; margin-right: 10px; ">Phường xã:</a></span><br>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <span>@Model.DonHang.Customer.FullName</span><br>
+                                        <span>@Model.DonHang.Address</span><br>
+                                        <span>@Model.DonHang.Customer.Phone</span><br>
+                                        <span>@Model.DonHang.Province</span><br>
+                                        <span>@Model.DonHang.District</span><br>
+                                        <span>@Model.DonHang.Ward</span><br>
+                                    </div>
+                                </div>
                             </address>
                         </div>
                         <div class="col-sm-3">
@@ -66,16 +74,16 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @if (xemDonHangs != null && xemDonHangs.Count() > 0)
+                                    @if (Model != null)
                                     {
-                                        foreach (var item in xemDonHangs)
+                                        for (int i = 0; i < Model.ChiTietDonHang.Count; i++)
                                         {
                                             <tr>
-                                                <td>@item.DonHang.OrderId</td>
-                                                <td>@item.ChiTietDonHang.FirstOrDefault().Product.ProductName</td>
-                                                <td>@item.ChiTietDonHang.FirstOrDefault().Quantity</td>
-                                                <td>@item.ChiTietDonHang.FirstOrDefault().Price.Value.ToString("#,##0") VNĐ</td>
-                                                <td>@item.ChiTietDonHang.FirstOrDefault().Total.Value.ToString("#,##0") VNĐ</td>
+                                                <td>@(i + 1)</td>
+                                                <td>@Model.ChiTietDonHang[i].Product.ProductName</td>
+                                                <td>@Model.ChiTietDonHang[i].Quantity</td>
+                                                <td>@Model.ChiTietDonHang[i].Price.Value.ToString("#,##0") VNĐ</td>
+                                                <td>@Model.ChiTietDonHang[i].Total.Value.ToString("#,##0") VNĐ</td>
                                             </tr>
                                         }
                                     }
@@ -84,8 +92,15 @@
                         </div>
                         <div class="row m-t-30 lh-1-8">
                             <div class="col-sm-12">
-                                <div class="float-right text-right">
-                                    <h3><span class="font-weight-semibold text-dark">Total :</span> @Model.DonHang.TotalMoney.Value.ToString("#,##0") VNĐ</h3>
+                                <div class="container">
+                                    <div class="row">
+                                        <div class="col-md-9">
+                                            <a class="btn btn-block btn-primary col-md-3" href="MyAccount.html"><i class="fas fa-arrow-left" style="margin-right:10px;"></i>Quay lại</a>
+                                        </div>
+                                        <div class="float-right text-right col-md-3">
+                                            <h3><span class="font-weight-semibold text-dark">Total :</span> @Model.DonHang.TotalMoney.Value.ToString("#,##0") VNĐ</h3>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -94,7 +109,7 @@
                                 <img class="img-fluid text-opacity m-t-5" width="100" src="assets/images/logo/logo.png" alt="">
                             </div>
                             <div class="col-sm-6 text-right">
-                                <small><span class="font-weight-semibold text-dark">Phone:</span> (123) 456-7890</small>
+                                <small><span class="font-weight-semibold text-dark">Phone:</span> (+84) 968-454-617</small>
                                 <br>
                                 <small>support@themenate.com</small>
                             </div>
@@ -105,4 +120,5 @@
         </div>
     </div>
 </div>
+
 
