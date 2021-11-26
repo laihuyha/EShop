@@ -1,0 +1,108 @@
+﻿@model EShop.ViewModel.XemDonHang
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Layout/_InvoiceLayout.cshtml";
+    List<EShop.ViewModel.XemDonHang> xemDonHangs = ViewBag.donHang;
+}
+
+<div class="main-content" style="margin-left: -20%">
+    <div class="container">
+        <div class="card">
+            <div class="card-body">
+                <div id="invoice" class="p-h-30">
+                    <div class="m-t-15 lh-2">
+                        <div class="inline-block">
+                            <img class="img-fluid" src="assets/images/logo/logo.png" alt="">
+                            <address class="p-l-10">
+                                <span class="font-weight-semibold text-dark">EShop, Inc.</span><br>
+                                <span>9498 Harvard Street</span><br>
+                                <span>Fairfield, Chicago Town 06824</span><br>
+                                <abbr class="text-dark" title="Phone">Phone:</abbr>
+                                <span>(+84) 968-454-617</span>
+                            </address>
+                        </div>
+                        <div class="float-right">
+                            <h2>INVOICE</h2>
+                        </div>
+                    </div>
+                    <div class="row m-t-20 lh-2">
+                        <div class="col-sm-9">
+                            <h3 class="p-l-10 m-t-10">Invoice To:</h3>
+                            <address class="p-l-10 m-t-10">
+                                <span class="font-weight-semibold text-dark">@Model.DonHang.Address</span><br>
+                                <span>@Model.DonHang.Province </span><br>
+                                <span>@Model.DonHang.Province</span>
+                                <span>@Model.DonHang.Province</span>
+                                <span>@Model.DonHang.Province</span>
+                                <span>@Model.DonHang.Province</span>
+                                <span>@Model.DonHang.Customer.FullName</span>
+                                <span>@Model.DonHang.Customer.Phone</span>
+                                <span>@Model.DonHang.Customer.Mail</span>
+                            </address>
+                        </div>
+                        <div class="col-sm-3">
+                            <div class="m-t-80">
+                                <div class="text-dark text-uppercase d-inline-block">
+                                    <span class="font-weight-semibold text-dark">Invoice No :</span>
+                                </div>
+                                <div class="float-right">#@Model.DonHang.OrderId</div>
+                            </div>
+                            <div class="text-dark text-uppercase d-inline-block">
+                                <span class="font-weight-semibold text-dark">Date :</span>
+                            </div>
+                            <div class="float-right">@Model.DonHang.OrderDate</div>
+                        </div>
+                    </div>
+                    <div class="m-t-20">
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>No.</th>
+                                        <th>Items</th>
+                                        <th>Quantity</th>
+                                        <th>Price</th>
+                                        <th>Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @if (xemDonHangs != null && xemDonHangs.Count() > 0)
+                                    {
+                                        foreach (var item in xemDonHangs)
+                                        {
+                                            <tr>
+                                                <td>@item.DonHang.OrderId</td>
+                                                <td>@item.ChiTietDonHang.FirstOrDefault().Product.ProductName</td>
+                                                <td>@item.ChiTietDonHang.FirstOrDefault().Quantity</td>
+                                                <td>@item.ChiTietDonHang.FirstOrDefault().Price.Value.ToString("#,##0") VNĐ</td>
+                                                <td>@item.ChiTietDonHang.FirstOrDefault().Total.Value.ToString("#,##0") VNĐ</td>
+                                            </tr>
+                                        }
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="row m-t-30 lh-1-8">
+                            <div class="col-sm-12">
+                                <div class="float-right text-right">
+                                    <h3><span class="font-weight-semibold text-dark">Total :</span> @Model.DonHang.TotalMoney.Value.ToString("#,##0") VNĐ</h3>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row m-v-20">
+                            <div class="col-sm-6">
+                                <img class="img-fluid text-opacity m-t-5" width="100" src="assets/images/logo/logo.png" alt="">
+                            </div>
+                            <div class="col-sm-6 text-right">
+                                <small><span class="font-weight-semibold text-dark">Phone:</span> (123) 456-7890</small>
+                                <br>
+                                <small>support@themenate.com</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

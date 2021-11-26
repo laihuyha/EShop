@@ -3,7 +3,7 @@
     ViewData["Title"] = Model.Username + " Profile Page";
     Layout = "~/Views/Layout/_ProfileLayout.cshtml";
     //string url = $"/{Model.CustommerId}.html";
-    List<Order> _lstDonHang = ViewBag._lstOrder;
+    List<Order> _lstDonHang = ViewBag._lstOrder;    
 }
 
 <div class="container emp-profile">
@@ -250,4 +250,26 @@
 @section scripts{
     <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            $("#xemdonhang").click(function () {
+                var madonhang = $(this).attr("data-madonhang")
+                $.ajax({
+                    url: '/DonHang/Index',
+                    dataType: "JSON",
+                    type: "POST",
+                    data: { id: madonhang },
+                    async: true,
+                    success: function (results) {
+                        $("#record_table").html("");
+                        $("#record_table").html(results);
+                    },
+                    error: function (xhr) {
+                        alert("Lỗi");
+                    }
+                });
+            });
+        });
+    </script>
 }

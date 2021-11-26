@@ -13,8 +13,9 @@ namespace EShop.Models
         public int? OrderNumber { get; set; }
         public int? Quantity { get; set; }
         public int? Discount { get; set; }
-        public int? Total { get; set; }
-        public DateTime? Shipdate { get; set; }
+        public decimal? Total { get; set; }
+        public DateTime? CreateDate { get; set; }
+        public decimal? Price { get; set; }
 
         public virtual Order Order { get; set; }
         public virtual Product Product { get; set; }

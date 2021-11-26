@@ -4,14 +4,16 @@ using EShop.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace EShop.Migrations
 {
     [DbContext(typeof(EcommerceVer2Context))]
-    partial class EcommerceVer2ContextModelSnapshot : ModelSnapshot
+    [Migration("20211126035719_fix_orderdetail")]
+    partial class fix_orderdetail
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -322,8 +324,18 @@ namespace EShop.Migrations
                         .HasColumnType("datetime")
                         .HasDefaultValueSql("('0001-01-01T00:00:00.000')");
 
+                    b.Property<DateTime?>("PaymentDate")
+                        .HasColumnType("datetime");
+
+                    b.Property<int?>("PaymentId")
+                        .HasColumnType("int")
+                        .HasColumnName("PaymentID");
+
                     b.Property<string>("Province")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("ShipDate")
+                        .HasColumnType("datetime");
 
                     b.Property<decimal?>("TotalMoney")
                         .HasColumnType("decimal(18,2)");

@@ -92,7 +92,7 @@
             $(function () {
                 $(".add-to-cart-btn").click(function () {
                     var productID = $(this).attr("data-mahh");
-                    var qty1 = $('#txtsoluong').val();
+                    var qty1 = $(this).attr("data-soluong");
                     $.ajax({
                         url: '/api/cart/add',
                         type: "POST",
