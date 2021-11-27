@@ -41,31 +41,21 @@
                 <table class="table table-hover e-commerce-table">
                     <thead>
                         <tr>
-                            <th>
-                                <a>
-                                    ID
-                                </a>
+                            <th class="text-center align-items-center">
+                                ID
                             </th>
-                            <th>
-                                <a>
-                                    Đơn hàng
-                                </a>
+                            <th class="text-center align-items-center">
+                                Đơn hàng
                             </th>
                             <th class="text-center align-items-center">Mô tả</th>
-                            <th>
-
+                            <th class="text-center align-items-center">
                                 Trạng thái
-
                             </th>
                             <th class="text-center align-items-center">
-                                <a>
-                                    Ngày mua
-                                </a>
+                                Ngày mua
                             </th>
                             <th class="text-center align-items-center">
-                                <a>
-                                    Tổng tiền
-                                </a>
+                                Tổng tiền
                             </th>
                             <th></th>
                         </tr>
@@ -76,22 +66,28 @@
                             foreach (var item in Model)
                             {
                                 <tr>
-                                    <td>
+                                    <td class="text-center align-items-center">
                                         @item.OrderId
                                     </td>
-                                    <td>
+                                    <td class="text-center align-items-center">
                                         @item.Customer.FullName
                                     </td>
-                                    <td>
+                                    <td class="text-center align-items-center">
                                         @item.TransactionStatus.Descriptions
                                     </td>
-                                    <td>
+                                    <td class="text-center align-items-center">
+                                        @item.IsPaid
+                                    </td>
+                                    <td class="text-center align-items-center">
                                         @item.OrderDate
                                     </td>
-                                    <td>
+                                    <td class="text-center align-items-center">
                                         @item.TotalMoney.Value.ToString("#,##0") VNĐ
                                     </td>
                                     <td>
+                                        <a asp-controller="AdminOrders" asp-action="Details" asp-route-id="@item.OrderId" class="btn btn-icon btn-hover btn-sm btn-rounded">
+                                            <i class="anticon anticon-eye"></i>
+                                        </a>
                                         <a asp-controller="AdminOrders" asp-action="Edit" asp-route-id="@item.OrderId" class="btn btn-icon btn-hover btn-sm btn-rounded">
                                             <i class="anticon anticon-edit"></i>
                                         </a>

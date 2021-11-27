@@ -1,4 +1,4 @@
-using AspNetCoreHero.ToastNotification;
+﻿using AspNetCoreHero.ToastNotification;
 using EShop.Models;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
@@ -13,9 +13,9 @@ using System.Text.Unicode;
 
 namespace EShop
 {
-    //�dasd
+    //ádasd
     //ditme
-    //testpush�dasdsadasd
+    //testpushádasdsadasd
     public class Startup
     {
         //asdasda
@@ -51,6 +51,20 @@ namespace EShop
             services.AddSingleton<HtmlEncoder>(HtmlEncoder.Create(allowedRanges: new[] { UnicodeRanges.All }));
             services.AddControllersWithViews().AddRazorRuntimeCompilation().AddSessionStateTempDataProvider();
             services.AddNotyf(config => { config.DurationInSeconds = 1; config.IsDismissable = false; config.Position = NotyfPosition.TopRight; });
+
+            services.AddAuthentication()
+                .AddGoogle(googleOptions =>
+                {
+                    // Đọc thông tin Authentication:Google từ appsettings.json
+                    IConfigurationSection googleAuthNSection = Configuration.GetSection("Authentication:Google");
+
+                    // Thiết lập ClientID và ClientSecret để truy cập API google
+                    googleOptions.ClientId = googleAuthNSection["ClientId"];
+                    googleOptions.ClientSecret = googleAuthNSection["ClientSecret"];
+                    // Cấu hình Url callback lại từ Google (không thiết lập thì mặc định là /signin-google)
+                    googleOptions.CallbackPath = "/dang-nhap-tu-google";
+
+                });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
