@@ -202,7 +202,7 @@
                             <!-- product -->
                             <div class="col-md-4 col-xs-6">
                                 <div class="product">
-                                    <div class="product-img" style="height:300px; width:260px;">
+                                    <div class="product-img" style="height:300px; width:263px;">
                                         <img src="~/images/products/@item.ThumbImg" alt="@item.Title">
                                         @if (item.Discount.Value > 0)
                                         {
@@ -253,7 +253,7 @@
                         </ul>
                     </div>*@
                 <hr />
-                <pager class="paper-container" list="@Model" asp-area="" asp-controller="Products" asp-action="Index"></pager>
+                <pager class="paper-container" list="@Model"  asp-controller="Products" asp-action="PhuKien"></pager>
                 <!-- /store bottom filter -->
             </div>
             <!-- /STORE -->
