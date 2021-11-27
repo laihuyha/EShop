@@ -25,10 +25,17 @@ namespace EShop.Controllers
         public ActionResult Index()
         {
             var lstNewProduct = _context.Products
-                .Include(n=>n.Cate)
-                .Where(n => n.IsActived && n.UnitInStock>5)
+                .Include(n => n.Cate)
+                .Where(n => n.IsActived && n.UnitInStock > 5)
                 .OrderByDescending(n => n.DateCreated);
             ViewBag.ListNPD = lstNewProduct;
+
+            var lstBestSeller = _context.Products
+                .Include(n => n.Cate)
+                .Include(n=>n.OrderDetails)
+                .Where(n => n.IsActived && n.UnitInStock > 5 && n.IsBestsellers == true)
+                .OrderByDescending(n => n.DateCreated);
+            ViewBag.BestSeller = lstBestSeller;
             return View();
         }
 

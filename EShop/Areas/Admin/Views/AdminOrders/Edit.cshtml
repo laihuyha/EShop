@@ -1,7 +1,7 @@
 ﻿@model EShop.Models.Order
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Thay đổi trạng thái đơn hàng #" + Model.OrderId;
     Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
 }
 <div style="margin-top:10%; margin-left:10%">
@@ -14,6 +14,8 @@
             <form asp-action="Edit">
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                 <input type="hidden" asp-for="OrderId" />
+                <input type="hidden" asp-for="CustomerId" />
+                <input type="hidden" asp-for="OrderDate" />
                 <div class="form-group">
                     <label asp-for="CustomerId" class="control-label">Chủ đơn</label>
                     <select disabled asp-for="CustomerId" class="form-control" asp-items="ViewBag.CustomerId"></select>
