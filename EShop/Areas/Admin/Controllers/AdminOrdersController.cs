@@ -34,6 +34,7 @@ namespace EShop.Areas.Admin.Controllers
             var pageNo = page == null || page <= 0 ? 1 : page.Value;
             var pageSize = 20;
             ViewBag.CurrentPage = pageNo;
+            ViewData["CustomerId"] = new SelectList(_context.Customers, "CustommerId", "FullName");
             PagedList<Order> models = new PagedList<Order>(ecommerceVer2Context, pageNo, pageSize);
             return View(models);
         }
@@ -62,8 +63,8 @@ namespace EShop.Areas.Admin.Controllers
         // GET: Admin/AdminOrders/Create
         public IActionResult Create()
         {
-            ViewData["CustomerId"] = new SelectList(_context.Customers, "CustommerId", "CustommerId");
-            ViewData["TransactionStatusId"] = new SelectList(_context.TransactStatuses, "TransactionStatusId", "TransactionStatusId");
+            ViewData["CustomerId"] = new SelectList(_context.Customers, "CustommerId", "FullName");
+            ViewData["TransactionStatusId"] = new SelectList(_context.TransactStatuses, "TransactionStatusId", "Descriptions");
             return View();
         }
 
@@ -80,8 +81,8 @@ namespace EShop.Areas.Admin.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CustomerId"] = new SelectList(_context.Customers, "CustommerId", "CustommerId", order.CustomerId);
-            ViewData["TransactionStatusId"] = new SelectList(_context.TransactStatuses, "TransactionStatusId", "TransactionStatusId", order.TransactionStatusId);
+            ViewData["CustomerId"] = new SelectList(_context.Customers, "CustommerId", "FullName", order.CustomerId);
+            ViewData["TransactionStatusId"] = new SelectList(_context.TransactStatuses, "TransactionStatusId", "Descriptions", order.TransactionStatusId);
             return View(order);
         }
 
@@ -98,7 +99,7 @@ namespace EShop.Areas.Admin.Controllers
             {
                 return NotFound();
             }
-            ViewData["CustomerId"] = new SelectList(_context.Customers, "CustommerId", "CustommerId", order.CustomerId);
+            ViewData["CustomerId"] = new SelectList(_context.Customers, "CustommerId", "FullName", order.CustomerId);
             ViewData["TransactionStatusId"] = new SelectList(_context.TransactStatuses, "TransactionStatusId", "Descriptions", order.TransactionStatusId);
             return View(order);
         }
@@ -135,8 +136,8 @@ namespace EShop.Areas.Admin.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CustomerId"] = new SelectList(_context.Customers, "CustommerId", "CustommerId", order.CustomerId);
-            ViewData["TransactionStatusId"] = new SelectList(_context.TransactStatuses, "TransactionStatusId", "TransactionStatusId", order.TransactionStatusId);
+            ViewData["CustomerId"] = new SelectList(_context.Customers, "CustommerId", "FullName", order.CustomerId);
+            ViewData["TransactionStatusId"] = new SelectList(_context.TransactStatuses, "TransactionStatusId", "Descriptions", order.TransactionStatusId);
             return View(order);
         }
 
