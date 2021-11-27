@@ -6,6 +6,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Remove="Views\Layout\error-1.cshtml" />
+    <Content Remove="Views\Layout\Errorr.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="AspNetCoreHero.ToastNotification" Version="1.1.0" />
     <PackageReference Include="IdentityServer4" Version="4.1.2" />
     <PackageReference Include="IdentityServer4.AccessTokenValidation" Version="3.0.1" />
@@ -33,6 +38,10 @@
     <Folder Include="wwwroot\images\categories\" />
     <Folder Include="wwwroot\images\brands\" />
     <Folder Include="wwwroot\images\User\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Views\Layout\Errorr.cshtml" />
   </ItemGroup>
 
 </Project>
