@@ -22,7 +22,7 @@ namespace EShop.Areas.Admin.Controllers
 
         public IActionResult Index(string searchStr, int? page)
         {
-            var ecommerceVer2Context = from m in _context.Orders.Include(o => o.Customer).Include(o => o.TransactionStatus).OrderByDescending(x=>x.OrderDate) select m;
+            var ecommerceVer2Context = from m in _context.Orders.Include(o => o.Customer).Include(o => o.TransactionStatus).OrderByDescending(x => x.OrderDate) select m;
             //Search
             ViewData["CurrentFilter"] = searchStr;
             if (!String.IsNullOrEmpty(searchStr))
@@ -51,12 +51,20 @@ namespace EShop.Areas.Admin.Controllers
             var order = await _context.Orders
                 .Include(o => o.Customer)
                 .Include(o => o.TransactionStatus)
+                .Where(o => o.IsDeleted == false)
                 .FirstOrDefaultAsync(m => m.OrderId == id);
             if (order == null)
             {
                 return NotFound();
             }
 
+            var chitietdohang = _context.OrderDetails
+                .AsNoTracking()
+                .Include(x => x.Product)
+                .Where(x => x.OrderId == order.OrderId)
+                .OrderBy(x => x.OrderDetailId)
+                .ToList();
+            ViewBag.ChiTiet = chitietdohang;
             return View(order);
         }
 
@@ -120,7 +128,60 @@ namespace EShop.Areas.Admin.Controllers
             {
                 try
                 {
-                    _context.Update(order);
+                    var donhang = _context.Orders.AsNoTracking().Include(x => x.Customer).FirstOrDefault();
+                    if (donhang != null)
+                    {
+                        donhang.IsPaid = order.IsPaid;
+                        donhang.IsDeleted = order.IsDeleted;
+                        donhang.TransactionStatusId = order.TransactionStatusId;
+                        donhang.OrderDate = order.OrderDate;
+                        //Khai báo Chitietdonhang có Id = donhang.Id
+                        var orderdetail = _context.OrderDetails
+                                .AsNoTracking()
+                                .Where(x => x.OrderId == donhang.OrderId)
+                                .Include(x => x.Product)
+                                .ToList();
+                        //Nhóm sản phẩm theo productID sau đó tính tổng số lượng
+                        foreach (var item in orderdetail)
+                        {
+                            var product1 = _context.OrderDetails
+                                .GroupBy(x => x.ProductId)
+                                .Select(g => new
+                                {
+                                    Key = g.Key,
+                                    Total = g.Sum(x=>x.Quantity)
+                                })
+                                .OrderByDescending(x => x.Total)
+                                .ToList();
+                            for(int i = 0; i < product1.Count; i++)
+                            {
+                                if(product1[i].Total >= 5)
+                                {
+                                    var product2 = _context.Products.Where(x => x.ProductId == product1[i].Key).FirstOrDefault();
+                                    product2.IsBestsellers = true;
+                                    _context.Update(product2);
+                                }
+                            }
+                        }
+                        // Nếu trạng thái đơn hàng đã xác nhận thông tin thah toán thì chuyển qua bước vận chuyển -> trừ vào số lượng hàng trong kho
+                        if (donhang.TransactionStatusId == 3)
+                        {
+                            for (int i = 0; i < orderdetail.Count(); i++)
+                            {
+                                var product = _context.Products
+                                    .Where(x => x.ProductId == orderdetail[i].ProductId)
+                                    .FirstOrDefault();
+                                product.UnitInStock = (product.UnitInStock - orderdetail[i].Quantity);
+                                _context.Update(product);
+                            }
+                        }
+                        // Nếu đơn hàng đã giao thì chuyển trạng thái Delete = true;
+                        if (donhang.TransactionStatusId == 5)
+                        {
+                            donhang.IsDeleted = true;
+                        }
+                    }
+                    _context.Update(donhang);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
