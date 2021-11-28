@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using EShop.Models;
 using PagedList.Core;
 using EmailServices;
+using Microsoft.AspNetCore.Authorization;
 
 namespace EShop.Areas.Admin.Controllers
 {
@@ -257,6 +258,7 @@ namespace EShop.Areas.Admin.Controllers
         }
         #endregion
         #region Delete
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -277,6 +279,7 @@ namespace EShop.Areas.Admin.Controllers
         }
 
         // POST: Admin/AdminOrders/Delete/5
+        [Authorize(Roles = "Admin")]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)

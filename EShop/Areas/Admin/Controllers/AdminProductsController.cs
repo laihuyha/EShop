@@ -12,6 +12,7 @@ using System.IO;
 using EShop.Helpper;
 using AspNetCoreHero.ToastNotification.Abstractions;
 using System.Data;
+using Microsoft.AspNetCore.Authorization;
 
 namespace EShop.Areas.Admin.Controllers
 {
@@ -209,6 +210,7 @@ namespace EShop.Areas.Admin.Controllers
             return View(product);
         }
 
+        [Authorize(Roles = "Admin")]
         // GET: Admin/AdminProducts/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
@@ -230,6 +232,7 @@ namespace EShop.Areas.Admin.Controllers
         }
 
         // POST: Admin/AdminProducts/Delete/5
+        [Authorize(Roles = "Admin")]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
