@@ -26,7 +26,8 @@ namespace EShop.Areas.Admin.Controllers
         #region index
         public IActionResult Index(string searchStr, int? page)
         {
-            var ecommerceVer2Context = from m in _context.Orders.Include(o => o.Customer).Include(o => o.TransactionStatus).OrderByDescending(x => x.OrderDate) select m;
+            //chưa duyệt
+            var ecommerceVer2Context = from m in _context.Orders.Include(o => o.Customer).Include(o => o.TransactionStatus).Where(o => o.TransactionStatusId == 1).OrderByDescending(x => x.OrderDate) select m;
             //Search
             ViewData["CurrentFilter"] = searchStr;
             if (!String.IsNullOrEmpty(searchStr))
@@ -40,6 +41,46 @@ namespace EShop.Areas.Admin.Controllers
             ViewBag.CurrentPage = pageNo;
             ViewData["CustomerId"] = new SelectList(_context.Customers, "CustommerId", "FullName");
             PagedList<Order> models = new PagedList<Order>(ecommerceVer2Context, pageNo, pageSize);
+            return View(models);
+        }
+
+        public IActionResult Index1(string searchStr, int? page)
+        {
+            //Đang chuyển
+            var DeliveringProduct = from m in _context.Orders.Include(o => o.Customer).Include(o => o.TransactionStatus).Where(o => o.TransactionStatusId == 3).OrderByDescending(x => x.OrderDate) select m;
+            //Search
+            ViewData["CurrentFilter"] = searchStr;
+            if (!String.IsNullOrEmpty(searchStr))
+            {
+                DeliveringProduct = DeliveringProduct.Where(p => p.OrderId.ToString().Contains(searchStr) || p.CustomerId.ToString().Contains(searchStr));
+            }
+
+            //Paginate
+            var pageNo = page == null || page <= 0 ? 1 : page.Value;
+            var pageSize = 20;
+            ViewBag.CurrentPage = pageNo;
+            ViewData["CustomerId"] = new SelectList(_context.Customers, "CustommerId", "FullName");
+            PagedList<Order> models = new PagedList<Order>(DeliveringProduct, pageNo, pageSize);
+            return View(models);
+        }
+
+        public IActionResult Index2(string searchStr, int? page)
+        {
+            //Đã giao
+            var DeliveredProduct = from m in _context.Orders.Include(o => o.Customer).Include(o => o.TransactionStatus).Where(o => o.TransactionStatusId == 5).OrderByDescending(x => x.OrderDate) select m;
+            //Search
+            ViewData["CurrentFilter"] = searchStr;
+            if (!String.IsNullOrEmpty(searchStr))
+            {
+                DeliveredProduct = DeliveredProduct.Where(p => p.OrderId.ToString().Contains(searchStr) || p.CustomerId.ToString().Contains(searchStr));
+            }
+
+            //Paginate
+            var pageNo = page == null || page <= 0 ? 1 : page.Value;
+            var pageSize = 20;
+            ViewBag.CurrentPage = pageNo;
+            ViewData["CustomerId"] = new SelectList(_context.Customers, "CustommerId", "FullName");
+            PagedList<Order> models = new PagedList<Order>(DeliveredProduct, pageNo, pageSize);
             return View(models);
         }
         #endregion

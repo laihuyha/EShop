@@ -14,9 +14,9 @@
         <!-- row -->
         <div class="row">
             <!-- ASIDE -->
-            <div id="aside" class="col-md-3">
+            <!--<div id="aside" class="col-md-3">-->
                 <!-- aside Widget -->
-                <div class="aside">
+                <!--<div class="aside">
                     <h3 class="aside-title">Categories</h3>
                     <div class="checkbox-filter">
 
@@ -74,10 +74,10 @@
                             </label>
                         </div>
                     </div>
-                </div>
+                </div>-->
                 <!-- /aside Widget -->
                 <!-- aside Widget -->
-                <div class="aside">
+                <!--<div class="aside">
                     <h3 class="aside-title">Price</h3>
                     <div class="price-filter">
                         <div id="price-slider"></div>
@@ -93,10 +93,10 @@
                             <span class="qty-down">-</span>
                         </div>
                     </div>
-                </div>
+                </div>-->
                 <!-- /aside Widget -->
                 <!-- aside Widget -->
-                <div class="aside">
+                <!--<div class="aside">
                     <h3 class="aside-title">Brand</h3>
                     <div class="checkbox-filter">
                         <div class="input-checkbox">
@@ -148,10 +148,10 @@
                             </label>
                         </div>
                     </div>
-                </div>
+                </div>-->
                 <!-- /aside Widget -->
                 <!-- aside Widget -->
-                <div class="aside">
+                <!--<div class="aside">
                     <h3 class="aside-title">Top selling</h3>
                     <div class="product-widget">
                         <div class="product-img">
@@ -185,12 +185,12 @@
                             <h4 class="product-price">$980.00 <del class="product-old-price">$990.00</del></h4>
                         </div>
                     </div>
-                </div>
+                </div>-->
                 <!-- /aside Widget -->
-            </div>
+            <!--</div>-->
             <!-- /ASIDE -->
             <!-- STORE -->
-            <div id="store" class="col-md-9">
+            <div id="store" class="col-md-12">
                 <!-- store products -->
                 <div class="row">
                     @if (Model != null && Model.Count() > 0)
@@ -201,8 +201,8 @@
                             <!-- product -->
                             <div class="col-md-4 col-xs-6">
                                 <div class="product">
-                                    <div class="product-img" style="height:300px; width:263px;">
-                                        <img src="~/images/products/@item.ThumbImg" style="height:263px; width:263px;" alt="@item.Title">
+                                    <div class="product-img">
+                                        <img src="~/images/products/@item.ThumbImg" style="height:263px; width:360px;" alt="@item.Title">
                                         @if (item.Discount.Value > 0)
                                         {
                                             <div class="product-label">
