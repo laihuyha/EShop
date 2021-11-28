@@ -95,14 +95,14 @@ namespace EShop.Areas.Admin.Controllers
             }
         }
 
+        //SignOut
         [HttpGet]
-        [Route("SignOut", Name = "DangXuatAd")]
-        public IActionResult Logout(string url = null)
+        [Route("Adlogout", Name = "AdDangXuat")]
+        public IActionResult Logout()
         {
-            url = "/Home/Index";
             HttpContext.SignOutAsync();
-            HttpContext.Session.Remove("CustommerId");
-            return RedirectToAction(url);
+            HttpContext.Session.Remove("UserId");
+            return RedirectToAction("Index", "Home");
         }
     }
 }

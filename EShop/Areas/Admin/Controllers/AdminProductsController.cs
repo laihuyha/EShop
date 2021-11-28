@@ -12,6 +12,7 @@ using System.IO;
 using EShop.Helpper;
 using AspNetCoreHero.ToastNotification.Abstractions;
 using System.Data;
+using Microsoft.AspNetCore.Authorization;
 
 namespace EShop.Areas.Admin.Controllers
 {
@@ -209,6 +210,7 @@ namespace EShop.Areas.Admin.Controllers
             return View(product);
         }
 
+        [Authorize(Roles = "Admin")]
         // GET: Admin/AdminProducts/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
@@ -230,6 +232,7 @@ namespace EShop.Areas.Admin.Controllers
         }
 
         // POST: Admin/AdminProducts/Delete/5
+        [Authorize(Roles = "Admin")]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
@@ -278,6 +281,52 @@ namespace EShop.Areas.Admin.Controllers
                     break;
             }
 
+            //Search
+            ViewData["CurrentFilter"] = searchStr;
+            if (!String.IsNullOrEmpty(searchStr))
+            {
+                _product = _product.Where(p => p.ProductName.Contains(searchStr) || p.ProductId.ToString().Contains(searchStr));
+            }
+            //Paginate
+            var pageNo = page == null || page <= 0 ? 1 : page.Value;
+            var pageSize = 5;
+            PagedList<Product> models = new PagedList<Product>(_product, pageNo, pageSize);
+            ViewBag.CurrentPage = pageNo;
+
+            return View(models);
+        }
+
+        public IActionResult BestSeller(string sortOrder, string currentFilter, string searchStr, int? page)
+        {
+            ViewData["CateId"] = new SelectList(_context.Categories, "CateId", "CategoryName");
+            ViewData["BrandId"] = new SelectList(_context.Brands, "BrandId", "BrandName");
+            var _product = from m in _context.Products.Include(p => p.Brand).Include(p => p.Cate).Where(x=>x.IsBestsellers == true) select m;
+            //Sort
+            ViewData["IdSortParm"] = String.IsNullOrEmpty(sortOrder) ? "id_desc" : "";
+            ViewData["DateSortParm"] = sortOrder == "Date" ? "date_desc" : "Date";
+            ViewData["UnitSortParm"] = sortOrder == "Unit" ? "unit_desc" : "Unit";
+            ViewData["CurrentSort"] = sortOrder;
+            switch (sortOrder)
+            {
+                case "id_desc":
+                    _product = _product.OrderByDescending(p => p.ProductId);
+                    break;
+                case "Date":
+                    _product = _product.OrderBy(p => p.DateCreated);
+                    break;
+                case "date_desc":
+                    _product = _product.OrderByDescending(p => p.DateCreated);
+                    break;
+                case "unit_desc":
+                    _product = _product.OrderByDescending(p => p.UnitInStock);
+                    break;
+                case "Unit":
+                    _product = _product.OrderBy(p => p.UnitInStock);
+                    break;
+                default:
+                    _product = _product.OrderBy(p => p.ProductId);
+                    break;
+            }
             //Search
             ViewData["CurrentFilter"] = searchStr;
             if (!String.IsNullOrEmpty(searchStr))
