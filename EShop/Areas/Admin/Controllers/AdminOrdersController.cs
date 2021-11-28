@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using EShop.Models;
 using PagedList.Core;
+using EmailServices;
 
 namespace EShop.Areas.Admin.Controllers
 {
@@ -14,12 +15,15 @@ namespace EShop.Areas.Admin.Controllers
     public class AdminOrdersController : Controller
     {
         private readonly EcommerceVer2Context _context;
+        private readonly IEmailSender _emailSender;
 
-        public AdminOrdersController(EcommerceVer2Context context)
+        public AdminOrdersController(EcommerceVer2Context context, IEmailSender emailSender)
         {
+            _emailSender = emailSender;
             _context = context;
         }
 
+        #region index
         public IActionResult Index(string searchStr, int? page)
         {
             var ecommerceVer2Context = from m in _context.Orders.Include(o => o.Customer).Include(o => o.TransactionStatus).OrderByDescending(x => x.OrderDate) select m;
@@ -38,9 +42,8 @@ namespace EShop.Areas.Admin.Controllers
             PagedList<Order> models = new PagedList<Order>(ecommerceVer2Context, pageNo, pageSize);
             return View(models);
         }
-
-
-        // GET: Admin/AdminOrders/Details/5
+        #endregion
+        #region details
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -67,8 +70,8 @@ namespace EShop.Areas.Admin.Controllers
             ViewBag.ChiTiet = chitietdohang;
             return View(order);
         }
-
-        // GET: Admin/AdminOrders/Create
+        #endregion
+        #region Create
         public IActionResult Create()
         {
             ViewData["CustomerId"] = new SelectList(_context.Customers, "CustommerId", "FullName");
@@ -93,8 +96,8 @@ namespace EShop.Areas.Admin.Controllers
             ViewData["TransactionStatusId"] = new SelectList(_context.TransactStatuses, "TransactionStatusId", "Descriptions", order.TransactionStatusId);
             return View(order);
         }
-
-        // GET: Admin/AdminOrders/Edit/5
+        #endregion
+        #region Edit
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -149,15 +152,15 @@ namespace EShop.Areas.Admin.Controllers
                                 .Select(g => new
                                 {
                                     Key = g.Key,
-                                    Total = g.Sum(x=>x.Quantity)
+                                    Total = g.Sum(x => x.Quantity)
                                 })
                                 .OrderByDescending(x => x.Total)
                                 .ToList();
-                            for(int i = 0; i < product1.Count; i++)
+                            for (int i = 0; i < product1.Count; i++) // Chạy lặp trong danh sách sản phẩm của product1
                             {
-                                if(product1[i].Total >= 5)
+                                if (product1[i].Total >= 5) //Đk để set nó thành BestSeller
                                 {
-                                    var product2 = _context.Products.Where(x => x.ProductId == product1[i].Key).FirstOrDefault();
+                                    var product2 = _context.Products.Where(x => x.ProductId == product1[i].Key).FirstOrDefault(); // Kiếm nó trong Db
                                     product2.IsBestsellers = true;
                                     _context.Update(product2);
                                 }
@@ -166,14 +169,24 @@ namespace EShop.Areas.Admin.Controllers
                         // Nếu trạng thái đơn hàng đã xác nhận thông tin thah toán thì chuyển qua bước vận chuyển -> trừ vào số lượng hàng trong kho
                         if (donhang.TransactionStatusId == 3)
                         {
+                            string chitiet = "";
                             for (int i = 0; i < orderdetail.Count(); i++)
                             {
                                 var product = _context.Products
                                     .Where(x => x.ProductId == orderdetail[i].ProductId)
                                     .FirstOrDefault();
                                 product.UnitInStock = (product.UnitInStock - orderdetail[i].Quantity);
+                                chitiet += "Tên sản phẩm : " + product.ProductName.ToString();
+                                chitiet += " - Số lượng : " + orderdetail[i].Quantity.Value.ToString();
+                                chitiet += " - Giá : " + orderdetail[i].Product.SalesPrice.Value.ToString("#,##0") + " VNĐ";
+                                chitiet += " - Thành tiền : " + orderdetail[i].Total.Value.ToString("#,##0") + " VNĐ";
+                                chitiet += "<br />";
+                                chitiet += "Tổng thanh toán: " + donhang.TotalMoney.Value.ToString("#,##0") + " VNĐ";
                                 _context.Update(product);
                             }
+
+                            var message = new Message(new string[] { donhang.Customer.Mail }, "Xác nhận đơn hàng", chitiet);
+                            _emailSender.SendEmail(message);
                         }
                         // Nếu đơn hàng đã giao thì chuyển trạng thái Delete = true;
                         if (donhang.TransactionStatusId == 5)
@@ -201,8 +214,8 @@ namespace EShop.Areas.Admin.Controllers
             ViewData["TransactionStatusId"] = new SelectList(_context.TransactStatuses, "TransactionStatusId", "Descriptions", order.TransactionStatusId);
             return View(order);
         }
-
-        // GET: Admin/AdminOrders/Delete/5
+        #endregion
+        #region Delete
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -232,6 +245,7 @@ namespace EShop.Areas.Admin.Controllers
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
+        #endregion
 
         private bool OrderExists(int id)
         {

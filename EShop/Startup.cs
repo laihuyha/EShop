@@ -1,8 +1,10 @@
 ﻿using AspNetCoreHero.ToastNotification;
+using EmailServices;
 using EShop.Models;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -29,6 +31,8 @@ namespace EShop
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+
+            #region //Cookies
             services.AddDistributedMemoryCache();
             services.AddSession(options =>
             {
@@ -37,6 +41,7 @@ namespace EShop
                 options.Cookie.HttpOnly = true;
                 options.Cookie.IsEssential = true;
             });
+
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie(p =>
                 {
@@ -45,13 +50,9 @@ namespace EShop
                     p.LogoutPath = "/";
                     p.AccessDeniedPath = "/";
                 });
+            #endregion
 
-            services.AddDbContext<EcommerceVer2Context>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("EShopDb")));
-            services.AddSingleton<HtmlEncoder>(HtmlEncoder.Create(allowedRanges: new[] { UnicodeRanges.All }));
-            services.AddControllersWithViews().AddRazorRuntimeCompilation().AddSessionStateTempDataProvider();
-            services.AddNotyf(config => { config.DurationInSeconds = 1; config.IsDismissable = false; config.Position = NotyfPosition.TopRight; });
-
+            #region //services GG
             services.AddAuthentication()
                 .AddGoogle(googleOptions =>
                 {
@@ -65,6 +66,21 @@ namespace EShop
                     googleOptions.CallbackPath = "/dang-nhap-tu-google";
 
                 });
+            #endregion
+
+            services.AddDbContext<EcommerceVer2Context>(options =>
+                options.UseSqlServer(Configuration.GetConnectionString("EShopDb")));
+            services.AddSingleton<HtmlEncoder>(HtmlEncoder.Create(allowedRanges: new[] { UnicodeRanges.All }));
+            services.AddControllersWithViews().AddRazorRuntimeCompilation().AddSessionStateTempDataProvider();
+            services.AddNotyf(config => { config.DurationInSeconds = 1; config.IsDismissable = false; config.Position = NotyfPosition.TopRight; });
+
+            // MailServer
+            var emailconfig = Configuration
+                .GetSection("EmailConfiguration")
+                .Get<EmailConfiguration>();
+            services.AddSingleton(emailconfig);
+            services.AddScoped<IEmailSender, EmailSender>();
+            services.AddControllers();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -100,6 +116,15 @@ namespace EShop
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
+                //endpoints.MapGet("/TestSendMailServices", async (context) => {
+                //    var sendmailservices = context.RequestServices.GetService<SendMailServices>();
+                //    var mailcontent = new MailContent();
+                //    mailcontent.To = "Laihuyha@gmail.com";
+                //    mailcontent.SubJect = "Test";
+                //    mailcontent.Body = "<h1>Test<h1> test";
+                //    var kq = await sendmailservices.SendMail(mailcontent);
+                //    await context.Response.WriteAsync(kq);
+                //});
             });
         }
     }
