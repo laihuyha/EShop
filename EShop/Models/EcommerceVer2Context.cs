@@ -1,7 +1,6 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
-using EShop.ViewModel;
 
 #nullable disable
 
@@ -22,9 +21,10 @@ namespace EShop.Models
         public virtual DbSet<Attribute> Attributes { get; set; }
         public virtual DbSet<AttributePrice> AttributePrices { get; set; }
         public virtual DbSet<Brand> Brands { get; set; }
-        public virtual DbSet<Cart> Carts { get; set; }
         public virtual DbSet<Category> Categories { get; set; }
         public virtual DbSet<Customer> Customers { get; set; }
+        public virtual DbSet<ImportDetail> ImportDetails { get; set; }
+        public virtual DbSet<ImportTicket> ImportTickets { get; set; }
         public virtual DbSet<Order> Orders { get; set; }
         public virtual DbSet<OrderDetail> OrderDetails { get; set; }
         public virtual DbSet<Product> Products { get; set; }
@@ -36,6 +36,7 @@ namespace EShop.Models
         {
             if (!optionsBuilder.IsConfigured)
             {
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
                 optionsBuilder.UseSqlServer("Server=.\\SQLExpress;Database=EcommerceVer2;Trusted_Connection=True;");
             }
         }
@@ -72,6 +73,10 @@ namespace EShop.Models
                 entity.Property(e => e.Phone)
                     .HasMaxLength(13)
                     .IsUnicode(false);
+
+                entity.Property(e => e.Randomkey)
+                    .HasMaxLength(10)
+                    .IsFixedLength(true);
 
                 entity.Property(e => e.Username)
                     .IsRequired()
@@ -124,19 +129,6 @@ namespace EShop.Models
                 entity.Property(e => e.BrandName).HasMaxLength(100);
             });
 
-            modelBuilder.Entity<Cart>(entity =>
-            {
-                entity.ToTable("Cart");
-
-                entity.Property(e => e.CartId).HasColumnName("CartID");
-
-                entity.Property(e => e.DateCreated).HasColumnType("datetime");
-
-                entity.Property(e => e.ProductId).HasColumnName("ProductID");
-
-                entity.Property(e => e.UserId).HasColumnName("UserID");
-            });
-
             modelBuilder.Entity<Category>(entity =>
             {
                 entity.HasKey(e => e.CateId);
@@ -183,6 +175,51 @@ namespace EShop.Models
                 entity.Property(e => e.Phone)
                     .HasMaxLength(13)
                     .IsUnicode(false);
+
+                entity.Property(e => e.Randomkey).HasMaxLength(10);
+            });
+
+            modelBuilder.Entity<ImportDetail>(entity =>
+            {
+                entity.HasKey(e => e.TicketDetailsId);
+
+                entity.Property(e => e.TicketDetailsId).HasColumnName("TicketDetailsID");
+
+                entity.Property(e => e.ImportCost).HasColumnType("decimal(18, 2)");
+
+                entity.Property(e => e.ProductId).HasColumnName("ProductID");
+
+                entity.Property(e => e.TicketId).HasColumnName("TicketID");
+
+                entity.Property(e => e.TotalCost).HasColumnType("decimal(18, 2)");
+
+                entity.HasOne(d => d.Product)
+                    .WithMany(p => p.ImportDetails)
+                    .HasForeignKey(d => d.ProductId)
+                    .HasConstraintName("FK_ImportDetails_Product");
+
+                entity.HasOne(d => d.Ticket)
+                    .WithMany(p => p.ImportDetails)
+                    .HasForeignKey(d => d.TicketId)
+                    .HasConstraintName("FK_ImportDetails_ImportTicket");
+            });
+
+            modelBuilder.Entity<ImportTicket>(entity =>
+            {
+                entity.HasKey(e => e.TicketId);
+
+                entity.ToTable("ImportTicket");
+
+                entity.Property(e => e.TicketId).HasColumnName("TicketID");
+
+                entity.Property(e => e.ImportDate).HasColumnType("datetime");
+
+                entity.Property(e => e.TotalMoney).HasColumnType("decimal(18, 2)");
+
+                entity.HasOne(d => d.User)
+                    .WithMany(p => p.ImportTickets)
+                    .HasForeignKey(d => d.UserId)
+                    .HasConstraintName("FK_ImportTicket_Account");
             });
 
             modelBuilder.Entity<Order>(entity =>
@@ -201,6 +238,7 @@ namespace EShop.Models
                     .HasColumnType("datetime")
                     .HasDefaultValueSql("('0001-01-01T00:00:00.000')");
 
+                entity.Property(e => e.TotalMoney).HasColumnType("decimal(18, 2)");
 
                 entity.Property(e => e.TransactionStatusId).HasColumnName("TransactionStatusID");
 
@@ -223,11 +261,15 @@ namespace EShop.Models
 
                 entity.Property(e => e.OrderDetailId).HasColumnName("OrderDetailID");
 
+                entity.Property(e => e.CreateDate).HasColumnType("datetime");
+
                 entity.Property(e => e.OrderId).HasColumnName("OrderID");
+
+                entity.Property(e => e.Price).HasColumnType("decimal(18, 2)");
 
                 entity.Property(e => e.ProductId).HasColumnName("ProductID");
 
-                entity.Property(e => e.CreateDate).HasColumnType("datetime");
+                entity.Property(e => e.Total).HasColumnType("decimal(18, 2)");
 
                 entity.HasOne(d => d.Order)
                     .WithMany(p => p.OrderDetails)
@@ -243,6 +285,8 @@ namespace EShop.Models
             modelBuilder.Entity<Product>(entity =>
             {
                 entity.ToTable("Product");
+
+                entity.HasIndex(e => e.BrandId, "IX_Product_BrandID");
 
                 entity.HasIndex(e => e.CateId, "IX_Product_CateID");
 
@@ -262,9 +306,13 @@ namespace EShop.Models
                     .IsRequired()
                     .HasDefaultValueSql("(CONVERT([bit],(0)))");
 
+                entity.Property(e => e.Price).HasColumnType("decimal(18, 2)");
+
                 entity.Property(e => e.ProductName)
                     .IsRequired()
                     .HasMaxLength(255);
+
+                entity.Property(e => e.SalesPrice).HasColumnType("decimal(18, 2)");
 
                 entity.Property(e => e.ShortDesc).HasMaxLength(255);
 
@@ -312,9 +360,7 @@ namespace EShop.Models
 
                 entity.ToTable("TransactStatus");
 
-                entity.Property(e => e.TransactionStatusId)
-                    .ValueGeneratedNever()
-                    .HasColumnName("TransactionStatusID");
+                entity.Property(e => e.TransactionStatusId).HasColumnName("TransactionStatusID");
 
                 entity.Property(e => e.Descriptions).HasMaxLength(50);
 
@@ -325,10 +371,5 @@ namespace EShop.Models
         }
 
         partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
-
-        public DbSet<EShop.ViewModel.RegisterViewModel> RegisterViewModel { get; set; }
-
-        public DbSet<EShop.ViewModel.LoginViewModel> LoginViewModel { get; set; }
-
     }
 }

@@ -90,7 +90,6 @@ namespace EShop.Areas.Admin.Controllers
         // GET: Admin/AdminCustomers/Create
         public IActionResult Create()
         {
-            ViewData["CartId"] = new SelectList(_context.Carts, "CartId", "CartId");
             return View();
         }
 
