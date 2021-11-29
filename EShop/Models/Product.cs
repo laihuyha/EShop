@@ -11,6 +11,7 @@ namespace EShop.Models
         public Product()
         {
             AttributePrices = new HashSet<AttributePrice>();
+            ImportDetails = new HashSet<ImportDetail>();
             OrderDetails = new HashSet<OrderDetail>();
         }
 
@@ -48,6 +49,7 @@ namespace EShop.Models
         public virtual Brand Brand { get; set; }
         public virtual Category Cate { get; set; }
         public virtual ICollection<AttributePrice> AttributePrices { get; set; }
+        public virtual ICollection<ImportDetail> ImportDetails { get; set; }
         public virtual ICollection<OrderDetail> OrderDetails { get; set; }
     }
 }

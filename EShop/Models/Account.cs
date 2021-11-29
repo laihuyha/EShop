@@ -8,6 +8,11 @@ namespace EShop.Models
 {
     public partial class Account
     {
+        public Account()
+        {
+            ImportTickets = new HashSet<ImportTicket>();
+        }
+
         public int UserId { get; set; }
         [Required(ErrorMessage = "Tên tài khoản không được để trống!")]
         [StringLength(50, ErrorMessage = "Tên tài khoản không vượt quá 50 kí tự")]
@@ -34,5 +39,6 @@ namespace EShop.Models
         public string Randomkey { get; set; }
 
         public virtual Role Role { get; set; }
+        public virtual ICollection<ImportTicket> ImportTickets { get; set; }
     }
 }
