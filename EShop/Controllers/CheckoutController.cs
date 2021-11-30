@@ -52,6 +52,7 @@ namespace EShop.Controllers
             return -1;
         }
 
+        #region //ThanhToanThuong
         [Route("Checkout.html", Name = "Checkout")]
         public IActionResult Index(string url = null)
         {
@@ -145,7 +146,7 @@ namespace EShop.Controllers
             return View(order);
         }
 
-        [Route("Order-Success.html", Name = "Success")]
+        [Route("Order-Status.html", Name = "Success")]
         public IActionResult Success()
         {
             try
@@ -179,5 +180,107 @@ namespace EShop.Controllers
                 throw;
             }
         }
+        #endregion
+        #region //ThanhToanMomo
+        [Route("/ThanhToan-MoMo.html", Name = "Momo")]
+        public IActionResult ThanhToan()
+        {
+            List<CartItem> carts = GioHang;
+            var CustomerId = HttpContext.Session.GetString("CustommerId");
+            OrderViewModel model = new OrderViewModel();
+            if (CustomerId != null)
+            {
+                var _customer = _context.Customers.AsNoTracking().SingleOrDefault(x => x.CustommerId == Convert.ToInt32(CustomerId));
+                model.CustomerId = _customer.CustommerId;
+                model.FullName = _customer.FullName;
+                model.Email = _customer.Mail;
+                model.Phone = _customer.Phone;
+                model.Address = _customer.Address;
+                model.Province = _customer.Province;
+                model.District = _customer.District;
+                model.Ward = _customer.Ward;
+            }
+            ViewBag.GioHang = carts;
+            return View(model);
+        }
+
+        [Route("/ThanhToan-MoMo.html", Name = "Momo")]
+        public IActionResult ThanhToan(OrderViewModel model)
+        {
+            //Khởi tạo endpoints
+            string endpoint = "https://test-payment.momo.vn/gw_payment/transactionProcessor";
+            string partnerCode = "MOMOU3YV20211129";
+            string accessKey = "qLuaMchii5BAThla";
+            string secretKey = "ltdSuh2aSQEdconjoEg2xpSHWr3AaeKU";
+            string orderInfo = "DH" + DateTime.Now.ToString("yyyyMMddHHmmss");
+            string returnUrl = "";
+            string notifyurl = "";
+            //lấy ra để xử lý
+            List<CartItem> carts = GioHang;
+            var _CustomerId = HttpContext.Session.GetString("CustommerId");
+            OrderViewModel order = new OrderViewModel();
+            if (_CustomerId != null)
+            {
+                var _customer = _context.Customers.AsNoTracking().SingleOrDefault(x => x.CustommerId == Convert.ToInt32(_CustomerId));
+                order.CustomerId = _customer.CustommerId;
+                order.FullName = _customer.FullName;
+                order.Email = _customer.Mail;
+                order.Phone = _customer.Phone;
+                order.Note = model.Note;
+                order.Address = _customer.Address;
+
+                model.Province = _customer.Province;
+                model.District = _customer.District;
+                model.Ward = _customer.Ward;
+
+                _context.Update(_customer);
+                _context.SaveChanges();
+            }
+            try
+            {
+                //Khởi tạo đơn hàng
+                Order donhang = new Order();
+                donhang.CustomerId = order.CustomerId;
+                donhang.Address = order.Address;
+                donhang.Province = order.Province = model.Province;
+                donhang.District = order.District = model.District;
+                donhang.Ward = order.Ward = model.Ward;
+
+                donhang.OrderDate = DateTime.Now;
+                donhang.TransactionStatusId = 1;
+                donhang.IsDeleted = false;
+                donhang.IsPaid = false;
+                donhang.Note = Utilities.StripHTML(order.Note);
+                donhang.TotalMoney = Convert.ToDecimal(carts.Sum(x => x.TotalMoney));
+                _context.Add(donhang);
+                _context.SaveChanges();
+
+                // tạo danh sách đơn hàng
+
+                foreach (var item in carts)
+                {
+                    OrderDetail orderDetail = new OrderDetail();
+                    orderDetail.OrderId = donhang.OrderId;
+                    orderDetail.ProductId = item.product.ProductId;
+                    orderDetail.Quantity = item.Qty;
+                    orderDetail.Price = item.product.SalesPrice;
+                    orderDetail.Total = (orderDetail.Price * orderDetail.Quantity);
+                    orderDetail.CreateDate = DateTime.Now;
+                    _context.Add(orderDetail);
+                }
+                _context.SaveChanges();
+                HttpContext.Session.Remove("GioHang");
+                _notyfService.Success("Đơn đặt thành công. Đang chờ xét duyệt");
+                return RedirectToAction("Success", "Checkout");
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+            ViewBag.GioHang = carts;
+            return View(order);
+        }
+        #endregion
     }
 }

@@ -213,7 +213,14 @@
                                     <div class="product-body">
                                         <p class="product-category">@item.Cate.CategoryName</p>
                                         <h3 class="product-name"><a href="@url">@item.ProductName</a></h3>
-                                        <h4 class="product-price">@item.SalesPrice.Value.ToString("#,##0") VNĐ<del class="product-old-price" style="margin-left:5px;">@item.Price.Value.ToString("#,##0") VNĐ</del></h4>
+                                        @if (item.Discount.Value > 0)
+                                        {
+                                            <h4 class="product-price">@item.SalesPrice.Value.ToString("#,##0") VNĐ<del class="product-old-price" style="margin-left:5px;">@item.Price.Value.ToString("#,##0") VNĐ</del></h4>
+                                        }
+                                        else
+                                        {
+                                            <h4 class="product-price">@item.Price.Value.ToString("#,##0") VNĐ</h4>
+                                        }
                                         <div class="product-rating">
                                             <i class="fa fa-star"></i>
                                             <i class="fa fa-star"></i>

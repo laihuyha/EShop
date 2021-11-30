@@ -3,6 +3,7 @@
     ViewData["Title"] = "Index";
     Layout = "~/Views/Layout/_Layout.cshtml";
     List<EShop.ViewModel.CartItem> carts = ViewBag.GioHang;
+    string action = $"";
 }
 
 <div class="section">
@@ -111,25 +112,21 @@
                     </div>
                     <div class="payment-method">
                         <div class="input-radio">
-                            <input type="radio" name="payment" id="payment-1">
+                            <input type="radio" name="payment" id="payment-1" checked="">
                             <label for="payment-1">
                                 <span></span>
-                                Thanh toán khi nhận hàng
+                                Thanh toán khi nhận hàng <br />
                             </label>
                             <div class="caption" style="margin-left:20px;">
                                 <p style="font-style: italic;">Bạn sẽ phải thanh toán khi nhận hàng</p>
                             </div>
                         </div>
+                        <hr />
                         <div class="input-radio">
-                            <input type="radio" name="payment" id="payment-2">
                             <label for="payment-2">
                                 <span></span>
-                                Thanh toán bằng Momo
+                                <a href="">Thanh toán bằng Momo</a>
                             </label>
-                            <div class="caption" style="margin-left:20px;">
-                                <p style="font-style: italic;">Bạn sẽ phải thanh toán đơn hàng này trước. Khi nhận hàng bạn không cần thanh toán bất cứ chi phí gì.</p>
-                                <p style="font-style: italic; color:red">Lưu ý: Khi thanh toán xong sẽ không được hoàn tiền</p>
-                            </div>
                         </div>
                     </div>
                     <div class="input-checkbox">
