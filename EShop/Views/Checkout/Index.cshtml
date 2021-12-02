@@ -107,27 +107,24 @@
                         </div>
                         <div class="order-col">
                             <div><strong>Tổng cộng</strong></div>
-                            <div><strong class="order-total">@carts.Sum(x=>x.TotalMoney).Value.ToString("#,##0") VNĐ</strong></div>
+                            <div><strong class="order-total">@carts.Sum(x => x.TotalMoney).Value.ToString("#,##0") VNĐ</strong></div>
                         </div>
                     </div>
                     <div class="payment-method">
                         <div class="input-radio">
-                            <input type="radio" name="payment" id="payment-1" checked="">
+                            <input type="radio" name="payment" id="payment-1">
                             <label for="payment-1">
                                 <span></span>
-                                Thanh toán khi nhận hàng <br />
+                                Thanh toán khi nhận hàng
                             </label>
                             <div class="caption" style="margin-left:20px;">
                                 <p style="font-style: italic;">Bạn sẽ phải thanh toán khi nhận hàng</p>
                             </div>
                         </div>
                         <hr />
-                        <div class="input-radio">
-                            <label for="payment-2">
-                                <span></span>
-                                <a href="">Thanh toán bằng Momo</a>
-                            </label>
-                        </div>
+                        <a  asp-controller="Checkout" asp-action="PaypalCheckout">
+                            <img src="~/_AdminAssets/images/PayPalLogo.bmp"/>
+                        </a>
                     </div>
                     <div class="input-checkbox">
                         <input type="checkbox" id="terms" required="required">
@@ -220,4 +217,3 @@
         }
     </script>
 }
-
