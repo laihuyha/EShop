@@ -84,6 +84,26 @@ namespace EShop.Areas.Admin.Controllers
             PagedList<Order> models = new PagedList<Order>(DeliveredProduct, pageNo, pageSize);
             return View(models);
         }
+
+        public IActionResult Index3(string searchStr, int? page)
+        {
+            //Đã trả tiền
+            var paidProduct = from m in _context.Orders.Include(o => o.Customer).Include(o => o.TransactionStatus).Where(o => o.IsPaid == true).OrderByDescending(x => x.OrderDate) select m;
+            //Search
+            ViewData["CurrentFilter"] = searchStr;
+            if (!String.IsNullOrEmpty(searchStr))
+            {
+                paidProduct = paidProduct.Where(p => p.OrderId.ToString().Contains(searchStr) || p.CustomerId.ToString().Contains(searchStr));
+            }
+
+            //Paginate
+            var pageNo = page == null || page <= 0 ? 1 : page.Value;
+            var pageSize = 20;
+            ViewBag.CurrentPage = pageNo;
+            ViewData["CustomerId"] = new SelectList(_context.Customers, "CustommerId", "FullName");
+            PagedList<Order> models = new PagedList<Order>(paidProduct, pageNo, pageSize);
+            return View(models);
+        }
         #endregion
         #region details
         public async Task<IActionResult> Details(int? id)

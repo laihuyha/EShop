@@ -3,6 +3,7 @@
     ViewData["Title"] = "Index";
     Layout = "~/Views/Layout/_Layout.cshtml";
     List<EShop.ViewModel.CartItem> carts = ViewBag.GioHang;
+    string action = $"";
 }
 
 <div class="section">
@@ -106,7 +107,7 @@
                         </div>
                         <div class="order-col">
                             <div><strong>Tổng cộng</strong></div>
-                            <div><strong class="order-total">@carts.Sum(x=>x.TotalMoney).Value.ToString("#,##0") VNĐ</strong></div>
+                            <div><strong class="order-total">@carts.Sum(x => x.TotalMoney).Value.ToString("#,##0") VNĐ</strong></div>
                         </div>
                     </div>
                     <div class="payment-method">
@@ -120,17 +121,10 @@
                                 <p style="font-style: italic;">Bạn sẽ phải thanh toán khi nhận hàng</p>
                             </div>
                         </div>
-                        <div class="input-radio">
-                            <input type="radio" name="payment" id="payment-2">
-                            <label for="payment-2">
-                                <span></span>
-                                Thanh toán bằng Momo
-                            </label>
-                            <div class="caption" style="margin-left:20px;">
-                                <p style="font-style: italic;">Bạn sẽ phải thanh toán đơn hàng này trước. Khi nhận hàng bạn không cần thanh toán bất cứ chi phí gì.</p>
-                                <p style="font-style: italic; color:red">Lưu ý: Khi thanh toán xong sẽ không được hoàn tiền</p>
-                            </div>
-                        </div>
+                        <hr />
+                        <a  asp-controller="Checkout" asp-action="PaypalCheckout">
+                            <img src="~/_AdminAssets/images/PayPalLogo.bmp"/>
+                        </a>
                     </div>
                     <div class="input-checkbox">
                         <input type="checkbox" id="terms" required="required">
@@ -223,4 +217,3 @@
         }
     </script>
 }
-
