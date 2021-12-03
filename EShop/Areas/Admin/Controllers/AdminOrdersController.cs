@@ -38,7 +38,7 @@ namespace EShop.Areas.Admin.Controllers
 
             //Paginate
             var pageNo = page == null || page <= 0 ? 1 : page.Value;
-            var pageSize = 20;
+            var pageSize = 15;
             ViewBag.CurrentPage = pageNo;
             ViewData["CustomerId"] = new SelectList(_context.Customers, "CustommerId", "FullName");
             PagedList<Order> models = new PagedList<Order>(ecommerceVer2Context, pageNo, pageSize);
@@ -58,7 +58,7 @@ namespace EShop.Areas.Admin.Controllers
 
             //Paginate
             var pageNo = page == null || page <= 0 ? 1 : page.Value;
-            var pageSize = 20;
+            var pageSize = 15;
             ViewBag.CurrentPage = pageNo;
             ViewData["CustomerId"] = new SelectList(_context.Customers, "CustommerId", "FullName");
             PagedList<Order> models = new PagedList<Order>(DeliveringProduct, pageNo, pageSize);
@@ -78,7 +78,7 @@ namespace EShop.Areas.Admin.Controllers
 
             //Paginate
             var pageNo = page == null || page <= 0 ? 1 : page.Value;
-            var pageSize = 20;
+            var pageSize = 15;
             ViewBag.CurrentPage = pageNo;
             ViewData["CustomerId"] = new SelectList(_context.Customers, "CustommerId", "FullName");
             PagedList<Order> models = new PagedList<Order>(DeliveredProduct, pageNo, pageSize);
@@ -98,7 +98,7 @@ namespace EShop.Areas.Admin.Controllers
 
             //Paginate
             var pageNo = page == null || page <= 0 ? 1 : page.Value;
-            var pageSize = 20;
+            var pageSize = 15;
             ViewBag.CurrentPage = pageNo;
             ViewData["CustomerId"] = new SelectList(_context.Customers, "CustommerId", "FullName");
             PagedList<Order> models = new PagedList<Order>(paidProduct, pageNo, pageSize);
@@ -193,7 +193,7 @@ namespace EShop.Areas.Admin.Controllers
             {
                 try
                 {
-                    var donhang = _context.Orders.AsNoTracking().Include(x => x.Customer).FirstOrDefault();
+                    var donhang = _context.Orders.AsNoTracking().Include(x => x.Customer).Where(x=>x.OrderId==id).FirstOrDefault();
                     if (donhang != null)
                     {
                         donhang.IsPaid = order.IsPaid;

@@ -1,14 +1,14 @@
 ﻿@model EShop.Models.TransactStatus
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Chỉnh sửa trạng thái #"+Model.TransactionStatusId;
     Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
 }
 
 <div style="margin-top: 10%; margin-left: 10%;">
-    <h1>Edit</h1>
+    <h1>Chỉnh sửa</h1>
 
-    <h4>TransactStatus</h4>
+    <h4>Trạng thái</h4>
     <hr />
     <div class="row">
         <div class="col-md-4">
@@ -33,7 +33,7 @@
     </div>
 
     <div>
-        <a asp-action="Index">Back to List</a>
+        <a asp-action="Index">Trở về</a>
     </div>
 
 

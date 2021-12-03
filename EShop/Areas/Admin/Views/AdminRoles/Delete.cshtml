@@ -1,7 +1,7 @@
 ﻿@model EShop.Models.Role
 
 @{
-    ViewData["Title"] = "Delete";
+    ViewData["Title"] = "Xóa quyền #"+Model.RoleId;
     Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
 }
 <div style="margin-top: 10%; margin-left: 10%">
@@ -30,7 +30,7 @@
             <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#exampleModalCenter">
                 Delete
             </button>            
-            <a asp-action="Index" type="button" class="btn btn-dark">Back to List</a>
+            <a asp-action="Index" type="button" class="btn btn-dark">Trở về</a>
         </form>
     </div>
     <!-- Modal -->
@@ -48,8 +48,8 @@
                 </div>
                 <div class="modal-footer">
                     <form asp-action="Delete">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        <input type="submit" value="Delete" class="btn btn-danger" />
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Đóng</button>
+                        <input type="submit" value="Xóa" class="btn btn-danger" />
                     </form>
                 </div>
             </div>
