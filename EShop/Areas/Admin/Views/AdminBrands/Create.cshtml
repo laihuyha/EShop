@@ -1,7 +1,7 @@
 ﻿@model EShop.Models.Brand
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Tạo nhãn";
     Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
 }
 
@@ -43,7 +43,7 @@
                 <div class="card">
                     <div class="card-body">
                         <div class="form-group">
-                            <label asp-for="BrandName" class="control-label"></label>
+                            <label asp-for="BrandName" class="control-label">Tên nhãn hàng</label>
                             <input asp-for="BrandName" class="form-control" />
                             <span asp-validation-for="BrandName" class="text-danger"></span>
                         </div>

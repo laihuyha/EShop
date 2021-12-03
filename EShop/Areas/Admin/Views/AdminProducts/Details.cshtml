@@ -1,7 +1,7 @@
 ﻿@model EShop.Models.Product
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Chi tiết sản phẩm #"+Model.ProductId;
     Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
 }
 
@@ -94,7 +94,7 @@
                                 <div class="media align-items-center">
                                     <i class="font-size-40 text-primary anticon anticon-stock"></i>
                                     <div class="m-l-15">
-                                        <p class="m-b-0 text-muted">Available Stock</p>
+                                        <p class="m-b-0 text-muted">Số lượng tồn</p>
                                         <h3 class="m-b-0 ls-1">@Model.UnitInStock</h3>
                                     </div>
                                 </div>
@@ -148,7 +148,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="card">
+                @*<div class="card">
                     <div class="card-body">
                         <h4 class="card-title">Option Info</h4>
                         <div class="table-responsive">
@@ -191,7 +191,7 @@
                             </table>
                         </div>
                     </div>
-                </div>
+                </div>*@
                 <div class="card">
                     <div class="card-header">
                         <h4 class="card-title">Mô tả sản phẩm</h4>

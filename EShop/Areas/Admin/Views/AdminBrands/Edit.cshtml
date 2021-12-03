@@ -1,7 +1,7 @@
 ﻿@model EShop.Models.Brand
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Chỉnh sửa nhãn hàng #"+Model.BrandId;
     Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
 }
 
@@ -29,7 +29,7 @@
                         </button>
                     </div>
                     <div>
-                        <a asp-action="Index" type="button" class="btn btn-dark">Back to List</a>
+                        <a asp-action="Index" type="button" class="btn btn-dark">Trở về</a>
                     </div>
                 </div>
             </div>
@@ -44,7 +44,7 @@
                 <div class="card">
                     <div class="card-body">
                         <div class="form-group">
-                            <label asp-for="BrandName" class="control-label"></label>
+                            <label asp-for="BrandName" class="control-label">Tên nhãn hàng</label>
                             <input asp-for="BrandName" class="form-control" />
                             <span asp-validation-for="BrandName" class="text-danger"></span>
                         </div>

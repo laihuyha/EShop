@@ -1,14 +1,14 @@
 ﻿@model EShop.Models.Account
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Thông tin tài khoản #"+Model.UserId;
     Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
 }
 
 <div class="container">
     <form method="post" class="emp-profile">
         <div class="row">
-            <div class="col-md-6">
+            <div class="col-md-8">
                 <div class="profile-head">
                     <h5>
                         @Model.FullName
@@ -20,18 +20,18 @@
                     <ul class="nav nav-tabs" id="myTab" role="tablist">
                         <li class="nav-item">
                             <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab"
-                               aria-controls="home" aria-selected="true">About</a>
+                               aria-controls="home" aria-selected="true">Thông tin cơ bản</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab"
-                               aria-controls="profile" aria-selected="false">Timeline</a>
+                               aria-controls="profile" aria-selected="false">Mốc thời gian</a>
                         </li>
                     </ul>
                 </div>
             </div>
-            <div class="col-md-3">
-                <div style="margin-bottom:10px;"><span><a asp-action="Edit" asp-route-id="@Model.UserId" class="btn btn-primary btn-block btn-sm profile-edit-btn"><i class="fas fa-edit" style="margin-right:5px;"></i>Edit Profile</a></span></div>
-                <div style="margin-bottom:10px;"><span><a asp-action="Index" class="btn btn-secondary btn-block btn-sm profile-edit-btn"><i class="fas fa-arrow-circle-left" style="margin-right:5px;"></i>Back to list</a></span></div>
+            <div class="col-md-4">
+                <div style="margin-bottom:10px;"><span><a asp-action="Edit" asp-route-id="@Model.UserId" class="btn btn-primary btn-block btn-sm profile-edit-btn"><i class="fas fa-edit" style="margin-right:5px;"></i>Chỉnh sửa tài khoản</a></span></div>
+                <div style="margin-bottom:10px;"><span><a asp-action="Index" class="btn btn-secondary btn-block btn-sm profile-edit-btn"><i class="fas fa-arrow-circle-left" style="margin-right:5px;"></i>Quay về</a></span></div>
             </div>
         </div>
         <div class="row">

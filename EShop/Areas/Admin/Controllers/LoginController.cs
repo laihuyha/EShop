@@ -100,9 +100,25 @@ namespace EShop.Areas.Admin.Controllers
         [Route("Adlogout", Name = "AdDangXuat")]
         public IActionResult Logout()
         {
-            HttpContext.SignOutAsync();
-            HttpContext.Session.Remove("UserId");
-            return RedirectToAction("Index", "Home");
+            var AccID = HttpContext.Session.GetString("UserId");
+            var _User = _context.Accounts.Where(x => x.UserId == Convert.ToInt32(AccID)).FirstOrDefault();
+            try
+            {
+                if (_User != null)
+                {
+                    _User.LastLogin = DateTime.Now;
+                    _context.Update(_User);
+                    _context.SaveChanges();
+                }
+                HttpContext.SignOutAsync();
+                HttpContext.Session.Remove("UserId");
+                return RedirectToAction("Index", "Home");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                throw;
+            }
         }
     }
 }

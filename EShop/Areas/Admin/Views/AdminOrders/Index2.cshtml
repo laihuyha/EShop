@@ -3,13 +3,12 @@
 
 @{
     int _current = ViewBag.CurrentPage;
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Đơn hàng đã giao - Trang "+_current;
     Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
 }
 <link href="~/AdminAssets/vendors/datatables/dataTables.bootstrap.min.css" rel="stylesheet">
 <div class="main-content">
     <div class="page-header">
-        <h2 class="header-title">Product List</h2>
         <div class="header-sub-title">
             <nav class="breadcrumb breadcrumb-dash">
                 <a asp-controller="Home" asp-action="Index" class="breadcrumb-item"><i class="anticon anticon-home m-r-5"></i>Home</a>
@@ -31,10 +30,10 @@
                 </div>
 
                 <div class="col-lg-4 text-right">
-                    <a asp-controller="AdminOrders" asp-action="Create" class="btn btn-primary">
+                    @*<a asp-controller="AdminOrders" asp-action="Create" class="btn btn-primary">
                         <i class="anticon anticon-plus-circle m-r-5"></i>
                         <span>Thêm Đơn Hàng</span>
-                    </a>
+                    </a>*@
                 </div>
             </div>
             <div class="table-responsive">
@@ -91,9 +90,9 @@
                                         <a asp-controller="AdminOrders" asp-action="Edit" asp-route-id="@item.OrderId" class="btn btn-icon btn-hover btn-sm btn-rounded">
                                             <i class="anticon anticon-edit"></i>
                                         </a>
-                                        <a asp-controller="AdminOrders" asp-action="Delete" asp-route-id="@item.OrderId" class="btn btn-icon btn-hover btn-sm btn-rounded">
+                                        @*<a asp-controller="AdminOrders" asp-action="Delete" asp-route-id="@item.OrderId" class="btn btn-icon btn-hover btn-sm btn-rounded">
                                             <i class="anticon anticon-delete"></i>
-                                        </a>
+                                        </a>*@
                                     </td>
                                 </tr>
                             }

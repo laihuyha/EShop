@@ -1,19 +1,17 @@
 ﻿@model EShop.Models.Brand
 
 @{
-    ViewData["Title"] = "Delete";
+    ViewData["Title"] = "Xóa nhãn hàng Id #" + Model.BrandId;
     Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
 }
 <div style="margin-top:10%; margin-left:10%;">
-    <h1>Delete</h1>
-
-    <h3>Are you sure you want to delete this?</h3>
+    <h3>M có chắc là m muốn xóa nó không</h3>
     <div>
-        <h4>Brand</h4>
+        <h4>Nhãn hàng</h4>
         <hr />
         <dl class="row">
             <dt class="col-sm-2">
-                @Html.DisplayNameFor(model => model.BrandName)
+                Tên nhãn hàng
             </dt>
             <dd class="col-sm-10">
                 @Html.DisplayFor(model => model.BrandName)
@@ -39,9 +37,9 @@
         <form asp-action="Delete" style="margin-top: 30px;">
             <input type="hidden" asp-for="BrandId" />
             <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#exampleModalCenter">
-                Delete
+                Xóa
             </button>  |
-            <a asp-action="Index">Back to List</a>
+            <a asp-action="Index">Trở về</a>
         </form>
     </div>
 </div>
@@ -56,12 +54,12 @@
                 </button>
             </div>
             <div class="modal-body">
-                Bạn có muốn xóa ???
+                Cho m nghĩ lại lần nữa đấy ???
             </div>
             <div class="modal-footer">
                 <form asp-action="Delete">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    <input type="submit" value="Delete" class="btn btn-danger" />
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Để t suy nghĩ thêm</button>
+                    <input type="submit" value="Xóa" class="btn btn-danger" />
                 </form>
             </div>
         </div>

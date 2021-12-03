@@ -1,12 +1,11 @@
 ﻿@model EShop.Models.Account
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Chỉnh sửa tài khoản #" + Model.UserId;
     Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
 }
 <div style="margin-top:10%; margin-left:10%">
-    <h1>Edit</h1>
-    <h4>Account</h4>
+    <h1>Chỉnh sửa</h1>
     <hr />
     <div class="row">
         <div class="col-md-4">
@@ -15,6 +14,8 @@
                 <input type="hidden" asp-for="UserId" />
                 <input type="hidden" asp-for="Username" />
                 <input type="hidden" asp-for="Randomkey" />
+                <input type="hidden" asp-for="CreateDate" />
+                <input type="hidden" asp-for="LastLogin" />
                 @*<div class="form-group">
             <label asp-for="Username" class="control-label"></label>
             <input asp-for="Username" class="form-control" />
@@ -39,16 +40,6 @@
                     <label asp-for="Phone" class="control-label"></label>
                     <input asp-for="Phone" class="form-control" />
                     <span asp-validation-for="Phone" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="CreateDate" class="control-label"></label>
-                    <input asp-for="CreateDate" class="form-control" />
-                    <span asp-validation-for="CreateDate" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="LastLogin" class="control-label"></label>
-                    <input asp-for="LastLogin" class="form-control" />
-                    <span asp-validation-for="LastLogin" class="text-danger"></span>
                 </div>
                 <div class="form-group">
                     <label asp-for="RoleId" class="control-label"></label>

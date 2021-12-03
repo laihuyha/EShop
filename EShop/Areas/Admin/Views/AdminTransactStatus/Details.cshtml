@@ -1,7 +1,7 @@
 ﻿@model EShop.Models.TransactStatus
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Chi tiết trạng thái #"+Model.TransactionStatusId;
     Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
 }
 
@@ -31,7 +31,7 @@
     </div>
     <!-- /.card -->
     <div>
-        <a class="btn btn-adn fas fa-arrow-alt-circle-left btn-secondary" asp-action="Index"><span style="margin-left:10px;">Back to List</span></a> |
-        <a class="btn btn-adn fa fa-edit btn-primary" asp-action="Edit" asp-route-id="@Model.TransactionStatusId"><span style="margin-left:10px;">Edit</span></a>
+        <a class="btn btn-adn fas fa-arrow-alt-circle-left btn-secondary" asp-action="Index"><span style="margin-left:10px;">Trở về</span></a> |
+        <a class="btn btn-adn fa fa-edit btn-primary" asp-action="Edit" asp-route-id="@Model.TransactionStatusId"><span style="margin-left:10px;">Chỉnh sửa</span></a>
     </div>
 </div>

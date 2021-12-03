@@ -3,13 +3,12 @@
 
 @{
     int _current = ViewBag.CurrentPage;
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Quản lý danh mục";
     Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
 }
 <link href="~/AdminAssets/vendors/datatables/dataTables.bootstrap.min.css" rel="stylesheet">
 <div class="main-content">
     <div class="page-header">
-        <h2 class="header-title">Product List</h2>
         <div class="header-sub-title">
             <nav class="breadcrumb breadcrumb-dash">
                 <a asp-controller="Home" asp-action="Index" class="breadcrumb-item"><i class="anticon anticon-home m-r-5"></i>Home</a>
