@@ -249,7 +249,7 @@ namespace EShop.Controllers
                 var debugId = httpException.Headers.GetValues("PayPal-Debug-Id").FirstOrDefault();
 
                 //Process when Checkout with Paypal fails
-                return Redirect("/Paypal/CheckoutFail");
+                return Redirect("/Checkout/CheckoutFail");
             }
         }
 
