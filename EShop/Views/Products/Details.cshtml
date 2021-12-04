@@ -1,7 +1,7 @@
 ﻿@model EShop.Models.Product
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = Model.ProductName;
     Layout = "~/Views/Layout/_ProductLayout.cshtml";
     string url1 = $"{Model.Cate.CategoryName}.html";
 }

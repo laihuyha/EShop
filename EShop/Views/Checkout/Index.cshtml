@@ -1,6 +1,6 @@
 ﻿@model EShop.ViewModel.OrderViewModel
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Thanh Toán";
     Layout = "~/Views/Layout/_Layout.cshtml";
     List<EShop.ViewModel.CartItem> carts = ViewBag.GioHang;
     string action = $"";
@@ -80,61 +80,136 @@
                 </div>
 
                 <!-- Order Details -->
-                <div class="col-md-5 order-details">
-                    <div class="section-title text-center">
-                        <h3 class="title">Thông tin đơn hàng</h3>
-                    </div>
-                    <div class="order-summary">
-                        <div class="order-col">
-                            <div><strong>Sản phẩm</strong></div>
-                            <div><strong>Tổng</strong></div>
+                @if (carts != null && carts.Count() > 0)
+                {
+                    <div class="col-md-5 order-details">
+                        <div class="section-title text-center">
+                            <h3 class="title">Thông tin đơn hàng</h3>
                         </div>
-                        <div class="order-products">
-                            @if (carts != null && carts.Count() > 0)
-                            {
-                                foreach (var item in carts)
+                        <div class="order-summary">
+                            <div class="order-col">
+                                <div><strong>Sản phẩm</strong></div>
+                                <div><strong>Tổng</strong></div>
+                            </div>
+                            <div class="order-products">
+                                @if (carts != null && carts.Count() > 0)
                                 {
-                                    <div class="order-col">
-                                        <div><span>x</span>@item.Qty @item.product.ProductName</div>
-                                        <div>@item.product.SalesPrice.Value.ToString("#,##0") VNĐ</div>
-                                    </div>
+                                    foreach (var item in carts)
+                                    {
+                                        <div class="order-col">
+                                            <div><span>x</span>@item.Qty @item.product.ProductName</div>
+                                            <div>@item.product.SalesPrice.Value.ToString("#,##0") VNĐ</div>
+                                        </div>
+                                    }
                                 }
-                            }
-                        </div>
-                        <div class="order-col">
-                            <div>Shiping</div>
-                            <div><strong>FREE</strong></div>
-                        </div>
-                        <div class="order-col">
-                            <div><strong>Tổng cộng</strong></div>
-                            <div><strong class="order-total">@carts.Sum(x => x.TotalMoney).Value.ToString("#,##0") VNĐ</strong></div>
-                        </div>
-                    </div>
-                    <div class="payment-method">
-                        <div class="input-radio">
-                            <input type="radio" name="payment" id="payment-1">
-                            <label for="payment-1">
-                                <span></span>
-                                Thanh toán khi nhận hàng
-                            </label>
-                            <div class="caption" style="margin-left:20px;">
-                                <p style="font-style: italic;">Bạn sẽ phải thanh toán khi nhận hàng</p>
+                            </div>
+                            <div class="order-col">
+                                <div>Shiping</div>
+                                <div><strong>FREE</strong></div>
+                            </div>
+                            <div class="order-col">
+                                <div><strong>Tổng cộng</strong></div>
+                                <div><strong class="order-total">@carts.Sum(x => x.TotalMoney).Value.ToString("#,##0") VNĐ</strong></div>
                             </div>
                         </div>
+                        <div class="payment-method">
+                            <div class="input-radio">
+                                <input type="radio" name="payment" id="payment-1" required="required">
+                                <label for="payment-1">
+                                    <span></span>
+                                    Thanh toán khi nhận hàng
+                                </label>
+                                <div class="caption" style="margin-left:20px;">
+                                    <p style="font-style: italic;">Bạn sẽ phải thanh toán khi nhận hàng</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="input-checkbox">
+                            <input type="checkbox" id="terms" required="required">
+                            <label for="terms">
+                                <span></span>
+                                I've read and accept the <a href="#">terms & conditions</a>
+                            </label>
+                        </div>
+                        <button type="submit" class="primary-btn order-submit">Đặt hàng</button>
                         <hr />
-                        <a  asp-controller="Checkout" asp-action="PaypalCheckout">
-                            <img src="~/_AdminAssets/images/PayPalLogo.bmp"/>
-                        </a>
+                        <div class="payment-method">
+                            <div class="input-radio">
+                                <input type="radio" name="payment" id="payment-2" required="required">
+                                <label for="payment-2">
+                                    <span></span>
+                                    Thanh toán bằng Paypal
+                                </label>
+                                <div class="caption" style="margin-left:20px;">
+                                    <a asp-controller="Checkout" asp-action="PaypalCheckout">
+                                        <img src="~/_AdminAssets/images/PayPalLogo.bmp" />
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="input-checkbox">
-                        <input type="checkbox" id="terms" required="required">
-                        <label for="terms">
-                            <span></span>
-                            I've read and accept the <a href="#">terms & conditions</a>
-                        </label>
+                }
+                else
+                {
+                    <div class="col-md-5 order-details">
+                        <div class="section-title text-center">
+                            <h3 class="title">Thông tin đơn hàng</h3>
+                        </div>
+                        <div class="order-summary">
+                            <div class="order-col">
+                                <div><strong>Sản phẩm</strong></div>
+                                <div><strong>Tổng</strong></div>
+                            </div>
+                            <div class="order-products">
+                                @if (carts != null && carts.Count() > 0)
+                                {
+                                    foreach (var item in carts)
+                                    {
+                                        <div class="order-col">
+                                            <div><span>x</span>@item.Qty @item.product.ProductName</div>
+                                            <div>@item.product.SalesPrice.Value.ToString("#,##0") VNĐ</div>
+                                        </div>
+                                    }
+                                }
+                            </div>
+                            <div class="order-col">
+                                <div>Shiping</div>
+                                <div><strong>FREE</strong></div>
+                            </div>
+                            <div class="order-col">
+                                <div><strong>Tổng cộng</strong></div>
+                                <div><strong class="order-total">@carts.Sum(x => x.TotalMoney).Value.ToString("#,##0") VNĐ</strong></div>
+                            </div>
+                        </div>
+                        <h4 style="color:orange; text-align:center">Đơn hàng rỗng. Không thể đặt hàng</h4>
+                        <div style="visibility:hidden; display:none;" disabled>
+                            <div class="payment-method">
+                                <div class="input-radio">
+                                    <input type="radio" name="payment" id="payment-1" required="required">
+                                    <label for="payment-1">
+                                        <span></span>
+                                        Thanh toán khi nhận hàng
+                                    </label>
+                                    <div class="caption" style="margin-left:20px;">
+                                        <p style="font-style: italic;">Bạn sẽ phải thanh toán khi nhận hàng</p>
+                                    </div>
+                                </div>
+                                <hr />
+                                <a asp-controller="Checkout" asp-action="PaypalCheckout">
+                                    <img src="~/_AdminAssets/images/PayPalLogo.bmp" />
+                                </a>
+                            </div>
+                            <div class="input-checkbox">
+                                <input type="checkbox" id="terms" required="required">
+                                <label for="terms">
+                                    <span></span>
+                                    I've read and accept the <a href="#">terms & conditions</a>
+                                </label>
+                            </div>
+                        </div>
+                        <button type="submit" style="visibility:hidden; display:none;" disabled class="primary-btn order-submit">Đặt hàng</button>
                     </div>
-                    <button type="submit" class="primary-btn order-submit">Đặt hàng</button>
-                </div>
+                }
                 <!-- /Order Details -->
             </div>
             <!-- /row -->

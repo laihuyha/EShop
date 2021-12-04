@@ -58,5 +58,28 @@ namespace EShop.Controllers
             return View(donHang);
             //return PartialView("Details", donHang);
         }
+
+        //Hủy đơn hàng
+        [HttpPost]
+        [Route("api/donhang/cancel")]
+        public IActionResult Cancel(int id)
+        {
+            try
+            {
+                var _Order = _context.Orders.AsNoTracking().Where(x => x.OrderId == id).SingleOrDefault();
+                if (_Order != null)
+                {
+                    _Order.IsDeleted = true;
+                    _context.Update(_Order);
+                    _context.SaveChanges();
+                }
+                _notyfService.Success("Đã hủy thành công");
+                return Json(new { succcess = true });
+            }
+            catch (Exception)
+            {
+                return Json(new { succcess = false });
+            }
+        }
     }
 }

@@ -141,7 +141,7 @@
                                                 Tổng tiền
                                             </th>
                                             <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
-                                                Note
+                                                Đã xóa?
                                             </th>
                                             <th></th>
                                         </tr>
@@ -165,16 +165,38 @@
                                                     <p class="text-xs font-weight-normal mb-0">@item.TransactionStatus.Descriptions</p>
                                                 </td>
                                                 <td>
-                                                    <p class="text-xs font-weight-normal mb-0">@item.IsPaid</p>
+                                                    @if (item.IsPaid == true)
+                                                    {
+
+
+                                                        <span class="badge bg-success">Đã thanh toán</span>
+                                                    }
+                                                    else
+                                                    {
+                                                        <span class="badge bg-secondary">Chưa thanh toán</span>
+                                                    }
                                                 </td>
                                                 <td>
                                                     <p class="text-xs font-weight-normal mb-0">@item.TotalMoney.Value.ToString("#,##0") VNĐ</p>
                                                 </td>
                                                 <td>
-                                                    <p class="text-xs font-weight-normal mb-0">@item.Note</p>
+                                                    @if (item.IsDeleted == true)
+                                                    {
+
+
+                                                        <span class="badge bg-danger">Đã xóa</span>
+                                                    }
+                                                    else
+                                                    {
+                                                        <span class="badge bg-info">Chưa xóa</span>
+                                                    }
                                                 </td>
                                                 <td>
                                                     <a class="btn btn-secondary btn-primary-hover" href="@url" id="xemdonhang" data-madonhang="@item.OrderId">Xem chi tiết</a>
+                                                    @if (item.IsDeleted == false && item.TransactionStatusId < 3 && item.IsPaid == false)
+                                                    {
+                                                        <a class="btn btn-warning btn-danger-hover" id="huydonhang" data-madonhang="@item.OrderId">Hủy đơn hàng</a>
+                                                    }
                                                 </td>
                                             </tr>
                                         }
@@ -326,25 +348,26 @@
     <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 
-    @*<script>
+    <script>
         $(document).ready(function () {
-            $("#xemdonhang").click(function () {
-                var madonhang = $(this).attr("data-madonhang")
-                $.ajax({
-                    url: '/DonHang/Details',
-                    dataType: "JSON",
-                    type: "POST",
-                    data: { id: madonhang },
-                    async: true,
-                    success: function (results) {
-                        $("#record_table").html("");
-                        $("#record_table").html(results);
-                    },
-                    error: function (xhr) {
-                        alert("Lỗi");
-                    }
+            $(function () {
+                $("#huydonhang").click(function () {
+                    var madonhang = $(this).attr("data-madonhang")
+                    $.ajax({
+                        url: 'api/donhang/cancel',
+                        dataType: "JSON",
+                        type: "POST",
+                        data: { id: madonhang },
+                        async: true,
+                        success: function (results) {
+                            location.reload();
+                        },
+                        error: function (xhr) {
+                            alert("Lỗi");
+                        }
+                    });
                 });
             });
         });
-    </script>*@
+    </script>
 }
