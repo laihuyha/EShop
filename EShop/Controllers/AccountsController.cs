@@ -377,7 +377,8 @@ namespace EShop.Controllers
                     //Kiểm tra Acc có bị Disable không
                     if (CTM.IsActived == false)
                     {
-                        return RedirectToAction("Notice", "Accounts");
+                        _notyfService.Warning("Tài khoản của bạn đang bị khóa, vui lòng liên hệ Admin!");
+                        return RedirectToAction("Login", "Accounts");
                     }
 
                     //Lưu luôn Session đỡ phải Login lại
