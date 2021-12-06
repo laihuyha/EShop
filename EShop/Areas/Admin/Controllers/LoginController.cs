@@ -49,7 +49,7 @@ namespace EShop.Areas.Admin.Controllers
                     if (CTM == null)
                     {
                         _notyfService.Error("Thông tin đăng nhập không chính xác");
-                        return RedirectToAction("AdLogin", "Login", new { Area = "Admin" });
+                        return Redirect("/Admin/Login/Index?ReturnUrl=%2Fadmin%2Fdashboard%2Findex");
                     }
                     string pass = (model.Password + CTM.Randomkey.Trim()).PassToMD5(); //pass nhập vô
 
@@ -86,12 +86,12 @@ namespace EShop.Areas.Admin.Controllers
                     //đợi t x
                 }
                 _notyfService.Error("Thông tin đăng nhập không chính xác");
-                return RedirectToAction("AdLogin", "Login", new { Area = "Admin" });
+                return Redirect("/Admin/Login/Index?ReturnUrl=%2Fadmin%2Fdashboard%2Findex");
             }
             catch
             {
                 _notyfService.Error("Thông tin đăng nhập không chính xác");
-                return RedirectToAction("AdLogin", "Login", new { Area = "Admin" });
+                return Redirect("/Admin/Login/Index?ReturnUrl=%2Fadmin%2Fdashboard%2Findex");
             }
         }
 

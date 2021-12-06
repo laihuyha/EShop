@@ -71,7 +71,7 @@ namespace EShop
                 options.UseSqlServer(Configuration.GetConnectionString("EShopDb")));
             services.AddSingleton<HtmlEncoder>(HtmlEncoder.Create(allowedRanges: new[] { UnicodeRanges.All }));
             services.AddControllersWithViews().AddRazorRuntimeCompilation().AddSessionStateTempDataProvider();
-            services.AddNotyf(config => { config.DurationInSeconds = 1; config.IsDismissable = false; config.Position = NotyfPosition.TopRight; });
+            services.AddNotyf(config => { config.DurationInSeconds = 5; config.IsDismissable = false; config.Position = NotyfPosition.TopRight; });
 
             // MailServer
             var emailconfig = Configuration
