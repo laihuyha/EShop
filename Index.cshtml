@@ -1,140 +1,155 @@
-﻿@using EShop.Models;
-@model IEnumerable<Product>
+﻿<!DOCTYPE html>
+<html lang="en">
 
-@{
-    ViewData["Title"] = "Home Page";
-    Layout = "~/Views/Layout/_Layout.cshtml";
-}
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" type="image/jpg" href="~/icons8-osu-16.ico" />
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
 
-@{
-    IEnumerable<Product> _lstNewProduct = (IEnumerable<Product>)ViewBag.ListNPD;
-    IEnumerable<Product> _lstBestSeller = (IEnumerable<Product>)ViewBag.BestSeller;
-}
+    <title>Eshop</title>
 
-<!-- NEWPRODUCTS SECTION -->
-<div class="section">
-    <!-- container -->
-    <div class="container">
-        <!-- row -->
-        <div class="row">
+    <!-- Google font -->
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,500,700" rel="stylesheet">
 
-            <!-- section title -->
-            <div class="col-md-12">
-                <div class="section-title">
-                    <h3 class="title">Sản phẩm mới</h3>
-                </div>
-            </div>
-            <!-- /section title -->
-            <!-- Products tab & slick -->
-            <div class="col-md-12">
-                <div class="row">
-                    <div class="products-tabs">
-                        <!-- tab -->
-                        <div id="tab1" class="tab-pane active">
-                            <div class="products-slick" data-nav="#slick-nav-1">
-                                <!-- product -->
-                                @Html.Partial("~/Views/Home/NPPartial.cshtml", _lstNewProduct)
-                                <!-- /product -->
-                            </div>
-                            <div id="slick-nav-1" class="products-slick-nav"></div>
+    <!-- Bootstrap -->
+    <link type="text/css" rel="stylesheet" href="~/_UserAssets/css/bootstrap.min.css" />
+
+    <!-- Slick -->
+    <link type="text/css" rel="stylesheet" href="~/_UserAssets/css/slick.css" />
+    <link type="text/css" rel="stylesheet" href="~/_UserAssets/css/slick-theme.css" />
+
+    <!-- nouislider -->
+    <link type="text/css" rel="stylesheet" href="~/_UserAssets/css/nouislider.min.css" />
+
+    <!-- Font Awesome Icon -->
+    <script src="https://kit.fontawesome.com/03e6f106ae.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="~/_UserAssets/css/font-awesome.min.css">
+
+    <!-- Custom stlylesheet -->
+    <link type="text/css" rel="stylesheet" href="~/_UserAssets/css/style.css" />
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+
+</head>
+
+<body>
+    <!-- HEADER -->
+    @await Html.PartialAsync("PartialView/_HeaderPartial.cshtml")
+    <!-- /HEADER -->
+    <!-- NAVIGATION -->
+    @await Html.PartialAsync("PartialView/_NavigationPartialView.cshtml")
+    <!--Menupartial-->
+    <!-- /NAVIGATION -->
+    <!-- SECTION -->
+    <div class="section">
+        <!-- container -->
+        <div class="container">
+            <!-- row -->
+            <div class="row">
+                <!-- shop -->
+                <div class="col-md-4 col-xs-6">
+                    <div class="shop">
+                        <div class="shop-img">
+                            <img src="~/_UserAssets/img/shop01.png" alt="">
                         </div>
-                        <!-- /tab -->
+                        <div class="shop-body">
+                            <h3>Laptop<br>Collection</h3>
+                            <a asp-controller="Home" asp-action="LaptopColection"  class="cta-btn">Shop now <i class="fa fa-arrow-circle-right"></i></a>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <!-- Products tab & slick -->
-        </div>
-        <!-- /row -->
-    </div>
-    <!-- /container -->
-</div>
-<!-- END NEWPRODUCTS SECTION -->
-<!-- TopSelling SECTION -->
-<div class="section">
-    <!-- container -->
-    <div class="container">
-        <!-- row -->
-        <div class="row">
-
-            <!-- section title -->
-            <div class="col-md-12">
-                <div class="section-title">
-                    <h3 class="title">Bán chạy</h3>
-                </div>
-            </div>
-            <!-- /section title -->
-            <!-- Products tab & slick -->
-            <div class="col-md-12">
-                <div class="row">
-                    <div class="products-tabs">
-                        <!-- tab -->
-                        <div id="tab2" class="tab-pane fade in active">
-                            <div class="products-slick" data-nav="#slick-nav-2">
-                                <!-- product -->
-                                @Html.Partial("~/Views/Home/NPPartial.cshtml", _lstBestSeller)
-                                <!-- /product -->
-                            </div>
-                            <div id="slick-nav-2" class="products-slick-nav"></div>
+                <!-- /shop -->
+                <!-- shop -->
+                <div class="col-md-4 col-xs-6">
+                    <div class="shop">
+                        <div class="shop-img">
+                            <img src="~/_UserAssets/img/shop03.png" alt="">
                         </div>
-                        <!-- /tab -->
+                        <div class="shop-body">
+                            <h3>Accessories<br>Collection</h3>
+                            <a asp-controller="Home" asp-action="PhuKienColection" class="cta-btn">Shop now <i class="fa fa-arrow-circle-right"></i></a>
+                        </div>
                     </div>
                 </div>
+                <!-- /shop -->
+                <!-- shop -->
+                <div class="col-md-4 col-xs-6">
+                    <div class="shop">
+                        <div class="shop-img">
+                            <img src="~/_UserAssets/img/iphone1.jpg" alt="">
+                        </div>
+                        <div class="shop-body">
+                            <h3>SmartPhone<br>Collection</h3>
+                            <a asp-controller="Home" asp-action="SmartPhoneColection" class="cta-btn">Shop now <i class="fa fa-arrow-circle-right"></i></a>
+                        </div>
+                    </div>
+                </div>
+                <!-- /shop -->
             </div>
-            <!-- /Products tab & slick -->
+            <!-- /row -->
         </div>
-        <!-- /row -->
+        <!-- /container -->
     </div>
-    <!-- /container -->
-</div>
-<!-- END TopSelling SECTION -->
-@section scripts {
-    <script>
-        $(document).ready(function () {
-            $(function () {
-                $(".add-to-cart-btn").click(function () {
-                    var productID = $(this).attr("data-mahh");
-                    var qty1 = $(this).attr("data-soluong");
-                    $.ajax({
-                        url: '/api/cart/add',
-                        type: "POST",
-                        dataType: "JSON",
-                        data: {
-                            productId: productID,
-                            qty: qty1
-                        },
-                        success: function (response) {
-                            loadHeaderCart();
-                            location.reload();
-                        },
-                        error: function (error) {
-                            alert("Lỗi khi post data: " + error.responseText);
-                        }
-                    });
-                });
-            });
+    <!-- /SECTION -->
+    @RenderBody()
+    <!--2 Partial chứa 2 kiểu sản phẩm-->
+    <!-- NEWSLETTER -->
+    <div id="newsletter" class="section">
+        <!-- container -->
+        <div class="container">
+            <!-- row -->
+            <div class="row">
+                @*<div class="col-md-12">
+                    <div class="newsletter">
+                        <p>Sign Up for the <strong>NEWSLETTER</strong></p>
+                        <form>
+                            <input class="input" type="email" placeholder="Enter Your Email">
+                            <button class="newsletter-btn"><i class="fa fa-envelope"></i> Subscribe</button>
+                        </form>
+                        <ul class="newsletter-follow">
+                            <li>
+                                <a href="#"><i class="fa fa-facebook"></i></a>
+                            </li>
+                            <li>
+                                <a href="#"><i class="fa fa-twitter"></i></a>
+                            </li>
+                            <li>
+                                <a href="#"><i class="fa fa-instagram"></i></a>
+                            </li>
+                            <li>
+                                <a href="#"><i class="fa fa-pinterest"></i></a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>*@
+            </div>
+            <!-- /row -->
+        </div>
+        <!-- /container -->
+    </div>
+    <!-- /NEWSLETTER -->
+    <!-- FOOTER -->
+    @await Html.PartialAsync("PartialView/_FooterPartialView.cshtml")
+    <!-- /FOOTER -->
+    <!-- jQuery Plugins -->
+    <script src="~/_UserAssets/js/jquery.min.js"></script>
+    <script src="~/_UserAssets/js/bootstrap.min.js"></script>
+    <script src="~/_UserAssets/js/slick.min.js"></script>
+    <script src="~/_UserAssets/js/nouislider.min.js"></script>
+    <script src="~/_UserAssets/js/jquery.zoom.min.js"></script>
+    <script src="~/_UserAssets/js/main.js"></script>
+    @await Component.InvokeAsync("Notyf")
+    @await RenderSectionAsync("Scripts", required: false)
+    @await RenderSectionAsync("Styles", required: false)
+</body>
 
-            $(".delete").click(function () {
-                var productID = $(this).attr("data-mahh");
-                $.ajax({
-                    url: "api/cart/remove",
-                    type: "POST",
-                    dataType: "JSON",
-                    data: {
-                        productId: productID,
-                    },
-                    success: function (result) {
-                        location.reload();
-                    },
-                    error: function (rs) {
-                        alert("Lỗi khi Xóa !!!");
-                    }
-                });
-            });
-
-            function loadHeaderCart() {
-                $("#miniCart").load("/AjaxContent/HeaderCart")
-                $("#miniCart").load("/AjaxContent/NumberCart")
-            }
-        });
-    </script>
-}
+</html>
