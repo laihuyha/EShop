@@ -13,6 +13,8 @@ using EShop.Helpper;
 using AspNetCoreHero.ToastNotification.Abstractions;
 using System.Data;
 using Microsoft.AspNetCore.Authorization;
+using Newtonsoft.Json.Linq;
+using System.Net.Http;
 
 namespace EShop.Areas.Admin.Controllers
 {
@@ -28,6 +30,15 @@ namespace EShop.Areas.Admin.Controllers
             _context = context;
             _notyfService = notyfService;
         }
+
+        string app_Id = "1117157035770463";
+        string secret_Key = "8a5ac077fcdf135c837aefa9b9c65dfa";
+        string pageId = "109789021642472";
+        string _app_Access_token = "1117157035770463|PGXmgWAd0VyqaU2PQhw_SKJPctc";
+        string _page_access_token = "EAAP4DGRGgl8BAJmQ461xddH7jUHzCxaISTV43zovg8j41ZAfovkq6a9FbGItPXQVXZBspEOPMiVVbi9reT6GiGu9IuIRoUYbvtqdU4uUdyOmZAzNpSpKS8uKQ73wA1WAWgVB8FdY0KCZATm56aDE2jaUEQjYchqagLshJts4AynE5ZB6SMCMzS06MjkAH7rvgmXaefVhsNwcN46Eivw8A";
+        string short_term_token = "EAAP4DGRGgl8BAEvK6mManpV6CZBT6qkKhi87ZArLabGqVWQqkOTceBTWZABYenVgxcIqnroJIb2XHa1ck7z0aHcD5LJgc7MnhZAZClWVZAtxCdZB0YigPKHHG6mqJ28ZArdnc3tmDncBx3SkwNIazKv3qICH8DrHt8tZBrFtYCJIeBkqvv0UwxsIumoCF3a9Wm16QiZCG9TlA8lrx6PC0VoErfTce70ZBHlaMz7ckGNj2yAj4jlF5zc3he9lOZCx0HZBdiH4ZD";
+        string long_term_access_token = "EAAP4DGRGgl8BAEieGIVewKqfQLZCKaaRLRtblG1DPV6si07fSpchcKXWbIe8ZBpN4azXSLbJ6Gz5i7edemEWZCgBoBjJ8TO8iFVprTyhP4aFsQf4VE9ueDWUS6DpMzmXA28BGzBZAfqDEuVvSvNfGqhUenEGLu4HOZCNDDOPIkzCxBce47tlR";
+        string real_page_token = "EAAP4DGRGgl8BALKRCsuajaOC1Ye0kMGEVetZB1KBN0DlTBNf8ncIZBtQatmb1JT3uGOochJ376HOcLYMgvp5gtifXUkTZBB2YG6XkFa46wvRQPIb1mSzpall1zomlUg4y8CufK21NgRBncxaB3FARbfUw6xStIEdepKu53WXyWQYr7QlRSgGDzFRu257GB6EAV6PucZATZCNYqXCPyX18";
 
         // GET: Admin/AdminProducts
         public IActionResult Index(string sortOrder, string currentFilter, string searchStr, int? page)
@@ -132,6 +143,38 @@ namespace EShop.Areas.Admin.Controllers
                 _context.Add(product);
                 _notyfService.Success("Thêm thành công!");
                 await _context.SaveChangesAsync();
+
+                //#region // Post with photo
+                Facebook facebook = new Facebook(real_page_token, pageId);
+                //string result = facebook.PublishToFacebook("some text", "https://www.google.com/aclk?sa=l&ai=DChcSEwj-4eGRlZj2AhVhn8IKHWqVASQYABALGgJ0bQ&sig=AOD64_1G9M4Rah6BsMWpVTaOvMuWPVo6LQ&adurl&ctype=5&ved=2ahUKEwjppNORlZj2AhVMAqYKHbtLBb4Qwg96BAgBEGU");
+                //Console.WriteLine(result);
+                //#endregion
+                string text_to_send = $"Tên sản phẩm : "+$"{product.ProductName}" + "\n" + $"Giá chỉ còn : " + $"{product.SalesPrice}";
+                //2) if you want just to publish a simple text post
+                var rezText = Task.Run(async () =>
+                {
+                    using (var http = new HttpClient())
+                    {
+                        return await facebook.PublishSimplePost(text_to_send);
+                    }
+                });
+                var rezTextJson = JObject.Parse(rezText.Result.Item2);
+                if (rezText.Result.Item1 != 200)
+                {
+                    try // return error from JSON
+                    {
+                        Console.WriteLine($"Error posting to Facebook. {rezTextJson["error"]["message"].Value<string>()}");
+                        //return;
+                    }
+                    catch (Exception ex) // return unknown error
+                    {
+                        // log exception somewhere
+                        Console.WriteLine($"Unknown error posting to Facebook. {ex.Message}");
+                        //return;
+                    }
+                }
+                Console.WriteLine(rezTextJson);
+
                 return RedirectToAction(nameof(Index));
             }
             ViewData["BrandId"] = new SelectList(_context.Brands, "BrandId", "BrandName", product.BrandId);
@@ -253,7 +296,7 @@ namespace EShop.Areas.Admin.Controllers
         {
             ViewData["CateId"] = new SelectList(_context.Categories, "CateId", "CategoryName");
             ViewData["BrandId"] = new SelectList(_context.Brands, "BrandId", "BrandName");
-            var _product = from m in _context.Products.Include(p => p.Brand).Include(p => p.Cate).Where(p=>p.UnitInStock < 5) select m;
+            var _product = from m in _context.Products.Include(p => p.Brand).Include(p => p.Cate).Where(p => p.UnitInStock < 5) select m;
             //Sort
             ViewData["IdSortParm"] = String.IsNullOrEmpty(sortOrder) ? "id_desc" : "";
             ViewData["DateSortParm"] = sortOrder == "Date" ? "date_desc" : "Date";
@@ -300,7 +343,7 @@ namespace EShop.Areas.Admin.Controllers
         {
             ViewData["CateId"] = new SelectList(_context.Categories, "CateId", "CategoryName");
             ViewData["BrandId"] = new SelectList(_context.Brands, "BrandId", "BrandName");
-            var _product = from m in _context.Products.Include(p => p.Brand).Include(p => p.Cate).Where(x=>x.IsBestsellers == true) select m;
+            var _product = from m in _context.Products.Include(p => p.Brand).Include(p => p.Cate).Where(x => x.IsBestsellers == true) select m;
             //Sort
             ViewData["IdSortParm"] = String.IsNullOrEmpty(sortOrder) ? "id_desc" : "";
             ViewData["DateSortParm"] = sortOrder == "Date" ? "date_desc" : "Date";
