@@ -17,3 +17,7 @@ Tài khoản SandBox Paypal
 - Pass1 : Huyha1112
 - Acc2 : sb-pcndl8826715@personal.example.com
 - Pass2: 12345678
+
+Tài khoản FB post :
+- Acc: postFbtest
+- Pass: Abc@123123123
