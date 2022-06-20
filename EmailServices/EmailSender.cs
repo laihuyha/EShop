@@ -43,6 +43,7 @@ namespace EmailServices
             return emailMessage;
         }
 
+        [Obsolete]
         private void Send (MimeMessage mailMessage)
         {
             using (var client  = new SmtpClient())
